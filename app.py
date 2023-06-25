@@ -71,8 +71,8 @@ def create_account():
         confirm = request.form.get('confirm_password')
 
         if password == confirm:
-            create_account['email'] = request.form.get('email')
-            create_account['password'] = hashlib.md5(password.encode()).hexdigest()
+            new_account['email'] = request.form.get('email')
+            new_account['password'] = hashlib.md5(password.encode()).hexdigest()
 
             return redirect('/email_verification')
     
