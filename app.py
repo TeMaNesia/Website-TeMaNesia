@@ -2,8 +2,9 @@ import os
 import pyrebase
 import hashlib
 
-from flask import Flask, session, render_template, request, redirect
+from flask import Flask, session, render_template, request, redirect, url_for, flash
 # from firebase_admin import credentials, firestore, initialize_app, auth
+
 
 app = Flask(__name__)
 app.secret_key = 'secret'
@@ -30,24 +31,39 @@ auth = firebase.auth()
 
 new_account = {}
 
+
 @app.route('/', methods=['POST', 'GET'])
 def index():
-    if('user' in session):
-        return render_template('dashboard.html', umessage=session['user'])
+    if('user' not in session):
+        return redirect('/login')
     
+    return render_template('dashboard.html')
+
+
+@app.route('/login', methods=['POST', 'GET'])
+def login():
+
     if request.method == 'POST':
         email = request.form.get('email')
         password = request.form.get('password')
 
         try:
-            user = auth.sign_in_with_email_and_password(email, hashlib.md5(password.encode()).hexdigest())
-            session['user'] = user['localId']
-            return redirect('/')
+            user = auth.sign_in_with_email_and_password(email, password)
+            user_info = auth.get_account_info(user['idToken'])['users'][0]
+            session['user_info'] = user_info
 
-        except:
-            return render_template('login.html', umessage="Login gagal, kesalahan email atau password")
+            if session['user_info']['emailVerified'] == False:
+                flash('Email akun anda belum terverifikasi', 'error')
+                return redirect(url_for('login'))
+
+            return render_template('dashboard.html')
         
-    return render_template('login.html')
+        except Exception as e:
+            flash(str(e), 'error')
+            return render_template('authentication/login.html')
+        
+    return render_template('authentication/login.html')
+
 
 @app.route('/register', methods=['POST', 'GET'])
 def register():
@@ -58,41 +74,53 @@ def register():
         new_account['sektor_lembaga'] = request.form.get('sektor')
         new_account['telepon_lembaga'] = request.form.get('telepon')
         new_account['alamat_lembaga'] = request.form.get('alamat')
-        return redirect('/create_account')
-    
-    return render_template('register.html')
-
-@app.route('/create_account', methods=['POST', 'GET'])
-def create_account():
-    if request.method == 'POST':
         password = request.form.get('password')
         confirm = request.form.get('confirm_password')
 
         if password == confirm:
             new_account['email'] = request.form.get('email')
-            new_account['password'] = hashlib.md5(password.encode()).hexdigest()
-            return redirect('/email_verification')
-    
-    return render_template('create_account.html')
+            new_account['password'] = password
 
-@app.route('/email_verification', methods=['POST', 'GET'])
-def email_verification():
-    if request.method == 'POST':
-        code = request.form.get('code_confirmation')
-        true_code = "123"
-        if code == true_code: 
+        try:
             user = auth.create_user_with_email_and_password(new_account['email'], new_account['password'])
             auth.send_email_verification(user['idToken'])
-            # users_collection.document(user['localId']).set(new_account)
-            return redirect('/')
+
+            flash('Akun berhasil dibuat, silahkan hubungi admin untuk verifikasi', 'success')
+            return redirect(url_for('email_verification'))
+
+        except Exception as e:
+            flash(str(e), 'error')
+            return redirect(url_for('register'))
+
         
-    return render_template('email_verification.html')
+    return render_template('authentication/register.html')
+
+
+@app.route('/verify-email', methods=['GET'])
+def email_verification():
+    return render_template('authentication/email_verification.html')
+
 
 @app.route('/logout')
 def logout():
     session.pop('user')
     return redirect('/')
 
-port = int(os.environ.get('PORT', 8080))
+
+@app.errorhandler(403)
+def forbidden(e):
+    return render_template('errors/error-403.html'), 403
+
+@app.errorhandler(404)
+def page_not_found(e):
+    return render_template('errors/error-404.html'), 404
+
+@app.errorhandler(500)
+def system_error(e):
+    return render_template('errors/error-500.html'), 500
+
+
+
+port = int(os.environ.get('PORT', 5000))
 if __name__ == '__main__':
-    app.run(threaded=True, port=port)
+    app.run(threaded=True, port=port, debug=True)
