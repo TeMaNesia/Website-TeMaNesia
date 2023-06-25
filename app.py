@@ -59,7 +59,7 @@ def login():
             return render_template('dashboard.html')
         
         except Exception as e:
-            flash(str(e), 'error')
+            flash("Email atau password salah", 'error')
             return render_template('authentication/login.html')
         
     return render_template('authentication/login.html')
@@ -103,7 +103,7 @@ def email_verification():
 
 @app.route('/logout')
 def logout():
-    session.pop('user')
+    session.pop('user_info')
     return redirect('/')
 
 

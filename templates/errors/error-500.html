@@ -1,0 +1,20 @@
+{% extends 'masters/base.html' %}
+
+{% block title %} 500 {% endblock %}
+
+{% block body %}
+<div id="error" class="vh-100 d-flex justify-content-center align-items-center">
+
+    <div class="error-page container">
+        <div class="col-md-8 col-12 offset-md-2">
+            <div class="text-center">
+                <img class="img-error" src="{{ url_for('static', filename='images/samples/error-500.svg') }}" height="500px" alt="Not Found">
+                <h1 class="error-title text-primary">System Error</h1>
+                <p class="fs-5 text-gray-600">The website is currently unaivailable. Try again later or contact the developer.</p>
+                <a href="index.html" class="btn btn-lg btn-outline-primary mt-3">Go Home</a>
+            </div>
+        </div>
+    </div>
+
+</div>
+{% endblock %}

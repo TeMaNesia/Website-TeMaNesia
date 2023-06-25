@@ -1,0 +1,195 @@
+{% extends 'masters/base.html' %}
+
+{% block title %} Daftar {% endblock %}
+
+{% block body %}
+<div id="auth">
+
+    <div class="d-flex justify-content-center align-items-center vh-100">
+
+        <div class="col-lg-4 col-12">
+            <div class="card rounded-4 p-3" style="transition: height 0.3s ease;">
+                <div class="card-content rounded-4 bg-white px-5 py-5 text-center">
+
+                    <form action="/register" method="POST" id="register-form">
+
+                        <div class="step-1" id="step-1">
+                            <h4 class="text-primary text-start">Buat Akun Baru 🔥</h4>
+                            <p class="text-gray-500 text-start">Silahkan ini form dibawah ini dengan lengkap dan sesuaikan dengan data Anda.</p>
+
+                            <div class="form-group position-relative has-icon-left mt-5">
+                                <input type="text" name="nama" class="form-control form-control-lg ps-5 py-3 bg-gray-light rounded-3" placeholder="Nama Lembaga" required>
+                                <div class="form-control-icon d-flex align-items-center top-0 h-100 px-3">
+                                    <i class="bi bi-building h-auto"></i>
+                                </div>
+                            </div>
+
+                            <div class="form-group position-relative has-icon-left mt-3">
+                                <input type="text" name="sektor" class="form-control form-control-lg ps-5 py-3 bg-gray-light rounded-3" placeholder="Sektor Lembaga" required>
+                                <div class="form-control-icon d-flex align-items-center top-0 h-100 px-3">
+                                    <i class="bi bi-building h-auto"></i>
+                                </div>
+                            </div>
+
+                            <div class="form-group position-relative has-icon-left mt-3">
+                                <input type="number" name="telepon" class="form-control form-control-lg ps-5 py-3 bg-gray-light rounded-3" placeholder="Nomor Telepon Lembaga" required>
+                                <div class="form-control-icon d-flex align-items-center top-0 h-100 px-3">
+                                    <i class="bi bi-telephone h-auto"></i>
+                                </div>
+                            </div>
+
+                            <div class="form-group position-relative has-icon-left mt-3">
+                                <textarea type="text" name="alamat" class="form-control form-control-lg ps-5 py-3 bg-gray-light rounded-3" style="max-lines: 3;" placeholder="Alamat"></textarea>
+                                <div class="form-control-icon d-flex align-items-start pt-3 top-0 h-100 px-3">
+                                    <i class="bi bi-geo-alt h-auto"></i>
+                                </div>
+                            </div>
+
+                            <button class="btn btn-primary btn-block btn-lg mt-5 rounded-3 py-3" onclick="toStep('#step-1', '#step-2')">Selanjutnya</button>
+                            <p class=" text-center w-100 mt-2 mb-0">Sudah punya akun? <a href="/login" class="text-primary font-semibold">Masuk Disini</a></p>
+                        </div>
+
+                        <div class="step-2 d-none" id="step-2">
+                            <div class="d-flex justify-content-start"><i class="bi bi-arrow-left-circle h-auto text-primary" style="cursor: pointer; font-size: 2rem;" onclick="toStep('#step-2', '#step-1')"></i></div>
+                            <h4 class="text-primary text-start mt-3">Buat Akun Baru 🔥</h4>
+                            <p class="text-gray-500 text-start">Silahkan ini form dibawah ini dengan lengkap dan sesuaikan dengan data Anda.</p>
+
+                            <div class="form-group position-relative has-icon-left mt-5">
+                                <input type="email" name="email" class="form-control form-control-lg ps-5 py-3 bg-gray-light rounded-3" placeholder="Email" required>
+                                <div class="form-control-icon d-flex align-items-center top-0 h-100 px-3">
+                                    <i class="bi bi-envelope h-auto"></i>
+                                </div>
+                            </div>
+
+                            <div class="form-group position-relative has-icon-left mt-3">
+                                <input type="password" name="password" class="form-control form-control-lg ps-5 py-3 bg-gray-light rounded-3" placeholder="Kata Sandi" required>
+                                <div class="form-control-icon d-flex align-items-center top-0 h-100 px-3">
+                                    <i class="bi bi-key h-auto"></i>
+                                </div>
+                            </div>
+
+                            <div class="form-group position-relative has-icon-left mt-3">
+                                <input type="password" name="confirm_password" class="form-control form-control-lg ps-5 py-3 bg-gray-light rounded-3" placeholder="Konfirmasi Kata Sandi" required>
+                                <div class="form-control-icon d-flex align-items-center top-0 h-100 px-3">
+                                    <i class="bi bi-key h-auto"></i>
+                                </div>
+                            </div>
+
+                            <button type="button" class="btn btn-primary btn-block btn-lg mt-5 rounded-3 py-3" onclick="submitRegForm()">Daftar Sekarang</button>
+                            <p class="text-center w-100 mt-2 mb-0">Sudah punya akun? <a href="/login" class="text-primary font-semibold">Masuk Disini</a></p>
+                        </div>
+
+                    </form>
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+{% endblock %}
+
+
+{% block script %}
+<script type="text/javascript">
+    const Toast = Swal.mixin({
+        toast: true,
+        position: 'top-end',
+        showConfirmButton: false,
+        timer: 3000,
+        timerProgressBar: true,
+        didOpen: (toast) => {
+            toast.addEventListener('mouseenter', Swal.stopTimer)
+            toast.addEventListener('mouseleave', Swal.resumeTimer)
+        }
+    })
+
+    function toStep(currStep, desStep) {
+
+        var goNext = true
+
+        $(`${currStep} :input:not(button)`).each(function () {
+            if ($(this).val() == "") {
+                $(this).addClass('is-invalid')
+                goNext = false
+            }
+        })
+
+        if (!goNext) {
+            Toast.fire({
+                icon: 'error',
+                title: 'Harap isi semua kolom'
+            })
+
+            return
+        }
+
+        $(`${currStep} :input:not(button)`).each(function () {
+            $(this).removeClass('is-invalid')
+        })
+
+        if (goNext) {
+            $(currStep).addClass('d-none');
+            $(desStep).removeClass('d-none');
+        }
+    }
+
+    function submitRegForm() {
+        var submit = true
+
+        $(`#step-2 :input:not(button)`).each(function () {
+            if ($(this).val() == "") {
+                $(this).addClass('is-invalid')
+                submit = false
+            }
+        })
+
+        if (!submit) {
+            Toast.fire({
+                icon: 'error',
+                title: 'Harap isi semua kolom'
+            })
+
+            return
+        }
+
+        if ($('input[name=password]').val() == $('input[name=confirm_password]').val()) {
+
+            $('input[name=password]').removeClass('is-invalid')
+            $('input[name=confirm_password]').removeClass('is-invalid')
+
+        } else {
+
+            $('input[name=password]').addClass('is-invalid')
+            $('input[name=confirm_password]').addClass('is-invalid')
+
+            Toast.fire({
+                icon: 'error',
+                title: 'Password dan Konfirmasi Password berbeda'
+            })
+
+            submit = false
+        }
+
+        if (submit) {
+            $('#register-form').submit()
+        }
+
+    }
+
+    {% with messages = get_flashed_messages(with_categories = true) %}
+    {% if messages %}
+    {% for category, message in messages %}
+
+    Toast.fire({
+        icon: '{{ category }}',
+        title: '{{ message }}'
+    })
+
+    {% endfor %}
+    {% endif %}
+    {% endwith %}
+
+</script>
+{% endblock %}
