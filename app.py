@@ -1,9 +1,8 @@
 import os
 import pyrebase
-import hashlib
 
 from flask import Flask, session, render_template, request, redirect, url_for, flash
-# from firebase_admin import credentials, firestore, initialize_app, auth
+from firebase_admin import credentials, firestore, initialize_app
 
 
 app = Flask(__name__)
@@ -23,13 +22,11 @@ config = {
 firebase = pyrebase.initialize_app(config)
 auth = firebase.auth()
 
-# cred = credentials.Certificate('key.json')
-# initialize_app(cred)
-# db = firestore.client()
+cred = credentials.Certificate('key.json')
+initialize_app(cred)
+db = firestore.client()
 
-# users_collection = db.collection('users')
-
-new_account = {}
+users_collection = db.collection('users')
 
 
 @app.route('/', methods=['POST', 'GET'])
@@ -55,8 +52,14 @@ def login():
             if session['user_info']['emailVerified'] == False:
                 flash('Email akun anda belum terverifikasi', 'error')
                 return redirect(url_for('login'))
+            
+            status = users_collection.document(user['localId']).get().to_dict().get('status')
 
-            return render_template('dashboard.html')
+            if status == 'Nonaktif':
+                flash('Status akun anda masih nonaktif, segera hubungi admin', 'error')
+                return redirect(url_for('login'))
+
+            return render_template('dashboard.html') 
         
         except Exception as e:
             flash("Email atau password salah", 'error')
@@ -70,19 +73,22 @@ def register():
     new_account = {}
 
     if request.method == 'POST':
-        new_account['nama_lembaga'] = request.form.get('nama')
-        new_account['sektor_lembaga'] = request.form.get('sektor')
-        new_account['telepon_lembaga'] = request.form.get('telepon')
-        new_account['alamat_lembaga'] = request.form.get('alamat')
         password = request.form.get('password')
         confirm = request.form.get('confirm_password')
+        new_account['nama_lembaga'] = request.form.get('nama')
+        new_account['sektor_lembaga'] = request.form.get('sektor')
+        new_account['role'] = request.form.get('role')
+        new_account['telepon_lembaga'] = request.form.get('telepon')
+        new_account['alamat_lembaga'] = request.form.get('alamat')
 
         if password == confirm:
             new_account['email'] = request.form.get('email')
             new_account['password'] = password
+            new_account['status'] = 'Nonaktif'
 
         try:
             user = auth.create_user_with_email_and_password(new_account['email'], new_account['password'])
+            users_collection.document(user['localId']).set(new_account)
             auth.send_email_verification(user['idToken'])
 
             flash('Akun berhasil dibuat, silahkan hubungi admin untuk verifikasi', 'success')
@@ -91,7 +97,6 @@ def register():
         except Exception as e:
             flash(str(e), 'error')
             return redirect(url_for('register'))
-
         
     return render_template('authentication/register.html')
 
