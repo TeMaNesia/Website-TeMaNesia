@@ -1,27 +1,30 @@
 .dataTable-wrapper.no-header .dataTable-container {
-	border-top: 1px solid #d9d9d9;
+	border-top: 1px solid var(--bs-primary);
 }
 
 .dataTable-wrapper.no-footer .dataTable-container {
-	border-bottom: 1px solid #d9d9d9;
+	border-bottom: 1px solid var(--bs-primary);
 }
 
-.dataTable-top,
 .dataTable-bottom {
-	padding: 8px 10px;
+	padding-top: 1.5rem;
 }
 
-.dataTable-top > nav:first-child,
-.dataTable-top > div:first-child,
-.dataTable-bottom > nav:first-child,
-.dataTable-bottom > div:first-child {
+.dataTable-top {
+	padding-bottom: 1.5rem;
+}
+
+.dataTable-top>nav:first-child,
+.dataTable-top>div:first-child,
+.dataTable-bottom>nav:first-child,
+.dataTable-bottom>div:first-child {
 	float: left;
 }
 
-.dataTable-top > nav:last-child,
-.dataTable-top > div:last-child,
-.dataTable-bottom > nav:last-child,
-.dataTable-bottom > div:last-child {
+.dataTable-top>nav:last-child,
+.dataTable-top>div:last-child,
+.dataTable-bottom>nav:last-child,
+.dataTable-bottom>div:last-child {
 	float: right;
 }
 
@@ -59,13 +62,16 @@
 }
 
 .dataTable-pagination a:hover {
-	background-color: #d9d9d9;
+	background-color: var(--bs-primary);
+	color: white;
 }
 
 .dataTable-pagination .active a,
 .dataTable-pagination .active a:focus,
 .dataTable-pagination .active a:hover {
-	background-color: #d9d9d9;
+	background-color: var(--bs-primary);
+	font-weight: 600;
+	color: white;
 	cursor: default;
 }
 
@@ -95,26 +101,50 @@
 	border-collapse: separate;
 }
 
-.dataTable-table > tbody > tr > td,
-.dataTable-table > tbody > tr > th,
-.dataTable-table > tfoot > tr > td,
-.dataTable-table > tfoot > tr > th,
-.dataTable-table > thead > tr > td,
-.dataTable-table > thead > tr > th {
+.dataTable-table>tbody>tr>td,
+.dataTable-table>tbody>tr>th,
+.dataTable-table>tfoot>tr>td,
+.dataTable-table>tfoot>tr>th,
+.dataTable-table>thead>tr>td,
+.dataTable-table>thead>tr>th {
 	vertical-align: top;
-	padding: 8px 10px;
+	padding: 12px 10px;
 }
 
-.dataTable-table > thead > tr > th {
+.dataTable-table>thead>tr>th {
 	vertical-align: bottom;
 	text-align: left;
-	border-bottom: 1px solid #d9d9d9;
+	background-color: rgba(0, 171, 254, 0.2);
+	border-bottom: 0;
+	font-weight: 600;
+	text-align: center;
 }
 
-.dataTable-table > tfoot > tr > th {
+.dataTable-table>tbody:before {
+	content: "@";
+	display: block;
+	line-height: 6px;
+	text-indent: -99999px;
+}
+
+
+.dataTable-table:not(.table-borderless) thead th,
+.table:not(.table-borderless) thead th {
+	border-bottom: 0 !important;
+}
+
+.dataTable-table>thead>tr>th:first-child {
+	border-radius: 0.5rem 0 0 0.5rem;
+}
+
+.dataTable-table>thead>tr>th:last-child {
+	border-radius: 0 0.5rem 0.5rem 0;
+}
+
+.dataTable-table>tfoot>tr>th {
 	vertical-align: bottom;
 	text-align: left;
-	border-top: 1px solid #d9d9d9;
+	border-top: 1px solid var(--bs-primary);
 }
 
 .dataTable-table th {
@@ -143,30 +173,31 @@
 	right: 4px;
 	border-left: 4px solid transparent;
 	border-right: 4px solid transparent;
-	opacity: 0.2;
+	opacity: 0.5;
 }
 
 .dataTable-sorter::before {
-	border-top: 4px solid #000;
+	border-top: 4px solid var(--bs-primary);
 	bottom: 0px;
 }
 
 .dataTable-sorter::after {
-	border-bottom: 4px solid #000;
+	border-bottom: 4px solid var(--bs-primary);
 	border-top: 4px solid transparent;
 	top: 0px;
 }
 
 .asc .dataTable-sorter::after,
 .desc .dataTable-sorter::before {
-	opacity: 0.6;
+	opacity: 1;
 }
 
 .dataTables-empty {
 	text-align: center;
 }
 
-.dataTable-top::after, .dataTable-bottom::after {
+.dataTable-top::after,
+.dataTable-bottom::after {
 	clear: both;
 	content: " ";
 	display: table;

@@ -132,18 +132,18 @@ screen and (-ms-high-contrast:active) {
     --bs-gray-light: #F8F8F8;
     --bs-primary: #00ABFE;
     --bs-secondary: #FDBB2E;
-    --bs-success: #198754;
-    --bs-info: #0dcaf0;
-    --bs-warning: #ffc107;
-    --bs-danger: #dc3545;
+    --bs-success: #3DC6A6;
+    --bs-info: #00ABFE;
+    --bs-warning: #FDBB2E;
+    --bs-danger: #FD443A;
     --bs-light: #f8f9fa;
     --bs-dark: #f2f7ff;
     --bs-primary-rgb: 0, 171, 254;
     --bs-secondary-rgb: 253, 187, 46;
-    --bs-success-rgb: 25, 135, 84;
-    --bs-info-rgb: 13, 202, 240;
-    --bs-warning-rgb: 255, 193, 7;
-    --bs-danger-rgb: 220, 53, 69;
+    --bs-success-rgb: 61, 198, 166;
+    --bs-info-rgb: 0, 171, 254;
+    --bs-warning-rgb: 253, 187, 46;
+    --bs-danger-rgb: 253, 68, 58;
     --bs-light-rgb: 248, 249, 250;
     --bs-dark-rgb: 242, 247, 255;
     --bs-white-rgb: 255, 255, 255;
@@ -164,6 +164,7 @@ screen and (-ms-high-contrast:active) {
     --bs-border-color: #dee2e6;
     --bs-border-color-translucent: rgba(0, 0, 0, .175);
     --bs-border-radius: 0.25rem;
+    --bs-border-radius-05: 0.5rem;
     --bs-border-radius-sm: 0.2rem;
     --bs-border-radius-lg: 0.7rem;
     --bs-border-radius-xl: 1rem;
@@ -220,7 +221,7 @@ h3,
 h4,
 h5,
 h6 {
-    color: #25396f;
+    color: var(--bs-primary);
     font-family: 'Montserrat', sans-serif;
     font-weight: 700;
     line-height: 1.2;
@@ -5375,15 +5376,15 @@ fieldset:disabled .btn {
 }
 
 .badge {
-    --bs-badge-padding-x: 0.65em;
-    --bs-badge-padding-y: 0.35em;
-    --bs-badge-font-size: 0.85em;
-    --bs-badge-font-weight: 700;
+    --bs-badge-padding-x: 0.5rem;
+    --bs-badge-padding-y: 0.25rem;
+    --bs-badge-font-size: 0.8rem;
+    --bs-badge-font-weight: 600;
     --bs-badge-color: #fff;
     --bs-badge-border-radius: 0.25rem;
     border-radius: var(--bs-badge-border-radius);
     color: var(--bs-badge-color);
-    display: inline-block;
+    /* display: inline-block; */
     font-size: var(--bs-badge-font-size);
     font-weight: var(--bs-badge-font-weight);
     line-height: 1;
@@ -9326,20 +9327,48 @@ fieldset:disabled .btn {
     --bs-bg-opacity: 0.1
 }
 
-.bg-opacity-25 {
-    --bs-bg-opacity: 0.25
+.bg-opacity-20 {
+    --bs-bg-opacity: 0.2
+}
+
+.bg-opacity-30 {
+    --bs-bg-opacity: 0.3
+}
+
+.bg-opacity-40 {
+    --bs-bg-opacity: 0.4
 }
 
 .bg-opacity-50 {
     --bs-bg-opacity: 0.5
 }
 
-.bg-opacity-75 {
-    --bs-bg-opacity: 0.75
+.bg-opacity-60 {
+    --bs-bg-opacity: 0.6
+}
+
+.bg-opacity-70 {
+    --bs-bg-opacity: 0.7
+}
+
+.bg-opacity-80 {
+    --bs-bg-opacity: 0.8
+}
+
+.bg-opacity-90 {
+    --bs-bg-opacity: 0.9
 }
 
 .bg-opacity-100 {
     --bs-bg-opacity: 1
+}
+
+.bg-opacity-25 {
+    --bs-bg-opacity: 0.25
+}
+
+.bg-opacity-75 {
+    --bs-bg-opacity: 0.75
 }
 
 .bg-gradient {
@@ -9375,6 +9404,11 @@ fieldset:disabled .btn {
 .rounded {
     border-radius: var(--bs-border-radius) !important
 }
+
+.rounded-05 {
+    border-radius: var(--bs-border-radius-05) !important
+}
+
 
 .rounded-0 {
     border-radius: 0 !important
@@ -21225,7 +21259,7 @@ body .bi:before {
 .sidebar-wrapper .sidebar-toggler.x {
     display: none;
     position: absolute;
-    right: 1.75rem;
+    right: 1rem;
     top: .25rem
 }
 
@@ -21711,38 +21745,38 @@ body .bi:before {
 }
 
 .pagination.pagination-primary .page-item.active .page-link {
-    background-color: #435ebe;
-    border-color: #435ebe;
+    background-color: var(--bs-primary);
+    border-color: var(--bs-primary);
     box-shadow: 0 2px 5px rgba(67, 94, 190, .3)
 }
 
 .pagination.pagination-secondary .page-item.active .page-link {
-    background-color: #6c757d;
-    border-color: #6c757d;
+    background-color: var(--bs-secondary);
+    border-color: var(--bs-secondary);
     box-shadow: 0 2px 5px hsla(208, 7%, 46%, .3)
 }
 
 .pagination.pagination-success .page-item.active .page-link {
-    background-color: #198754;
-    border-color: #198754;
+    background-color: var(--bs-success);
+    border-color: var(--bs-success);
     box-shadow: 0 2px 5px rgba(25, 135, 84, .3)
 }
 
 .pagination.pagination-info .page-item.active .page-link {
-    background-color: #0dcaf0;
-    border-color: #0dcaf0;
+    background-color: var(--bs-info);
+    border-color: var(--bsinfo-);
     box-shadow: 0 2px 5px rgba(13, 202, 240, .3)
 }
 
 .pagination.pagination-warning .page-item.active .page-link {
-    background-color: #ffc107;
-    border-color: #ffc107;
+    background-color: var(--bs-warning);
+    border-color: var(--bs-warning);
     box-shadow: 0 2px 5px rgba(255, 193, 7, .3)
 }
 
 .pagination.pagination-danger .page-item.active .page-link {
-    background-color: #dc3545;
-    border-color: #dc3545;
+    background-color: var(--bs-danger);
+    border-color: var(--bs-danger);
     box-shadow: 0 2px 5px rgba(220, 53, 69, .3)
 }
 

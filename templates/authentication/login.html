@@ -2,13 +2,17 @@
 
 {% block title %} Masuk {% endblock %}
 
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/pages/auth.css') }}">
+{% endblock %}
+
 {% block body %}
 <div id="auth">
 
     <div class="d-flex justify-content-center align-items-center vh-100">
 
-        <div class="col-lg-4 col-12">
-            <div class="card rounded-4 p-3">
+        <div class="col-xl-4 col-lg-6 col-md-8 col-sm-10 col-12">
+            <div class="card rounded-4 p-3 mb-0">
                 <div class="card-content rounded-4 bg-white px-5 py-5 text-center">
                     <form action="/login" method="POST">
                         <img src="{{ url_for('static', filename='images/logo-1.png' ) }}" alt="Logo" class="text-center" style="width: 160px;">

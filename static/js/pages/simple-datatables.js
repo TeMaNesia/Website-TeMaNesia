@@ -37,8 +37,8 @@ function adaptPagination() {
 
 // Patch "per page dropdown" and pagination after table rendered
 dataTable.on("datatable.init", function () {
-    adaptPageDropdown();
-    adaptPagination();
+  adaptPageDropdown();
+  adaptPagination();
 });
 
 // Re-patch pagination after the page was changed
