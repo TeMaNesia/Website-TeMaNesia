@@ -31,10 +31,11 @@ users_collection = db.collection('users')
 
 @app.route('/', methods=['POST', 'GET'])
 def index():
-    if('user' not in session):
+    if('user_info' not in session):
         return redirect('/login')
-    
-    return render_template('dashboard.html')
+    else:
+        flash('Selamat datang di TeMaNesia', 'success')
+        return redirect(url_for('dashboard', role='admin', page='verification'))
 
 
 @app.route('/login', methods=['POST', 'GET'])
@@ -110,6 +111,15 @@ def email_verification():
 def logout():
     session.pop('user_info')
     return redirect('/')
+
+
+@app.route('/dashboard/<role>/<page>')
+def dashboard(role, page):
+    print(role)
+    print(session['user_info'])
+    print(f'dashboard/{role}/{page}.html')
+    return render_template(f'dashboard/{role}/{page}.html', user = session['user_info'], role = role)
+
 
 
 @app.errorhandler(403)

@@ -8,8 +8,11 @@
     <title>{% block title %}{% endblock %} - TeMaNesia</title>
 
     <link rel="stylesheet" href="{{ url_for('static', filename='css/main/app.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/pages/auth.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main/app-dark.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='extensions/sweetalert2/sweetalert2.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='extensions/simple-datatables/style.css') }}">
+
+    {% block head %}{% endblock %}
 
     <link rel="apple-touch-icon" sizes="180x180" href="{{ url_for('static', filename='images/favicons/apple-touch-icon.png') }}">
     <link rel="icon" type="image/png" sizes="32x32" href="{{ url_for('static', filename='images/favicons/favicon-32x32.png') }}">
@@ -21,12 +24,17 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-    <script src="{{ url_for('static', filename='js/pages/jquery.js') }}"></script>
-    <script src="{{ url_for('static', filename='extensions/sweetalert2/sweetalert2.min.js') }}"></script>
 </head>
 
 <body>
     {% block body %}{% endblock %}
+
+    <script src="{{ url_for('static', filename='js/bootstrap.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/pages/jquery.js') }}"></script>
+    <script src="{{ url_for('static', filename='extensions/sweetalert2/sweetalert2.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='extensions/simple-datatables/umd/simple-datatables.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/pages/simple-datatables.js') }}"></script>
 </body>
 
 {% block script %}{% endblock %}

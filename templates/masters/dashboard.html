@@ -1,0 +1,105 @@
+{% extends 'masters/base.html' %}
+
+{% block title %}{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/pages/simple-datatables.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/pages/sidebar.css') }}">
+{% endblock %}
+
+{% block body %}
+<div id="app">
+    <div id="sidebar" class="active">
+        <div class="sidebar-wrapper active">
+            <div class="sidebar-header position-relative">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div class="logo">
+                        <a href="/"><img src="{{ url_for('static', filename='images/logo-2.png') }}" alt="Logo" srcset="" style="height: 2.5rem; margin-left: 1rem;"></a>
+                    </div>
+                    <div class="sidebar-toggler  x">
+                        <a href="#" class="sidebar-hide d-xl-none d-block"><i class="bi bi-x bi-middle text-primary"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="sidebar-menu">
+                <ul class="menu">
+                    <li class="sidebar-title mt-5">Info Pengguna</li>
+                    <li class="sidebar-item">
+                        <p class="ms-3 mb-0">{{ user['email'] }}</p>
+                        <span class="ms-3 badge bg-primary bg-opacity-20 text-primary">{{ role }}</span>
+                    </li>
+
+                    <li class="sidebar-title mt-5">Menu</li>
+
+                    {% block menu %}{% endblock %}
+
+                    <li class="sidebar-item mt-5 bottom">
+                        <a href="/logout" class='sidebar-link bg-danger rounded-05 logout' style="color: white !important; font-weight: 600 !important;">
+                            <i class="bi bi-box-arrow-left" style="color: white !important; font-weight: 600 !important;"></i>
+                            <span>Logout</span>
+                        </a>
+                    </li>
+
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div id="main">
+        <header class="mb-3 mb-xl-0">
+            <a href="#" class="burger-btn d-block d-xl-none">
+                <i class="bi bi-justify fs-3 text-primary"></i>
+            </a>
+        </header>
+
+        <div class="page-heading mt-0">
+            <section class="section">
+                {% block page_content %}{% endblock %}
+            </section>
+        </div>
+
+        <footer>
+            <div class="footer clearfix mb-0 text-muted">
+                <div class="float-start">
+                    <p>2023 &copy; TeMaNesia</p>
+                </div>
+                <div class="float-end">
+                    <p>Modified <a href="https://github.com/zuramai/mazer">Mazer</a> template by TeMaNesia</p>
+                </div>
+            </div>
+        </footer>
+    </div>
+</div>
+
+{% endblock %}
+
+
+{% block script %}
+<script type="text/javascript">
+
+    const Toast = Swal.mixin({
+        toast: true,
+        position: 'top-end',
+        showConfirmButton: false,
+        timer: 3000,
+        timerProgressBar: true,
+        didOpen: (toast) => {
+            toast.addEventListener('mouseenter', Swal.stopTimer)
+            toast.addEventListener('mouseleave', Swal.resumeTimer)
+        }
+    })
+
+    {% with messages = get_flashed_messages(with_categories = true) %}
+    {% if messages %}
+    {% for category, message in messages %}
+
+    Toast.fire({
+        icon: '{{ category }}',
+        title: '{{ message }}'
+    })
+
+    {% endfor %}
+    {% endif %}
+    {% endwith %}
+
+</script>
+{% endblock %}
