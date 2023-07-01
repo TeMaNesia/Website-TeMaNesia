@@ -1,8 +1,12 @@
 import os
 import pyrebase
+import locale
+import json
 
+from requests.exceptions import HTTPError
 from flask import Flask, session, render_template, request, redirect, url_for, flash
 from firebase_admin import credentials, firestore, initialize_app
+from datetime import datetime
 
 
 app = Flask(__name__)
@@ -26,6 +30,8 @@ cred = credentials.Certificate('key.json')
 initialize_app(cred)
 db = firestore.client()
 
+locale.setlocale(locale.LC_TIME, 'id_ID.utf8')
+
 users_collection = db.collection('users')
 
 
@@ -33,14 +39,15 @@ users_collection = db.collection('users')
 def index():
     if('user_info' not in session):
         return redirect('/login')
+    
     else:
         flash('Selamat datang di TeMaNesia', 'success')
-        return redirect(url_for('dashboard', role='admin', page='verification'))
+        if session['user_info']['role'] == 'Admin':
+            return redirect(url_for('dashboard', role='admin', page='verification'))
 
 
 @app.route('/login', methods=['POST', 'GET'])
 def login():
-
     if request.method == 'POST':
         email = request.form.get('email')
         password = request.form.get('password')
@@ -54,13 +61,19 @@ def login():
                 flash('Email akun anda belum terverifikasi', 'error')
                 return redirect(url_for('login'))
             
-            status = users_collection.document(user['localId']).get().to_dict().get('status')
+            data = users_collection.document(session['user_info']['localId']).get().to_dict()
+            session['user_info']['role'] = data.get('role')
+            session['user_info']['nama_lembaga'] = data.get('nama_lembaga')
 
-            if status == 'Nonaktif':
-                flash('Status akun anda masih nonaktif, segera hubungi admin', 'error')
-                return redirect(url_for('login'))
-
-            return render_template('dashboard.html') 
+            if session['user_info']['role'] != 'Admin':
+                if data.get('status') == 'Nonaktif':
+                    flash('Status akun anda masih nonaktif, segera hubungi admin', 'error')
+                    return redirect(url_for('login'))
+                
+            flash('Selamat datang di TeMaNesia', 'success')
+            if session['user_info']['role'] == 'Admin':
+                session['user_info']['users_data'] = get_users_data()
+                return redirect(url_for('dashboard', role='admin', page='verification'))
         
         except Exception as e:
             flash("Email atau password salah", 'error')
@@ -74,18 +87,16 @@ def register():
     new_account = {}
 
     if request.method == 'POST':
-        password = request.form.get('password')
-        confirm = request.form.get('confirm_password')
         new_account['nama_lembaga'] = request.form.get('nama')
         new_account['sektor_lembaga'] = request.form.get('sektor')
         new_account['role'] = request.form.get('role')
         new_account['telepon_lembaga'] = request.form.get('telepon')
         new_account['alamat_lembaga'] = request.form.get('alamat')
 
-        if password == confirm:
-            new_account['email'] = request.form.get('email')
-            new_account['password'] = password
-            new_account['status'] = 'Nonaktif'
+        new_account['email'] = request.form.get('email')
+        new_account['password'] = request.form.get('password')
+        new_account['status'] = 'Nonaktif'
+        new_account['tanggal_daftar'] = datetime.now().strftime("%d %B %Y")
 
         try:
             user = auth.create_user_with_email_and_password(new_account['email'], new_account['password'])
@@ -95,8 +106,8 @@ def register():
             flash('Akun berhasil dibuat, silahkan hubungi admin untuk verifikasi', 'success')
             return redirect(url_for('email_verification'))
 
-        except Exception as e:
-            flash(str(e), 'error')
+        except HTTPError as e:
+            flash(json.loads(e.strerror)['error']['message'], 'error')
             return redirect(url_for('register'))
         
     return render_template('authentication/register.html')
@@ -115,11 +126,7 @@ def logout():
 
 @app.route('/dashboard/<role>/<page>')
 def dashboard(role, page):
-    print(role)
-    print(session['user_info'])
-    print(f'dashboard/{role}/{page}.html')
-    return render_template(f'dashboard/{role}/{page}.html', user = session['user_info'], role = role)
-
+    return render_template(f'dashboard/{role}/{page}.html', user=session['user_info'])
 
 
 @app.errorhandler(403)
@@ -135,6 +142,15 @@ def system_error(e):
     return render_template('errors/error-500.html'), 500
 
 
+def get_users_data():
+    documents = users_collection.where('role', '!=', 'Admin').stream()
+
+    data = []
+    for doc in documents:
+        doc_data = doc.to_dict()
+        data.append(doc_data)
+
+    return data
 
 port = int(os.environ.get('PORT', 5000))
 if __name__ == '__main__':

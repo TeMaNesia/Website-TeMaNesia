@@ -182,13 +182,24 @@
             return
         }
 
-        if ($('input[name=password]').val() == $('input[name=confirm_password]').val()) {
+        
+        if ($('input[name=password]').val().length < 6){
+            $('input[name=password]').addClass('is-invalid')
 
+            Toast.fire({
+                icon: 'error',
+                title: 'Password tidak boleh kurang dari 6 digit'
+            })
+
+            submit = false
+        }
+
+        else if ($('input[name=password]').val() == $('input[name=confirm_password]').val()) {
             $('input[name=password]').removeClass('is-invalid')
             $('input[name=confirm_password]').removeClass('is-invalid')
+        } 
 
-        } else {
-
+        else {
             $('input[name=password]').addClass('is-invalid')
             $('input[name=confirm_password]').addClass('is-invalid')
 
