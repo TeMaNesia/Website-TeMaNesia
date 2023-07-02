@@ -126,6 +126,9 @@ def logout():
 
 @app.route('/dashboard/<role>/<page>')
 def dashboard(role, page):
+    if('user_info' not in session):
+        return redirect('/')
+
     return render_template(f'dashboard/{role}/{page}.html', user=session['user_info'])
 
 
