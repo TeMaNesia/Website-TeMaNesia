@@ -9,74 +9,255 @@
         <p class="text-subtitle mb-0">Manajemen penyelengaraan lomba lembaga anda di halaman ini.</p>
     </div>
     <div class="card-body">
+        <button class="btn btn-primary rounded-05 mb-4" data-bs-toggle="modal" data-bs-target="#addLombaForm">Tambah Lomba</button>
         <table class="table" id="table1">
             <thead>
                 <tr>
-                    <th>Name</th>
-                    <th>Email</th>
-                    <th>Phone</th>
-                    <th>City</th>
-                    <th>Status</th>
+                    <th>Nama</th>
+                    <th>Tanggal</th>
+                    <th>URL</th>
+                    <th>Aksi</th>
                 </tr>
             </thead>
             <tbody>
+                {% for lomba in data_lomba %}
+
                 <tr>
-                    <td>Graiden</td>
-                    <td>vehicula.aliquet@semconsequat.co.uk</td>
-                    <td>076 4820 8838</td>
-                    <td>Offenburg</td>
-                    <td>
-                        <span class="badge bg-primary bg-opacity-20 text-primary">Active</span>
-                    </td>
-                </tr>
-                <tr>
-                    <td>Dale</td>
-                    <td>fringilla.euismod.enim@quam.ca</td>
-                    <td>0500 527693</td>
-                    <td>New Quay</td>
-                    <td>
-                        <span class="badge bg-secondary bg-opacity-20 text-secondary">Active</span>
-                    </td>
-                </tr>
-                <tr>
-                    <td>Nathaniel</td>
-                    <td>mi.Duis@diam.edu</td>
-                    <td>(012165) 76278</td>
-                    <td>Grumo Appula</td>
-                    <td>
-                        <span class="badge bg-success bg-opacity-20 text-success">Inactive</span>
-                    </td>
-                </tr>
-                <tr>
-                    <td>Darius</td>
-                    <td>velit@nec.com</td>
-                    <td>0309 690 7871</td>
-                    <td>Ways</td>
-                    <td>
-                        <span class="badge bg-warning bg-opacity-20 text-warning">Active</span>
-                    </td>
-                </tr>
-                <tr>
-                    <td>Oleg</td>
-                    <td>rhoncus.id@Aliquamauctorvelit.net</td>
-                    <td>0500 441046</td>
-                    <td>Rossignol</td>
-                    <td>
-                        <span class="badge bg-danger bg-opacity-20 text-danger">Active</span>
-                    </td>
-                </tr>
-                <tr>
-                    <td>Kermit</td>
-                    <td>diam.Sed.diam@anteVivamusnon.org</td>
-                    <td>(01653) 27844</td>
-                    <td>Patna</td>
-                    <td>
-                        <span class="badge bg-info bg-opacity-20 text-info">Active</span>
+                    <td>{{ lomba['nama'] }}</td>
+                    <td>{{ lomba['date'] }}</td>
+                    <td>{{ lomba['url'] }}</td>
+                    <td class="text-center">
+
+                        <span class="badge bg-warning bg-opacity-20 text-warning fs-6 py-2 hover-zoom" onclick="editLomba('{{ lomba['id'] }}')">
+                            <i class="bi bi-pencil fs-6"></i>
+                        </span>
+
+                        <span class="badge bg-danger bg-opacity-20 text-danger fs-6 py-2 hover-zoom" onclick="deleteLomba('{{ lomba['id'] }}')">
+                            <i class="bi bi-trash3 fs-6"></i>
+                        </span>
+
+                        <span class="badge bg-primary bg-opacity-20 text-primary fs-6 py-2 hover-zoom" onclick="showDetail('{{ lomba['id'] }}')">
+                            <i class="bi bi-eye fs-6"></i>
+                        </span>
+
                     </td>
                 </tr>
 
+                {% endfor %}
             </tbody>
         </table>
     </div>
 </div>
+
+<div class="modal fade text-left modal-borderless" id="addLombaForm" tabindex="-1" aria-labelledby="addLombaFormLabel" style="display: none;" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
+        <div class="modal-content rounded-4">
+            <div class="modal-header">
+                <h4 class="modal-title" id="addLombaFormLabel">
+                    Form Tambah Lomba
+                </h4>
+                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-x">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+            <form action="/add-lomba" method="POST">
+                <div class="modal-body">
+
+                    <label for="nama">Nama Lomba: </label>
+                    <div class="form-group mb-3">
+                        <input id="nama" name="nama" type="text" placeholder="Nama lomba" class="form-control form-control-lg py-2 bg-gray-light rounded-05" required>
+                    </div>
+
+                    <label for="url">URL Lomba: </label>
+                    <div class="form-group mb-3">
+                        <input id="url" name="url" type="text" placeholder="URL lomba" class="form-control form-control-lg py-2 bg-gray-light rounded-05" required>
+                    </div>
+
+                    <label for="date">Tanggal Pelaksanaan Lomba: </label>
+                    <div class="form-group">
+                        <input id="date" type="text" name="date" class="form-control form-control-lg py-2 bg-gray-light rounded-05 flatpickr-no-config flatpickr-input active" placeholder="Klik untuk pilih tanggal" readonly="readonly" required>
+                    </div>
+
+                    <input type="hidden" name="penyelenggara_uid" value="{{ user['localId'] }}">
+
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary rounded-05">Submit</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade text-left modal-borderless" id="editLombaForm" tabindex="-1" aria-labelledby="editLombaFormLabel" style="display: none;" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
+        <div class="modal-content rounded-4">
+            <div class="modal-header">
+                <h4 class="modal-title" id="editLombaFormLabel">
+                    Ubah Data Lomba
+                </h4>
+                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-x">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+            <form action="/edit-lomba" method="POST">
+                <div class="modal-body">
+
+                    <label for="edt_nama">Nama Lomba: </label>
+                    <div class="form-group mb-3">
+                        <input id="edt_nama" name="nama" type="text" placeholder="Nama lomba" class="form-control form-control-lg py-2 bg-gray-light rounded-05" required>
+                    </div>
+
+                    <label for="edt_url">URL Lomba: </label>
+                    <div class="form-group mb-3">
+                        <input id="edt_url" name="url" type="text" placeholder="URL lomba" class="form-control form-control-lg py-2 bg-gray-light rounded-05" required>
+                    </div>
+
+                    <label for="edt_date">Tanggal Pelaksanaan Lomba: </label>
+                    <div class="form-group">
+                        <input id="edt_date" type="text" name="date" class="form-control form-control-lg py-2 bg-gray-light rounded-05 flatpickr-no-config flatpickr-input active" placeholder="Klik untuk pilih tanggal" readonly="readonly" required>
+                    </div>
+
+                    <input type="hidden" name="penyelenggara_uid" value="{{ user['localId'] }}">
+                    <input id="edt_created_at" type="hidden" name="created_at">
+                    <input id="edt_id" type="hidden" name="id">
+
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary rounded-05">Submit</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade text-left modal-borderless" id="detailLomba" tabindex="-1" aria-labelledby="detailLombaLabel" style="display: none;" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
+        <div class="modal-content rounded-4">
+            <div class="modal-header">
+                <h4 class="modal-title" id="detailLombaLabel">
+                    Detail Lomba
+                </h4>
+                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-x">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+            <div class="modal-body">
+                <label for="view_nama">Nama Lomba: </label>
+                <div class="form-group mb-3">
+                    <input id="view_nama" type="text" class="form-control form-control-lg py-2 bg-gray-light rounded-05" value="aa" readonly="readonly" disabled>
+                </div>
+
+                <label for="view_url">URL Lomba: </label>
+                <div class="form-group mb-3">
+                    <input id="view_url" type="text" class="form-control form-control-lg py-2 bg-gray-light rounded-05" value="bb" readonly="readonly" disabled>
+                </div>
+
+                <label for="view_date">Tanggal Pelaksanaan Lomba: </label>
+                <div class="form-group">
+                    <input id="view_date" type="text" class="form-control form-control-lg py-2 bg-gray-light rounded-05" value="cc" readonly="readonly" disabled>
+                </div>
+
+                <input type="hidden" name="penyelenggara_uid" value="{{ user['localId'] }}">
+
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary rounded-05" data-bs-dismiss="modal">Tutup</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block script %}
+
+<script>
+    flatpickr('.flatpickr-no-config', {
+        dateFormat: "Y-m-d",
+    })
+
+    const Toast = Swal.mixin({
+        toast: true,
+        position: 'top-end',
+        showConfirmButton: false,
+        timer: 3000,
+        timerProgressBar: true,
+        didOpen: (toast) => {
+            toast.addEventListener('mouseenter', Swal.stopTimer)
+            toast.addEventListener('mouseleave', Swal.resumeTimer)
+        }
+    })
+
+    {% with messages = get_flashed_messages(with_categories = true) %}
+    {% if messages %}
+    {% for category, message in messages %}
+
+    Toast.fire({
+        icon: '{{ category }}',
+        title: '{{ message }}'
+    })
+
+    {% endfor %}
+    {% endif %}
+    {% endwith %}
+
+    var detailLombaModal = new bootstrap.Modal($('#detailLomba'));
+    var editLombaModal = new bootstrap.Modal($('#editLombaForm'));
+
+    function showDetail(docId) {
+        $.get(`/get-lomba/${docId}`, function (data) {
+            $('#view_nama').val(data.nama)
+            $('#view_date').val(data.date)
+            $('#view_url').val(data.url)
+            detailLombaModal.show()
+        })
+    }
+
+    function editLomba(docId) {
+        $.get(`/get-lomba/${docId}`, function (data) {
+            $('#edt_nama').val(data.nama)
+            $('#edt_date').val(data.date)
+            $('#edt_url').val(data.url)
+            $('#edt_created_at').val(data.created_at)
+            $('#edt_id').val(docId)
+            editLombaModal.show()
+        })
+    }
+
+    const swalCustom = Swal.mixin({
+        customClass: {
+            confirmButton: 'btn btn-danger rounded-05 me-3',
+            cancelButton: 'btn btn-outline-danger rounded-05',
+            popup: 'rounded-4 py-5 px-3',
+            icon: 'mt-0'
+        },
+        buttonsStyling: false
+    })
+
+    function deleteLomba(docId) {
+        swalCustom.fire({
+            title: 'Hapus Lomba?',
+            text: "Apakah anda yakin akan menghapus lomba? Anda tidak dapat mengembalikan lomba yang sudah dihapus.",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: '&nbsp;&nbsp;&nbsp;Ya&nbsp;&nbsp;&nbsp;',
+            cancelButtonText: 'Tidak',
+        }).then((result) => {
+            if (result.isConfirmed) {
+                window.open(`/delete-lomba/${docId}`, "_self");
+            }
+        })
+    }
+
+</script>
+
 {% endblock %}

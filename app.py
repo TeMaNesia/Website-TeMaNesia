@@ -4,7 +4,7 @@ import locale
 import json
 
 from requests.exceptions import HTTPError
-from flask import Flask, session, render_template, request, redirect, url_for, flash
+from flask import Flask, session, render_template, request, redirect, url_for, flash, Response, jsonify
 from firebase_admin import credentials, firestore, initialize_app
 from datetime import datetime
 
@@ -66,7 +66,11 @@ def login():
             session['user_info']['nama_lembaga'] = data.get('nama_lembaga')
 
             if session['user_info']['role'] != 'Admin':
-                if data.get('status') == 'Nonaktif':
+                if data.get('status') == 'Aktif':
+                    session['user_info']['users_data'] = get_users_data()
+                    flash('Selamat datang di TeMaNesia', 'success')
+                    return redirect(url_for('dashboard', role=session['user_info']['role'], page='lomba'))
+                else:
                     flash('Status akun anda masih nonaktif, segera hubungi admin', 'error')
                     return redirect(url_for('login'))
                 
@@ -129,7 +133,84 @@ def dashboard(role, page):
     if('user_info' not in session):
         return redirect('/')
 
-    return render_template(f'dashboard/{role}/{page}.html', user=session['user_info'])
+    if role=='Penyelenggara Lomba':
+        if page=='lomba':
+            all_data = get_all_user_lomba(session['user_info']['localId'])
+            return render_template(f'dashboard/lomba/{page}.html', user=session['user_info'], data_lomba=all_data)
+
+    # return render_template(f'dashboard/{role}/{page}.html', user=session['user_info'])
+
+
+@app.route('/add-lomba', methods=['POST'])
+def add_lomba():
+
+    new_lomba = {}
+
+    if request.method == 'POST':
+        new_lomba['nama'] = request.form.get('nama')
+        new_lomba['date'] = datetime.strptime(request.form.get('date'), '%Y-%m-%d') ## Bener
+        new_lomba['penyelenggara_uid'] = request.form.get('penyelenggara_uid')
+        new_lomba['url'] = request.form.get('url')
+        new_lomba['created_at'] = datetime.now()
+
+        try:
+            db.collection('lomba').document().set(new_lomba)
+            flash('Lomba baru berhasil ditambahkan', 'success')
+            return redirect(url_for('dashboard', role=session['user_info']['role'], page='lomba'))
+
+        except HTTPError as e:
+            flash(json.loads(e.strerror)['error']['message'], 'error')
+            return redirect(url_for('dashboard', role=session['user_info']['role'], page='lomba'))
+
+    return render_template('errors/error-404.html'), 404
+
+
+@app.route('/edit-lomba', methods=['POST'])
+def edit_lomba():
+
+    edited_lomba = {}
+
+    if request.method == 'POST':
+        edited_lomba['nama'] = request.form.get('nama')
+        edited_lomba['date'] = datetime.strptime(request.form.get('date'), '%Y-%m-%d')
+        edited_lomba['penyelenggara_uid'] = request.form.get('penyelenggara_uid')
+        edited_lomba['url'] = request.form.get('url')
+        edited_lomba['created_at'] = request.form.get('created_at')
+
+        try:
+            db.collection('lomba').document(request.form.get('id')).set(edited_lomba)
+            flash('Data lomba berhasil diperbaharui', 'success')
+            return redirect(url_for('dashboard', role=session['user_info']['role'], page='lomba'))
+
+        except HTTPError as e:
+            flash(json.loads(e.strerror)['error']['message'], 'error')
+            return redirect(url_for('dashboard', role=session['user_info']['role'], page='lomba'))
+
+    return render_template('errors/error-404.html'), 404
+
+
+@app.route('/get-lomba/<id>', methods=['GET'])
+def get_lomba(id):
+
+    data = db.collection('lomba').document(id).get()
+
+    data_dict = data.to_dict()
+    data_dict['date'] = data_dict['date'].strftime("%Y-%m-%d")
+
+    return jsonify(data_dict)
+
+
+@app.route('/delete-lomba/<id>', methods=['GET'])
+def delete_lomba(id):
+
+    try:
+        db.collection('lomba').document(id).delete()
+        flash('Berhasil hapus lomba', 'success')
+        return redirect(url_for('dashboard', role=session['user_info']['role'], page='lomba'))
+    
+    except HTTPError as e:
+        flash(json.loads(e.strerror)['error']['message'], 'error')
+        return redirect(url_for('dashboard', role=session['user_info']['role'], page='lomba'))
 
 
 @app.errorhandler(403)
@@ -154,6 +235,23 @@ def get_users_data():
         data.append(doc_data)
 
     return data
+
+
+
+def get_all_user_lomba(user_id):
+    documents = db.collection('lomba').where("penyelenggara_uid", "==", user_id).order_by("created_at", direction=firestore.Query.DESCENDING).stream()
+
+    print(documents)
+
+    data = []
+    for doc in documents:
+        doc_dict = doc.to_dict()
+        doc_dict['date'] = doc_dict['date'].strftime("%d %B %Y")
+        doc_dict['id'] = doc.id
+        data.append(doc_dict)
+
+    return data
+
 
 port = int(os.environ.get('PORT', 5000))
 if __name__ == '__main__':
