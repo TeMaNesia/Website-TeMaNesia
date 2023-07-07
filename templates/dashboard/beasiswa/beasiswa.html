@@ -1,44 +1,44 @@
-{% extends 'dashboard/lomba/master.html' %}
+{% extends 'dashboard/beasiswa/master.html' %}
 
-{% block title %} Lomba {% endblock %}
+{% block title %} Beasiswa {% endblock %}
 
 {% block page_content %}
 <div class="card">
     <div class="card-header mb-0">
-        <h3>Daftar Lomba</h3>
-        <p class="text-subtitle mb-0">Manajemen penyelengaraan lomba lembaga anda di halaman ini.</p>
+        <h3>Daftar Beasiswa</h3>
+        <p class="text-subtitle mb-0">Manajemen penyelengaraan beasiswa lembaga anda di halaman ini.</p>
     </div>
     <div class="card-body">
-        <button class="btn btn-primary rounded-05 mb-4" data-bs-toggle="modal" data-bs-target="#addLombaForm">Tambah Lomba</button>
+        <button class="btn btn-primary rounded-05 mb-4" data-bs-toggle="modal" data-bs-target="#addBeasiswaForm">Tambah Beasiswa</button>
         <table class="table" id="table1">
             <thead>
                 <tr>
-                    <th>Nama Lomba</th>
-                    <th>Tanggal Lomba</th>
+                    <th>Nama Beasiswa</th>
+                    <th>Tanggal Beasiswa</th>
                     <th>Status</th>
                     <th>Aksi</th>
                 </tr>
             </thead>
             <tbody>
-                {% for lomba in data_lomba %}
+                {% for beasiswa in data_beasiswa %}
 
                 <tr>
-                    <td style="width: 40%;">{{ lomba['nama'] }}</td>
-                    <td class="text-center">{{ lomba['date'] }}</td>
+                    <td style="width: 40%;">{{ beasiswa['nama'] }}</td>
+                    <td class="text-center">{{ beasiswa['date'] }}</td>
                     <td class="text-center">
-                        <span class="badge bg-{% if lomba['status'] == 'Nonaktif' %}danger{% else %}success{% endif %} bg-opacity-20 text-{% if lomba['status'] == 'Nonaktif' %}danger{% else %}success{% endif %}">{{ lomba['status'] }}</span>
+                        <span class="badge bg-{% if beasiswa['status'] == 'Nonaktif' %}danger{% else %}success{% endif %} bg-opacity-20 text-{% if beasiswa['status'] == 'Nonaktif' %}danger{% else %}success{% endif %}">{{ beasiswa['status'] }}</span>
                     </td>
                     <td class="text-center">
 
-                        <span class="badge bg-warning bg-opacity-20 text-warning fs-6 py-2 hover-zoom" onclick="editLomba('{{ lomba['id'] }}')">
+                        <span class="badge bg-warning bg-opacity-20 text-warning fs-6 py-2 hover-zoom" onclick="editBeasiswa('{{ beasiswa['id'] }}')">
                             <i class="bi bi-pencil fs-6"></i>
                         </span>
 
-                        <span class="badge bg-danger bg-opacity-20 text-danger fs-6 py-2 hover-zoom" onclick="deleteLomba('{{ lomba['id'] }}')">
+                        <span class="badge bg-danger bg-opacity-20 text-danger fs-6 py-2 hover-zoom" onclick="deleteBeasiswa('{{ beasiswa['id'] }}')">
                             <i class="bi bi-trash3 fs-6"></i>
                         </span>
 
-                        <span class="badge bg-primary bg-opacity-20 text-primary fs-6 py-2 hover-zoom" onclick="showDetail('{{ lomba['id'] }}')">
+                        <span class="badge bg-primary bg-opacity-20 text-primary fs-6 py-2 hover-zoom" onclick="showDetail('{{ beasiswa['id'] }}')">
                             <i class="bi bi-eye fs-6"></i>
                         </span>
 
@@ -51,12 +51,12 @@
     </div>
 </div>
 
-<div class="modal fade text-left modal-borderless" id="addLombaForm" tabindex="-1" aria-labelledby="addLombaFormLabel" style="display: none;" aria-hidden="true">
+<div class="modal fade text-left modal-borderless" id="addBeasiswaForm" tabindex="-1" aria-labelledby="addBeasiswaFormLabel" style="display: none;" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
         <div class="modal-content rounded-4">
             <div class="modal-header">
-                <h4 class="modal-title" id="addLombaFormLabel">
-                    Form Tambah Lomba
+                <h4 class="modal-title" id="addBeasiswaFormLabel">
+                    Form Tambah Beasiswa
                 </h4>
                 <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-x">
@@ -65,36 +65,36 @@
                     </svg>
                 </button>
             </div>
-            <form action="/add-lomba" method="POST">
+            <form action="/add-beasiswa" method="POST">
                 <div class="modal-body">
-                    <label for="nama">Nama Lomba: </label>
+                    <label for="nama">Nama Beasiswa: </label>
                     <div class="form-group mb-3">
-                        <input id="nama" name="nama" type="text" placeholder="Nama lomba" class="form-control form-control-lg py-2 bg-gray-light rounded-05" required>
+                        <input id="nama" name="nama" type="text" placeholder="Nama beasiswa" class="form-control form-control-lg py-2 bg-gray-light rounded-05" required>
                     </div>
 
-                    <label for="ringkasan">Ringkasan Lomba: </label>
+                    <label for="ringkasan">Ringkasan Beasiswa: </label>
                     <div class="form-group mb-3">
-                        <input id="ringkasan" name="ringkasan" type="text" placeholder="Ringkasan lomba" class="form-control form-control-lg py-2 bg-gray-light rounded-05" required>
+                        <input id="ringkasan" name="ringkasan" type="text" placeholder="Ringkasan beasiswa" class="form-control form-control-lg py-2 bg-gray-light rounded-05" required>
                     </div>
 
-                    <label for="lokasi">Lokasi Lomba: </label>
+                    <label for="lokasi">Lokasi Beasiswa: </label>
                     <div class="form-group mb-3">
-                        <input id="lokasi" name="lokasi" type="text" placeholder="Lokasi lomba" class="form-control form-control-lg py-2 bg-gray-light rounded-05" required>
+                        <input id="lokasi" name="lokasi" type="text" placeholder="Lokasi beasiswa" class="form-control form-control-lg py-2 bg-gray-light rounded-05" required>
                     </div>
 
-                    <label for="date">Tanggal Pelaksanaan Lomba: </label>
+                    <label for="date">Tanggal Pelaksanaan Beasiswa: </label>
                     <div class="form-group">
                         <input id="date" type="text" name="date" class="form-control form-control-lg py-2 bg-gray-light rounded-05 flatpickr-no-config flatpickr-input active" placeholder="Klik untuk pilih tanggal" readonly="readonly" required>
                     </div>
 
-                    <label for="url">URL Lomba: </label>
+                    <label for="url">URL Beasiswa: </label>
                     <div class="form-group mb-3">
-                        <input id="url" name="url" type="text" placeholder="URL lomba" class="form-control form-control-lg py-2 bg-gray-light rounded-05" required>
+                        <input id="url" name="url" type="text" placeholder="URL beasiswa" class="form-control form-control-lg py-2 bg-gray-light rounded-05" required>
                     </div>
 
-                    <label for="deskripsi">Deskripsi Lomba: </label>
+                    <label for="deskripsi">Deskripsi Beasiswa: </label>
                     <div class="form-group mb-3">
-                        <input id="deskripsi" name="deskripsi" type="text" placeholder="Deskripsi lomba" class="form-control form-control-lg py-2 bg-gray-light rounded-05" required>
+                        <input id="deskripsi" name="deskripsi" type="text" placeholder="Deskripsi beasiswa" class="form-control form-control-lg py-2 bg-gray-light rounded-05" required>
                     </div>
 
                     <input type="hidden" name="nama_penyelenggara" value="{{ user['nama_lembaga'] }}">
@@ -109,12 +109,12 @@
     </div>
 </div>
 
-<div class="modal fade text-left modal-borderless" id="editLombaForm" tabindex="-1" aria-labelledby="editLombaFormLabel" style="display: none;" aria-hidden="true">
+<div class="modal fade text-left modal-borderless" id="editBeasiswaForm" tabindex="-1" aria-labelledby="editBeasiswaFormLabel" style="display: none;" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
         <div class="modal-content rounded-4">
             <div class="modal-header">
-                <h4 class="modal-title" id="editLombaFormLabel">
-                    Ubah Data Lomba
+                <h4 class="modal-title" id="editBeasiswaFormLabel">
+                    Ubah Data Beasiswa
                 </h4>
                 <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-x">
@@ -123,39 +123,39 @@
                     </svg>
                 </button>
             </div>
-            <form action="/edit-lomba" method="POST">
+            <form action="/edit-beasiswa" method="POST">
                 <div class="modal-body">
-                    <label for="edt_nama">Nama Lomba: </label>
+                    <label for="edt_nama">Nama Beasiswa: </label>
                     <div class="form-group mb-3">
-                        <input id="edt_nama" name="nama" type="text" placeholder="Nama lomba" class="form-control form-control-lg py-2 bg-gray-light rounded-05" required>
+                        <input id="edt_nama" name="nama" type="text" placeholder="Nama beasiswa" class="form-control form-control-lg py-2 bg-gray-light rounded-05" required>
                     </div>
 
-                    <label for="edt_ringkasan">Ringkasan Lomba: </label>
+                    <label for="edt_ringkasan">Ringkasan Beasiswa: </label>
                     <div class="form-group mb-3">
-                        <input id="edt_ringkasan" name="ringkasan" type="text" placeholder="Ringkasan lomba" class="form-control form-control-lg py-2 bg-gray-light rounded-05" required>
+                        <input id="edt_ringkasan" name="ringkasan" type="text" placeholder="Ringkasan beasiswa" class="form-control form-control-lg py-2 bg-gray-light rounded-05" required>
                     </div>
 
-                    <label for="edt_lokasi">Lokasi Lomba: </label>
+                    <label for="edt_lokasi">Lokasi Beasiswa: </label>
                     <div class="form-group mb-3">
-                        <input id="edt_lokasi" name="lokasi" type="text" placeholder="Lokasi lomba" class="form-control form-control-lg py-2 bg-gray-light rounded-05" required>
+                        <input id="edt_lokasi" name="lokasi" type="text" placeholder="Lokasi beasiswa" class="form-control form-control-lg py-2 bg-gray-light rounded-05" required>
                     </div>
                     
-                    <label for="edt_date">Tanggal Pelaksanaan Lomba: </label>
+                    <label for="edt_date">Tanggal Pelaksanaan Beasiswa: </label>
                     <div class="form-group">
                         <input id="edt_date" type="text" name="date" class="form-control form-control-lg py-2 bg-gray-light rounded-05 flatpickr-no-config flatpickr-input active" placeholder="Klik untuk pilih tanggal" readonly="readonly" required>
                     </div>
 
-                    <label for="edt_url">URL Lomba: </label>
+                    <label for="edt_url">URL Beasiswa: </label>
                     <div class="form-group mb-3">
-                        <input id="edt_url" name="url" type="text" placeholder="URL lomba" class="form-control form-control-lg py-2 bg-gray-light rounded-05" required>
+                        <input id="edt_url" name="url" type="text" placeholder="URL beasiswa" class="form-control form-control-lg py-2 bg-gray-light rounded-05" required>
                     </div>
 
-                    <label for="edt_deskripsi">Deskripsi Lomba: </label>
+                    <label for="edt_deskripsi">Deskripsi Beasiswa: </label>
                     <div class="form-group mb-3">
-                        <input id="edt_deskripsi" name="deskripsi" type="text" placeholder="Deskripsi lomba" class="form-control form-control-lg py-2 bg-gray-light rounded-05" required>
+                        <input id="edt_deskripsi" name="deskripsi" type="text" placeholder="Deskripsi beasiswa" class="form-control form-control-lg py-2 bg-gray-light rounded-05" required>
                     </div>
 
-                    <label for="edt_status">Status Lomba: </label>
+                    <label for="edt_status">Status Beasiswa: </label>
                     <div class="form-group mb-3">
                         <select class="form-select py-2 bg-gray-light rounded-05 text-start" name="status" id="edt_status" required>
                             <option class="text-start" disabled selected value="default">Pilih Status</option>
@@ -180,12 +180,12 @@
     </div>
 </div>
 
-<div class="modal fade text-left modal-borderless" id="detailLomba" tabindex="-1" aria-labelledby="detailLombaLabel" style="display: none;" aria-hidden="true">
+<div class="modal fade text-left modal-borderless" id="detailBeasiswa" tabindex="-1" aria-labelledby="detailBeasiswaLabel" style="display: none;" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
         <div class="modal-content rounded-4">
             <div class="modal-header">
-                <h4 class="modal-title" id="detailLombaLabel">
-                    Detail Lomba
+                <h4 class="modal-title" id="detailBeasiswaLabel">
+                    Detail Beasiswa
                 </h4>
                 <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-x">
@@ -195,42 +195,42 @@
                 </button>
             </div>
             <div class="modal-body">
-                <label for="view_ringkasan">Singkatan Nama Lomba: </label>
+                <label for="view_ringkasan">Singkatan Nama Beasiswa: </label>
                 <div class="form-group mb-3">
                     <input id="view_ringkasan" type="text" class="form-control form-control-lg py-2 bg-gray-light rounded-05" value="aa" readonly="readonly" disabled>
                 </div>
 
-                <label for="view_nama">Nama Lomba: </label>
+                <label for="view_nama">Nama Beasiswa: </label>
                 <div class="form-group mb-3">
                     <input id="view_nama" type="text" class="form-control form-control-lg py-2 bg-gray-light rounded-05" value="aa" readonly="readonly" disabled>
                 </div>
 
-                <label for="view_lokasi">Lokasi Lomba: </label>
+                <label for="view_lokasi">Lokasi Beasiswa: </label>
                 <div class="form-group mb-3">
                     <input id="view_lokasi" type="text" class="form-control form-control-lg py-2 bg-gray-light rounded-05" value="bb" readonly="readonly" disabled>
                 </div>
 
-                <label for="view_date">Tanggal Pelaksanaan Lomba: </label>
+                <label for="view_date">Tanggal Pelaksanaan Beasiswa: </label>
                 <div class="form-group">
                     <input id="view_date" type="text" class="form-control form-control-lg py-2 bg-gray-light rounded-05" value="cc" readonly="readonly" disabled>
                 </div>
 
-                <label for="view_url">URL Lomba: </label>
+                <label for="view_url">URL Beasiswa: </label>
                 <div class="form-group mb-3">
                     <input id="view_url" type="text" class="form-control form-control-lg py-2 bg-gray-light rounded-05" value="bb" readonly="readonly" disabled>
                 </div>
 
-                <label for="view_deskripsi">Deskripsi Lomba: </label>
+                <label for="view_deskripsi">Deskripsi Beasiswa: </label>
                 <div class="form-group mb-3">
                     <input id="view_deskripsi" type="text" class="form-control form-control-lg py-2 bg-gray-light rounded-05" value="bb" readonly="readonly" disabled>
                 </div>
 
-                <label for="view_status">Status Lomba: </label>
+                <label for="view_status">Status Beasiswa: </label>
                 <div class="form-group mb-3">
                     <input id="view_status" type="text" class="form-control form-control-lg py-2 bg-gray-light rounded-05" value="bb" readonly="readonly" disabled>
                 </div>
 
-                <label for="view_datecreated">Tanggal Pembuatan Lomba: </label>
+                <label for="view_datecreated">Tanggal Pembuatan Beasiswa: </label>
                 <div class="form-group mb-3">
                     <input id="view_datecreated" type="text" class="form-control form-control-lg py-2 bg-gray-light rounded-05" value="bb" readonly="readonly" disabled>
                 </div>
@@ -278,11 +278,11 @@
     {% endif %}
     {% endwith %}
 
-    var detailLombaModal = new bootstrap.Modal($('#detailLomba'));
-    var editLombaModal = new bootstrap.Modal($('#editLombaForm'));
+    var detailBeasiswaModal = new bootstrap.Modal($('#detailBeasiswa'));
+    var editBeasiswaModal = new bootstrap.Modal($('#editBeasiswaForm'));
 
     function showDetail(docId) {
-        $.get(`/get-lomba/${docId}`, function (data) {
+        $.get(`/get-beasiswa/${docId}`, function (data) {
             $('#view_ringkasan').val(data.ringkasan)
             $('#view_nama').val(data.nama)
             $('#view_lokasi').val(data.lokasi)
@@ -291,12 +291,12 @@
             $('#view_deskripsi').val(data.deskripsi)
             $('#view_status').val(data.status)
             $('#view_datecreated').val(data.created_at)
-            detailLombaModal.show()
+            detailBeasiswaModal.show()
         })
     }
 
-    function editLomba(docId) {
-        $.get(`/get-lomba/${docId}`, function (data) {
+    function editBeasiswa(docId) {
+        $.get(`/get-beasiswa/${docId}`, function (data) {
             $('#edt_ringkasan').val(data.ringkasan)
             $('#edt_nama').val(data.nama)
             $('#edt_lokasi').val(data.lokasi)
@@ -309,7 +309,7 @@
             $('#edt_jenis').val(data.jenis_kegiatan)
             $('#edt_nama_penyelenggara').val(data.nama_penyelenggara)
             $('#edt_id').val(docId)
-            editLombaModal.show()
+            editBeasiswaModal.show()
         })
     }
 
@@ -323,17 +323,17 @@
         buttonsStyling: false
     })
 
-    function deleteLomba(docId) {
+    function deleteBeasiswa(docId) {
         swalCustom.fire({
-            title: 'Hapus Lomba?',
-            text: "Apakah anda yakin akan menghapus lomba? Anda tidak dapat mengembalikan lomba yang sudah dihapus.",
+            title: 'Hapus Beasiswa?',
+            text: "Apakah anda yakin akan menghapus beasiswa? Anda tidak dapat mengembalikan beasiswa yang sudah dihapus.",
             icon: 'warning',
             showCancelButton: true,
             confirmButtonText: '&nbsp;&nbsp;&nbsp;Ya&nbsp;&nbsp;&nbsp;',
             cancelButtonText: 'Tidak',
         }).then((result) => {
             if (result.isConfirmed) {
-                window.open(`/delete-lomba/${docId}`, "_self");
+                window.open(`/delete-beasiswa/${docId}`, "_self");
             }
         })
     }

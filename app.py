@@ -44,6 +44,12 @@ def index():
         
         elif session['user_info']['role'] == 'Penyelenggara Lomba':
             return redirect(url_for('dashboard', role='lomba', page='lomba'))
+        
+        elif session['user_info']['role'] == 'Penyelenggara Sertifikasi':
+            return redirect(url_for('dashboard', role='sertifikasi', page='sertifikasi'))
+        
+        elif session['user_info']['role'] == 'Penyelenggara Beasiswa':
+            return redirect(url_for('dashboard', role='beasiswa', page='beasiswa'))
 
 
 @app.route('/login', methods=['POST', 'GET'])
@@ -77,6 +83,12 @@ def login():
                 flash('Selamat datang di TeMaNesia', 'success')
                 if session['user_info']['role'] == 'Penyelenggara Lomba':
                     return redirect(url_for('dashboard', role='lomba', page='lomba'))
+                
+                elif session['user_info']['role'] == 'Penyelenggara Sertifikasi':
+                    return redirect(url_for('dashboard', role='sertifikasi', page='sertifikasi'))
+                
+                elif session['user_info']['role'] == 'Penyelenggara Beasiswa':
+                    return redirect(url_for('dashboard', role='beasiswa', page='beasiswa'))
         
         except Exception as e:
             flash("Email atau password salah", 'error')
@@ -136,6 +148,16 @@ def dashboard(role, page):
             all_data = get_all_user_lomba(session['user_info']['localId'])
             return render_template(f'dashboard/{role}/{page}.html', user=session['user_info'], data_lomba=all_data)
         
+    elif session['user_info']['role'] == 'Penyelenggara Sertifikasi' and role == 'sertifikasi':
+        if page == 'sertifikasi':
+            all_data = get_all_user_sertifikasi(session['user_info']['localId'])
+            return render_template(f'dashboard/{role}/{page}.html', user=session['user_info'], data_sertifikasi=all_data)
+        
+    elif session['user_info']['role'] == 'Penyelenggara Beasiswa' and role == 'beasiswa':
+        if page == 'beasiswa':
+            all_data = get_all_user_beasiswa(session['user_info']['localId'])
+            return render_template(f'dashboard/{role}/{page}.html', user=session['user_info'], data_beasiswa=all_data)
+        
     return render_template('errors/error-403.html'), 403
         
 
@@ -150,7 +172,7 @@ def add_lomba():
     new_lomba = {}
 
     if request.method == 'POST':
-        new_lomba['akronim'] = request.form.get('akronim')
+        new_lomba['ringkasan'] = request.form.get('ringkasan')
         new_lomba['nama'] = request.form.get('nama')
         new_lomba['lokasi'] = request.form.get('lokasi')
         new_lomba['date'] = datetime.strptime(request.form.get('date'), '%Y-%m-%d') 
@@ -180,7 +202,7 @@ def edit_lomba():
     edited_lomba = {}
 
     if request.method == 'POST':
-        edited_lomba['akronim'] = request.form.get('akronim')
+        edited_lomba['ringkasan'] = request.form.get('ringkasan')
         edited_lomba['nama'] = request.form.get('nama')
         edited_lomba['lokasi'] = request.form.get('lokasi')
         edited_lomba['date'] = datetime.strptime(request.form.get('date'), '%Y-%m-%d')
@@ -265,6 +287,172 @@ def delete_user(id):
         return redirect(url_for('dashboard', role='admin', page='verification'))
 
 
+@app.route('/add-sertifikasi', methods=['POST'])
+def add_sertifikasi():
+    new_sertifikasi = {}
+
+    if request.method == 'POST':
+        new_sertifikasi['ringkasan'] = request.form.get('ringkasan')
+        new_sertifikasi['nama'] = request.form.get('nama')
+        new_sertifikasi['lokasi'] = request.form.get('lokasi')
+        new_sertifikasi['date'] = datetime.strptime(request.form.get('date'), '%Y-%m-%d') 
+        new_sertifikasi['url'] = request.form.get('url')
+        new_sertifikasi['deskripsi'] = request.form.get('deskripsi')
+        new_sertifikasi['nama_penyelenggara'] = request.form.get('nama_penyelenggara')
+        new_sertifikasi['email_penyelenggara'] = request.form.get('email_penyelenggara')
+        new_sertifikasi['created_at'] = datetime.now()
+        new_sertifikasi['penyelenggara_uid'] = request.form.get('penyelenggara_uid')
+        new_sertifikasi['status'] = 'Aktif'
+        new_sertifikasi['jenis_kegiatan'] = 'Sertifikasi'
+
+        try:
+            db.collection('sertifikasi').document().set(new_sertifikasi)
+            flash('sertifikasi baru berhasil ditambahkan', 'success')
+            return redirect(url_for('dashboard', role='sertifikasi', page='sertifikasi'))
+
+        except HTTPError as e:
+            flash(json.loads(e.strerror)['error']['message'], 'error')
+            return redirect(url_for('dashboard', role='sertifikasi', page='sertifikasi'))
+
+    return render_template('errors/error-404.html'), 404
+
+
+@app.route('/edit-sertifikasi', methods=['POST'])
+def edit_sertifikasi():
+    edited_sertifikasi = {}
+
+    if request.method == 'POST':
+        edited_sertifikasi['ringkasan'] = request.form.get('ringkasan')
+        edited_sertifikasi['nama'] = request.form.get('nama')
+        edited_sertifikasi['lokasi'] = request.form.get('lokasi')
+        edited_sertifikasi['date'] = datetime.strptime(request.form.get('date'), '%Y-%m-%d')
+        edited_sertifikasi['penyelenggara_uid'] = request.form.get('penyelenggara_uid')
+        edited_sertifikasi['url'] = request.form.get('url')
+        edited_sertifikasi['deskripsi'] = request.form.get('deskripsi')
+        edited_sertifikasi['created_at'] = datetime.strptime(request.form.get('created_at'), '%Y-%m-%d')
+        edited_sertifikasi['status'] = request.form.get('status')
+        edited_sertifikasi['jenis_kegiatan'] = request.form.get('jenis')
+        edited_sertifikasi['email_penyelenggara'] = request.form.get('email')
+        edited_sertifikasi['nama_penyelenggara'] = request.form.get('nama_penyelenggara')
+
+        try:
+            db.collection('sertifikasi').document(request.form.get('id')).set(edited_sertifikasi)
+            flash('Data sertifikasi berhasil diperbaharui', 'success')
+            return redirect(url_for('dashboard', role='sertifikasi', page='sertifikasi'))
+
+        except HTTPError as e:
+            flash(json.loads(e.strerror)['error']['message'], 'error')
+            return redirect(url_for('dashboard', role='sertifikasi', page='sertifikasi'))
+
+    return render_template('errors/error-404.html'), 404
+
+
+@app.route('/get-sertifikasi/<id>', methods=['GET'])
+def get_sertifikasi(id):
+    data = db.collection('sertifikasi').document(id).get()
+
+    data_dict = data.to_dict()
+    data_dict['date'] = data_dict['date'].strftime("%Y-%m-%d")
+    data_dict['created_at'] = data_dict['created_at'].strftime("%Y-%m-%d")
+
+    return jsonify(data_dict)
+
+
+@app.route('/delete-sertifikasi/<id>', methods=['GET'])
+def delete_sertifikasi(id):
+    try:
+        db.collection('sertifikasi').document(id).delete()
+        flash('Berhasil hapus sertifikasi', 'success')
+        return redirect(url_for('dashboard', role='sertifikasi', page='sertifikasi'))
+    
+    except HTTPError as e:
+        flash(json.loads(e.strerror)['error']['message'], 'error')
+        return redirect(url_for('dashboard', role='sertifikasi', page='sertifikasi'))
+    
+
+@app.route('/add-beasiswa', methods=['POST'])
+def add_beasiswa():
+    new_beasiswa = {}
+
+    if request.method == 'POST':
+        new_beasiswa['ringkasan'] = request.form.get('ringkasan')
+        new_beasiswa['nama'] = request.form.get('nama')
+        new_beasiswa['lokasi'] = request.form.get('lokasi')
+        new_beasiswa['date'] = datetime.strptime(request.form.get('date'), '%Y-%m-%d') 
+        new_beasiswa['url'] = request.form.get('url')
+        new_beasiswa['deskripsi'] = request.form.get('deskripsi')
+        new_beasiswa['nama_penyelenggara'] = request.form.get('nama_penyelenggara')
+        new_beasiswa['email_penyelenggara'] = request.form.get('email_penyelenggara')
+        new_beasiswa['created_at'] = datetime.now()
+        new_beasiswa['penyelenggara_uid'] = request.form.get('penyelenggara_uid')
+        new_beasiswa['status'] = 'Aktif'
+        new_beasiswa['jenis_kegiatan'] = 'Beasiswa'
+
+        try:
+            db.collection('beasiswa').document().set(new_beasiswa)
+            flash('beasiswa baru berhasil ditambahkan', 'success')
+            return redirect(url_for('dashboard', role='beasiswa', page='beasiswa'))
+
+        except HTTPError as e:
+            flash(json.loads(e.strerror)['error']['message'], 'error')
+            return redirect(url_for('dashboard', role='beasiswa', page='beasiswa'))
+
+    return render_template('errors/error-404.html'), 404
+
+
+@app.route('/edit-beasiswa', methods=['POST'])
+def edit_beasiswa():
+    edited_beasiswa = {}
+
+    if request.method == 'POST':
+        edited_beasiswa['ringkasan'] = request.form.get('ringkasan')
+        edited_beasiswa['nama'] = request.form.get('nama')
+        edited_beasiswa['lokasi'] = request.form.get('lokasi')
+        edited_beasiswa['date'] = datetime.strptime(request.form.get('date'), '%Y-%m-%d')
+        edited_beasiswa['penyelenggara_uid'] = request.form.get('penyelenggara_uid')
+        edited_beasiswa['url'] = request.form.get('url')
+        edited_beasiswa['deskripsi'] = request.form.get('deskripsi')
+        edited_beasiswa['created_at'] = datetime.strptime(request.form.get('created_at'), '%Y-%m-%d')
+        edited_beasiswa['status'] = request.form.get('status')
+        edited_beasiswa['jenis_kegiatan'] = request.form.get('jenis')
+        edited_beasiswa['email_penyelenggara'] = request.form.get('email')
+        edited_beasiswa['nama_penyelenggara'] = request.form.get('nama_penyelenggara')
+
+        try:
+            db.collection('beasiswa').document(request.form.get('id')).set(edited_beasiswa)
+            flash('Data beasiswa berhasil diperbaharui', 'success')
+            return redirect(url_for('dashboard', role='beasiswa', page='beasiswa'))
+
+        except HTTPError as e:
+            flash(json.loads(e.strerror)['error']['message'], 'error')
+            return redirect(url_for('dashboard', role='beasiswa', page='beasiswa'))
+
+    return render_template('errors/error-404.html'), 404
+
+
+@app.route('/get-beasiswa/<id>', methods=['GET'])
+def get_beasiswa(id):
+    data = db.collection('beasiswa').document(id).get()
+
+    data_dict = data.to_dict()
+    data_dict['date'] = data_dict['date'].strftime("%Y-%m-%d")
+    data_dict['created_at'] = data_dict['created_at'].strftime("%Y-%m-%d")
+
+    return jsonify(data_dict)
+
+
+@app.route('/delete-beasiswa/<id>', methods=['GET'])
+def delete_beasiswa(id):
+    try:
+        db.collection('beasiswa').document(id).delete()
+        flash('Berhasil hapus beasiswa', 'success')
+        return redirect(url_for('dashboard', role='beasiswa', page='beasiswa'))
+    
+    except HTTPError as e:
+        flash(json.loads(e.strerror)['error']['message'], 'error')
+        return redirect(url_for('dashboard', role='beasiswa', page='beasiswa'))
+
+
 @app.errorhandler(403)
 def forbidden(e):
     return render_template('errors/error-403.html'), 403
@@ -299,6 +487,32 @@ def get_all_users_data():
 
 def get_all_user_lomba(user_id):
     documents = db.collection('lomba').where("penyelenggara_uid", "==", user_id).order_by("created_at", direction=firestore.Query.DESCENDING).stream()
+
+    data = []
+    for doc in documents:
+        doc_dict = doc.to_dict()
+        doc_dict['date'] = doc_dict['date'].strftime("%d %B %Y")
+        doc_dict['id'] = doc.id
+        data.append(doc_dict)
+
+    return data
+
+
+def get_all_user_sertifikasi(user_id):
+    documents = db.collection('sertifikasi').where("penyelenggara_uid", "==", user_id).order_by("created_at", direction=firestore.Query.DESCENDING).stream()
+
+    data = []
+    for doc in documents:
+        doc_dict = doc.to_dict()
+        doc_dict['date'] = doc_dict['date'].strftime("%d %B %Y")
+        doc_dict['id'] = doc.id
+        data.append(doc_dict)
+
+    return data
+
+
+def get_all_user_beasiswa(user_id):
+    documents = db.collection('beasiswa').where("penyelenggara_uid", "==", user_id).order_by("created_at", direction=firestore.Query.DESCENDING).stream()
 
     data = []
     for doc in documents:
