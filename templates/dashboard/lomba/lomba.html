@@ -13,9 +13,9 @@
         <table class="table" id="table1">
             <thead>
                 <tr>
-                    <th>Nama</th>
-                    <th>Tanggal</th>
-                    <th>URL</th>
+                    <th>Nama Lomba</th>
+                    <th>Tanggal Lomba</th>
+                    <th>Status</th>
                     <th>Aksi</th>
                 </tr>
             </thead>
@@ -23,9 +23,11 @@
                 {% for lomba in data_lomba %}
 
                 <tr>
-                    <td>{{ lomba['nama'] }}</td>
-                    <td>{{ lomba['date'] }}</td>
-                    <td>{{ lomba['url'] }}</td>
+                    <td style="width: 40%;">{{ lomba['nama'] }}</td>
+                    <td class="text-center">{{ lomba['date'] }}</td>
+                    <td class="text-center">
+                        <span class="badge bg-{% if lomba['status'] == 'Nonaktif' %}danger{% else %}success{% endif %} bg-opacity-20 text-{% if lomba['status'] == 'Nonaktif' %}danger{% else %}success{% endif %}">{{ lomba['status'] }}</span>
+                    </td>
                     <td class="text-center">
 
                         <span class="badge bg-warning bg-opacity-20 text-warning fs-6 py-2 hover-zoom" onclick="editLomba('{{ lomba['id'] }}')">
@@ -65,15 +67,19 @@
             </div>
             <form action="/add-lomba" method="POST">
                 <div class="modal-body">
+                    <label for="akronim">Singkatan Nama Lomba: </label>
+                    <div class="form-group mb-3">
+                        <input id="akronim" name="akronim" type="text" placeholder="Singkatan nama lomba" class="form-control form-control-lg py-2 bg-gray-light rounded-05" required>
+                    </div>
 
-                    <label for="nama">Nama Lomba: </label>
+                    <label for="nama">Nama Lengkap Lomba: </label>
                     <div class="form-group mb-3">
                         <input id="nama" name="nama" type="text" placeholder="Nama lomba" class="form-control form-control-lg py-2 bg-gray-light rounded-05" required>
                     </div>
 
-                    <label for="url">URL Lomba: </label>
+                    <label for="lokasi">Lokasi Lomba: </label>
                     <div class="form-group mb-3">
-                        <input id="url" name="url" type="text" placeholder="URL lomba" class="form-control form-control-lg py-2 bg-gray-light rounded-05" required>
+                        <input id="lokasi" name="lokasi" type="text" placeholder="Lokasi lomba" class="form-control form-control-lg py-2 bg-gray-light rounded-05" required>
                     </div>
 
                     <label for="date">Tanggal Pelaksanaan Lomba: </label>
@@ -81,8 +87,19 @@
                         <input id="date" type="text" name="date" class="form-control form-control-lg py-2 bg-gray-light rounded-05 flatpickr-no-config flatpickr-input active" placeholder="Klik untuk pilih tanggal" readonly="readonly" required>
                     </div>
 
-                    <input type="hidden" name="penyelenggara_uid" value="{{ user['localId'] }}">
+                    <label for="url">URL Lomba: </label>
+                    <div class="form-group mb-3">
+                        <input id="url" name="url" type="text" placeholder="URL lomba" class="form-control form-control-lg py-2 bg-gray-light rounded-05" required>
+                    </div>
 
+                    <label for="deskripsi">Deskripsi Lomba: </label>
+                    <div class="form-group mb-3">
+                        <input id="deskripsi" name="deskripsi" type="text" placeholder="Deskripsi lomba" class="form-control form-control-lg py-2 bg-gray-light rounded-05" required>
+                    </div>
+
+                    <input type="hidden" name="nama_penyelenggara" value="{{ user['nama_lembaga'] }}">
+                    <input type="hidden" name="email_penyelenggara" value="{{ user['email'] }}">
+                    <input type="hidden" name="penyelenggara_uid" value="{{ user['localId'] }}">
                 </div>
                 <div class="modal-footer">
                     <button type="submit" class="btn btn-primary rounded-05">Submit</button>
@@ -108,10 +125,24 @@
             </div>
             <form action="/edit-lomba" method="POST">
                 <div class="modal-body">
-
-                    <label for="edt_nama">Nama Lomba: </label>
+                    <label for="edt_akronim">Singkatan Nama Lomba: </label>
                     <div class="form-group mb-3">
-                        <input id="edt_nama" name="nama" type="text" placeholder="Nama lomba" class="form-control form-control-lg py-2 bg-gray-light rounded-05" required>
+                        <input id="edt_akronim" name="akronim" type="text" placeholder="Singkatan nama lomba" class="form-control form-control-lg py-2 bg-gray-light rounded-05" required>
+                    </div>
+
+                    <label for="edt_nama">Nama Lengkap Lomba: </label>
+                    <div class="form-group mb-3">
+                        <input id="edt_nama" name="nama" type="text" placeholder="Nama lengkap lomba" class="form-control form-control-lg py-2 bg-gray-light rounded-05" required>
+                    </div>
+
+                    <label for="edt_lokasi">Lokasi Lomba: </label>
+                    <div class="form-group mb-3">
+                        <input id="edt_lokasi" name="lokasi" type="text" placeholder="Lokasi lomba" class="form-control form-control-lg py-2 bg-gray-light rounded-05" required>
+                    </div>
+                    
+                    <label for="edt_date">Tanggal Pelaksanaan Lomba: </label>
+                    <div class="form-group">
+                        <input id="edt_date" type="text" name="date" class="form-control form-control-lg py-2 bg-gray-light rounded-05 flatpickr-no-config flatpickr-input active" placeholder="Klik untuk pilih tanggal" readonly="readonly" required>
                     </div>
 
                     <label for="edt_url">URL Lomba: </label>
@@ -119,13 +150,25 @@
                         <input id="edt_url" name="url" type="text" placeholder="URL lomba" class="form-control form-control-lg py-2 bg-gray-light rounded-05" required>
                     </div>
 
-                    <label for="edt_date">Tanggal Pelaksanaan Lomba: </label>
-                    <div class="form-group">
-                        <input id="edt_date" type="text" name="date" class="form-control form-control-lg py-2 bg-gray-light rounded-05 flatpickr-no-config flatpickr-input active" placeholder="Klik untuk pilih tanggal" readonly="readonly" required>
+                    <label for="edt_deskripsi">Deskripsi Lomba: </label>
+                    <div class="form-group mb-3">
+                        <input id="edt_deskripsi" name="deskripsi" type="text" placeholder="Deskripsi lomba" class="form-control form-control-lg py-2 bg-gray-light rounded-05" required>
+                    </div>
+
+                    <label for="edt_status">Status Lomba: </label>
+                    <div class="form-group mb-3">
+                        <select class="form-select py-2 bg-gray-light rounded-05 text-start" name="status" id="edt_status" required>
+                            <option class="text-start" disabled selected value="default">Pilih Status</option>
+                            <option class="text-start" value="Nonaktif">Nonaktif</option>
+                            <option class="text-start" value="Aktif">Aktif</option>
+                        </select>
                     </div>
 
                     <input type="hidden" name="penyelenggara_uid" value="{{ user['localId'] }}">
                     <input id="edt_created_at" type="hidden" name="created_at">
+                    <input id="edt_email" type="hidden" name="email">
+                    <input id="edt_jenis" type="hidden" name="jenis">
+                    <input id="edt_nama_penyelenggara" type="hidden" name="nama_penyelenggara">
                     <input id="edt_id" type="hidden" name="id">
 
                 </div>
@@ -152,9 +195,24 @@
                 </button>
             </div>
             <div class="modal-body">
-                <label for="view_nama">Nama Lomba: </label>
+                <label for="view_akronim">Singkatan Nama Lomba: </label>
+                <div class="form-group mb-3">
+                    <input id="view_akronim" type="text" class="form-control form-control-lg py-2 bg-gray-light rounded-05" value="aa" readonly="readonly" disabled>
+                </div>
+
+                <label for="view_nama">Nama Lengkap Lomba: </label>
                 <div class="form-group mb-3">
                     <input id="view_nama" type="text" class="form-control form-control-lg py-2 bg-gray-light rounded-05" value="aa" readonly="readonly" disabled>
+                </div>
+
+                <label for="view_lokasi">Lokasi Lomba: </label>
+                <div class="form-group mb-3">
+                    <input id="view_lokasi" type="text" class="form-control form-control-lg py-2 bg-gray-light rounded-05" value="bb" readonly="readonly" disabled>
+                </div>
+
+                <label for="view_date">Tanggal Pelaksanaan Lomba: </label>
+                <div class="form-group">
+                    <input id="view_date" type="text" class="form-control form-control-lg py-2 bg-gray-light rounded-05" value="cc" readonly="readonly" disabled>
                 </div>
 
                 <label for="view_url">URL Lomba: </label>
@@ -162,9 +220,19 @@
                     <input id="view_url" type="text" class="form-control form-control-lg py-2 bg-gray-light rounded-05" value="bb" readonly="readonly" disabled>
                 </div>
 
-                <label for="view_date">Tanggal Pelaksanaan Lomba: </label>
-                <div class="form-group">
-                    <input id="view_date" type="text" class="form-control form-control-lg py-2 bg-gray-light rounded-05" value="cc" readonly="readonly" disabled>
+                <label for="view_deskripsi">Deskripsi Lomba: </label>
+                <div class="form-group mb-3">
+                    <input id="view_deskripsi" type="text" class="form-control form-control-lg py-2 bg-gray-light rounded-05" value="bb" readonly="readonly" disabled>
+                </div>
+
+                <label for="view_status">Status Lomba: </label>
+                <div class="form-group mb-3">
+                    <input id="view_status" type="text" class="form-control form-control-lg py-2 bg-gray-light rounded-05" value="bb" readonly="readonly" disabled>
+                </div>
+
+                <label for="view_datecreated">Tanggal Pembuatan Lomba: </label>
+                <div class="form-group mb-3">
+                    <input id="view_datecreated" type="text" class="form-control form-control-lg py-2 bg-gray-light rounded-05" value="bb" readonly="readonly" disabled>
                 </div>
 
                 <input type="hidden" name="penyelenggara_uid" value="{{ user['localId'] }}">
@@ -215,19 +283,31 @@
 
     function showDetail(docId) {
         $.get(`/get-lomba/${docId}`, function (data) {
+            $('#view_akronim').val(data.akronim)
             $('#view_nama').val(data.nama)
+            $('#view_lokasi').val(data.lokasi)
             $('#view_date').val(data.date)
             $('#view_url').val(data.url)
+            $('#view_deskripsi').val(data.deskripsi)
+            $('#view_status').val(data.status)
+            $('#view_datecreated').val(data.created_at)
             detailLombaModal.show()
         })
     }
 
     function editLomba(docId) {
         $.get(`/get-lomba/${docId}`, function (data) {
+            $('#edt_akronim').val(data.akronim)
             $('#edt_nama').val(data.nama)
+            $('#edt_lokasi').val(data.lokasi)
             $('#edt_date').val(data.date)
             $('#edt_url').val(data.url)
+            $('#edt_deskripsi').val(data.deskripsi)
+            $('#edt_status').val(data.status)
             $('#edt_created_at').val(data.created_at)
+            $('#edt_email').val(data.email_penyelenggara)
+            $('#edt_jenis').val(data.jenis_kegiatan)
+            $('#edt_nama_penyelenggara').val(data.nama_penyelenggara)
             $('#edt_id').val(docId)
             editLombaModal.show()
         })

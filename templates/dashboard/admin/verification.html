@@ -20,18 +20,24 @@
                 </tr>
             </thead>
             <tbody>
-                {% for item in user['users_data'] %}
+                {% for user in data_user %}
                 <tr>
-                    <td>{{ item.nama_lembaga }}</td>
-                    <td class="text-center">{{ item.telepon_lembaga }}</td>
-                    <td class="text-center">{{ item.tanggal_daftar }}</td>
+                    <td>{{ user.nama_lembaga }}</td>
+                    <td class="text-center">{{ user.telepon_lembaga }}</td>
+                    <td class="text-center">{{ user.tanggal_daftar }}</td>
                     <td class="text-center">
-                        <span class="badge bg-{% if item.status == 'Nonaktif' %}danger{% else %}success{% endif %} bg-opacity-20 text-{% if item.status == 'Nonaktif' %}danger{% else %}success{% endif %}">{{ item.status }}</span>
+                        <span class="badge bg-{% if user.status == 'Nonaktif' %}danger{% else %}success{% endif %} bg-opacity-20 text-{% if user.status == 'Nonaktif' %}danger{% else %}success{% endif %}">{{ user.status }}</span>
                     </td>
                     <td class="text-center">
-                        <span class="badge bg-success bg-opacity-20 text-success"><i class="bi bi-check-square"></i></span>
-                        <span class="badge bg-danger bg-opacity-20 text-danger"><i class="bi bi-x-square"></i></span>
-                        <span class="badge bg-primary bg-opacity-20 text-primary"><i class="bi bi-eye"></i></span>
+                        <span class="badge bg-success bg-opacity-20 text-success fs-6 py-2 hover-zoom" onclick="editStatus('{{ user.id }}')">
+                            <i class="bi bi-check-square"></i>
+                        </span>
+                        <span class="badge bg-danger bg-opacity-20 text-danger fs-6 py-2 hover-zoom" onclick="deleteUser('{{ user.id }}')">
+                            <i class="bi bi-x-square"></i>
+                        </span>
+                        <span class="badge bg-primary bg-opacity-20 text-primary fs-6 py-2 hover-zoom" onclick="showDetail('{{ user.id }}')">
+                            <i class="bi bi-eye"></i>
+                        </span>
                     </td>
                 </tr>
                 {% endfor %}
@@ -39,4 +45,186 @@
         </table>
     </div>
 </div>
+
+<div class="modal fade text-left modal-borderless" id="editStatusForm" tabindex="-1" aria-labelledby="editStatusFormLabel" style="display: none;" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
+        <div class="modal-content rounded-4">
+            <div class="modal-header">
+                <h4 class="modal-title" id="editStatusFormLabel">
+                    Ubah Status Pengguna
+                </h4>
+                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-x">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+            <form action="/edit-status" method="POST">
+                <div class="modal-body">
+
+                    <label for="edt_status">Status Pengguna: </label>
+                    <div class="form-group mb-3">
+                        <select class="form-select py-2 bg-gray-light rounded-05 text-start" name="status" id="edt_status" required>
+                            <option class="text-start" disabled selected value="default">Pilih Status</option>
+                            <option class="text-start" value="Nonaktif">Nonaktif</option>
+                            <option class="text-start" value="Aktif">Aktif</option>
+                        </select>
+                    </div>
+
+                    <input id="edt_id" type="hidden" name="id">
+
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary rounded-05">Submit</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade text-left modal-borderless" id="detailUser" tabindex="-1" aria-labelledby="detailUserLabel" style="display: none;" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
+        <div class="modal-content rounded-4">
+            <div class="modal-header">
+                <h4 class="modal-title" id="detailUserLabel">
+                    Detail Pengguna
+                </h4>
+                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-x">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+            <div class="modal-body">
+                <label for="view_nama">Nama Lembaga: </label>
+                <div class="form-group mb-3">
+                    <input id="view_nama" type="text" class="form-control form-control-lg py-2 bg-gray-light rounded-05" value="aa" readonly="readonly" disabled>
+                </div>
+
+                <label for="view_role">Role Lembaga: </label>
+                <div class="form-group mb-3">
+                    <input id="view_role" type="text" class="form-control form-control-lg py-2 bg-gray-light rounded-05" value="aa" readonly="readonly" disabled>
+                </div>
+
+                <label for="view_sektor">Sektor Lembaga: </label>
+                <div class="form-group mb-3">
+                    <input id="view_sektor" type="text" class="form-control form-control-lg py-2 bg-gray-light rounded-05" value="aa" readonly="readonly" disabled>
+                </div>
+
+                <label for="view_email">Email Lembaga: </label>
+                <div class="form-group mb-3">
+                    <input id="view_email" type="text" class="form-control form-control-lg py-2 bg-gray-light rounded-05" value="aa" readonly="readonly" disabled>
+                </div>
+
+                <label for="view_telepon">No Telepon Lembaga: </label>
+                <div class="form-group mb-3">
+                    <input id="view_telepon" type="text" class="form-control form-control-lg py-2 bg-gray-light rounded-05" value="aa" readonly="readonly" disabled>
+                </div>
+
+                <label for="view_alamat">Alamat Lembaga: </label>
+                <div class="form-group mb-3">
+                    <input id="view_alamat" type="text" class="form-control form-control-lg py-2 bg-gray-light rounded-05" value="aa" readonly="readonly" disabled>
+                </div>
+
+                <label for="view_status">Status Pengguna: </label>
+                <div class="form-group mb-3">
+                    <input id="view_status" type="text" class="form-control form-control-lg py-2 bg-gray-light rounded-05" value="aa" readonly="readonly" disabled>
+                </div>
+
+                <label for="view_tanggal_daftar">Tanggal Daftar: </label>
+                <div class="form-group mb-3">
+                    <input id="view_tanggal_daftar" type="text" class="form-control form-control-lg py-2 bg-gray-light rounded-05" value="aa" readonly="readonly" disabled>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary rounded-05" data-bs-dismiss="modal">Tutup</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block script %}
+
+<script>
+    const Toast = Swal.mixin({
+        toast: true,
+        position: 'top-end',
+        showConfirmButton: false,
+        timer: 3000,
+        timerProgressBar: true,
+        didOpen: (toast) => {
+            toast.addEventListener('mouseenter', Swal.stopTimer)
+            toast.addEventListener('mouseleave', Swal.resumeTimer)
+        }
+    })
+
+    {% with messages = get_flashed_messages(with_categories = true) %}
+    {% if messages %}
+    {% for category, message in messages %}
+
+    Toast.fire({
+        icon: '{{ category }}',
+        title: '{{ message }}'
+    })
+
+    {% endfor %}
+    {% endif %}
+    {% endwith %}
+
+    var detailUserModal = new bootstrap.Modal($('#detailUser'));
+    var editStatusModal = new bootstrap.Modal($('#editStatusForm'));
+
+    function showDetail(docId) {
+        $.get(`/get-user/${docId}`, function (data) {
+            $('#view_alamat').val(data.alamat_lembaga)
+            $('#view_email').val(data.email)
+            $('#view_nama').val(data.nama_lembaga)
+            $('#view_role').val(data.role)
+            $('#view_sektor').val(data.sektor_lembaga)
+            $('#view_status').val(data.status)
+            $('#view_telepon').val(data.telepon_lembaga)
+            $('#view_tanggal_daftar').val(data.tanggal_daftar)
+            detailUserModal.show()
+        })
+    }
+
+    function editStatus(docId) {
+        $.get(`/get-user/${docId}`, function (data) {
+            $('#edt_status').val(data.status)
+            $('#edt_id').val(docId)
+            editStatusModal.show()
+        })
+    }
+
+    const swalCustom = Swal.mixin({
+        customClass: {
+            confirmButton: 'btn btn-danger rounded-05 me-3',
+            cancelButton: 'btn btn-outline-danger rounded-05',
+            popup: 'rounded-4 py-5 px-3',
+            icon: 'mt-0'
+        },
+        buttonsStyling: false
+    })
+
+    function deleteUser(docId) {
+        swalCustom.fire({
+            title: 'Hapus Pengguna?',
+            text: "Apakah anda yakin akan menghapus pengguna? Anda tidak dapat mengembalikan pengguna yang sudah dihapus.",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: '&nbsp;&nbsp;&nbsp;Ya&nbsp;&nbsp;&nbsp;',
+            cancelButtonText: 'Tidak',
+        }).then((result) => {
+            if (result.isConfirmed) {
+                window.open(`/delete-user/${docId}`, "_self");
+            }
+        })
+    }
+
+</script>
+
 {% endblock %}
