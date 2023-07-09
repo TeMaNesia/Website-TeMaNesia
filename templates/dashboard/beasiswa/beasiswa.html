@@ -161,9 +161,21 @@
                     </div>
 
                     <label for="edt_lokasi">Lokasi Pelaksanaan Beasiswa: </label>
-                    <div class="form-group mb-3">
-                        <input id="edt_lokasi" name="lokasi" type="text" placeholder="Lokasi pelaksanaan beasiswa" class="form-control form-control-lg py-2 bg-gray-light rounded-05" required>
+                    <div class="form-check mb-2">
+                        <input class="form-check-input" type="radio" name="edtRadioLokasi" value="Daring" id="edtRadioDaring">
+                        <label class="form-check-label">
+                            Daring
+                        </label>
                     </div>
+                    <div class="form-check mb-1">
+                        <input class="form-check-input" type="radio" name="edtRadioLokasi" value="Offline" id="edtRadioOffline">
+                        <label class="form-check-label">
+                            Offline
+                        </label>
+                    </div>
+                    <div class="form-group mb-3">
+                        <input id="edtTextLokasi" name="lokasi" type="hidden" placeholder="Lokasi offline" class="form-control form-control-lg py-2 bg-gray-light rounded-05">
+                    </div>                   
                     
                     <label for="edt_date">Tanggal Pelaksanaan Beasiswa: </label>
                     <div class="form-group">
@@ -340,7 +352,6 @@
         $.get(`/get-beasiswa/${docId}`, function (data) {
             $('#edt_ringkasan').val(data.ringkasan)
             $('#edt_nama').val(data.nama)
-            $('#edt_lokasi').val(data.lokasi)
             $('#edt_date').val(data.date)
             $('#edt_url').val(data.url)
             $('#edt_deskripsi').val(data.deskripsi)
@@ -353,6 +364,17 @@
             $('#old_pedoman').val(data.pedoman)
             $('#edt_id').val(docId)
             $('#edt_preview').attr('src', data.poster);
+
+            if (data.lokasi === "Daring") {
+                $('#edtRadioDaring').prop('checked', true);
+                $('#edtTextLokasi').attr('type', "hidden");
+                $('#edtTextLokasi').val("Daring");
+            } else {
+                $('#edtRadioOffline').prop('checked', true);
+                $('#edtTextLokasi').attr('type', "text");
+                $('#edtTextLokasi').val(data.lokasi);
+            }
+
             editBeasiswaModal.show()
         })
     }
@@ -434,6 +456,20 @@
             } else {
                 $('#textLokasi').attr('type', "text");
                 $('#textLokasi').val("");
+            }
+        });
+    });
+
+    $(document).ready(function() {
+        $('input[name="edtRadioLokasi"]').change(function() {
+            var selectedValue = $(this).val();
+
+            if (selectedValue === "Daring") {
+                $('#edtTextLokasi').attr('type', "hidden");
+                $('#edtTextLokasi').val("Daring");
+            } else {
+                $('#edtTextLokasi').attr('type', "text");
+                $('#edtTextLokasi').val("");
             }
         });
     });
