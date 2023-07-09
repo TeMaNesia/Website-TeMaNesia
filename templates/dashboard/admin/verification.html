@@ -48,7 +48,7 @@
 
 <div class="modal fade text-left modal-borderless" id="editStatusForm" tabindex="-1" aria-labelledby="editStatusFormLabel" style="display: none;" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
-        <div class="modal-content rounded-4">
+        <div class="modal-content rounded-4 p-3">
             <div class="modal-header">
                 <h4 class="modal-title" id="editStatusFormLabel">
                     Ubah Status Pengguna
@@ -60,9 +60,8 @@
                     </svg>
                 </button>
             </div>
-            <form action="/edit-status" method="POST">
-                <div class="modal-body">
-
+            <div class="modal-body">
+                <form id="editForm" action="/edit-status" method="POST">
                     <label for="edt_status">Status Pengguna: </label>
                     <div class="form-group mb-3">
                         <select class="form-select py-2 bg-gray-light rounded-05 text-start" name="status" id="edt_status" required>
@@ -71,21 +70,19 @@
                             <option class="text-start" value="Aktif">Aktif</option>
                         </select>
                     </div>
-
                     <input id="edt_id" type="hidden" name="id">
-
-                </div>
-                <div class="modal-footer">
-                    <button type="submit" class="btn btn-primary rounded-05">Submit</button>
-                </div>
-            </form>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button id="submitEdit" type="submit" class="btn btn-primary rounded-05">Submit</button>
+            </div>
         </div>
     </div>
 </div>
 
 <div class="modal fade text-left modal-borderless" id="detailUser" tabindex="-1" aria-labelledby="detailUserLabel" style="display: none;" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
-        <div class="modal-content rounded-4">
+        <div class="modal-content rounded-4 p-3">
             <div class="modal-header">
                 <h4 class="modal-title" id="detailUserLabel">
                     Detail Pengguna
@@ -125,7 +122,7 @@
 
                 <label for="view_alamat">Alamat Lembaga: </label>
                 <div class="form-group mb-3">
-                    <input id="view_alamat" type="text" class="form-control form-control-lg py-2 bg-gray-light rounded-05" value="aa" readonly="readonly" disabled>
+                    <textarea id="view_alamat" type="text" class="form-control form-control-lg py-2 bg-gray-light rounded-05" readonly="readonly" disabled></textarea>
                 </div>
 
                 <label for="view_status">Status Pengguna: </label>
@@ -224,6 +221,12 @@
             }
         })
     }
+
+    $(document).ready(function() {
+        $('#submitEdit').click(function() {
+            $('#editForm').submit();
+        });
+    });
 
 </script>
 

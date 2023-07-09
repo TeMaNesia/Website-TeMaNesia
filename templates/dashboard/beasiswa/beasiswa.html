@@ -53,7 +53,7 @@
 
 <div class="modal fade text-left modal-borderless" id="addBeasiswaForm" tabindex="-1" aria-labelledby="addBeasiswaFormLabel" style="display: none;" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
-        <div class="modal-content rounded-4">
+        <div class="modal-content rounded-4 p-3">
             <div class="modal-header">
                 <h4 class="modal-title" id="addBeasiswaFormLabel">
                     Form Tambah Beasiswa
@@ -65,8 +65,8 @@
                     </svg>
                 </button>
             </div>
-            <form action="/add-beasiswa" method="POST">
-                <div class="modal-body">
+            <div class="modal-body">
+                <form id="addForm" action="/add-beasiswa" method="POST" enctype="multipart/form-data">
                     <label for="nama">Nama Beasiswa: </label>
                     <div class="form-group mb-3">
                         <input id="nama" name="nama" type="text" placeholder="Nama beasiswa" class="form-control form-control-lg py-2 bg-gray-light rounded-05" required>
@@ -77,10 +77,22 @@
                         <input id="ringkasan" name="ringkasan" type="text" placeholder="Ringkasan beasiswa" class="form-control form-control-lg py-2 bg-gray-light rounded-05" required>
                     </div>
 
-                    <label for="lokasi">Lokasi Beasiswa: </label>
-                    <div class="form-group mb-3">
-                        <input id="lokasi" name="lokasi" type="text" placeholder="Lokasi beasiswa" class="form-control form-control-lg py-2 bg-gray-light rounded-05" required>
+                    <label for="lokasi">Lokasi Pelaksanaan Beasiswa: </label>
+                    <div class="form-check mb-2">
+                        <input class="form-check-input" type="radio" name="radioLokasi" value="Daring" id="radioDaring">
+                        <label class="form-check-label">
+                            Daring
+                        </label>
                     </div>
+                    <div class="form-check mb-1">
+                        <input class="form-check-input" type="radio" name="radioLokasi" value="Offline" id="radioOffline">
+                        <label class="form-check-label">
+                            Offline
+                        </label>
+                    </div>
+                    <div class="form-group mb-3">
+                        <input id="textLokasi" name="lokasi" type="hidden" placeholder="Lokasi offline" class="form-control form-control-lg py-2 bg-gray-light rounded-05">
+                    </div>                    
 
                     <label for="date">Tanggal Pelaksanaan Beasiswa: </label>
                     <div class="form-group">
@@ -94,24 +106,36 @@
 
                     <label for="deskripsi">Deskripsi Beasiswa: </label>
                     <div class="form-group mb-3">
-                        <input id="deskripsi" name="deskripsi" type="text" placeholder="Deskripsi beasiswa" class="form-control form-control-lg py-2 bg-gray-light rounded-05" required>
+                        <textarea id="deskripsi" name="deskripsi" type="text" placeholder="Deskripsi beasiswa" class="form-control form-control-lg py-2 bg-gray-light rounded-05" required></textarea>
                     </div>
+
+                    <label for="pedoman">File Pedoman Beasiswa (Optional): </label>
+                    <div class="form-group mb-3">
+                        <input type="file" id="pedoman" name="pedoman" class="form-control form-control-lg py-2 bg-gray-light rounded-05" accept=".doc,.pdf" aria-describedby="inputGroupFileAddon04" aria-label="Upload">
+                    </div>
+
+                    <label for="poster">Poster Beasiswa: </label>
+                    <div class="form-group mb-3">
+                        <input type="file" id="poster" name="poster" class="form-control form-control-lg py-2 bg-gray-light rounded-05" accept="image/*" aria-describedby="inputGroupFileAddon04" aria-label="Upload" required>
+                    </div>
+
+                    <img id="preview" class="img-fluid mt-2 img-thumbnail" src="" width="" height="">
 
                     <input type="hidden" name="nama_penyelenggara" value="{{ user['nama_lembaga'] }}">
                     <input type="hidden" name="email_penyelenggara" value="{{ user['email'] }}">
                     <input type="hidden" name="penyelenggara_uid" value="{{ user['localId'] }}">
-                </div>
-                <div class="modal-footer">
-                    <button type="submit" class="btn btn-primary rounded-05">Submit</button>
-                </div>
-            </form>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" id="submitAdd" class="btn btn-primary rounded-05">Submit</button>
+            </div>
         </div>
     </div>
 </div>
 
 <div class="modal fade text-left modal-borderless" id="editBeasiswaForm" tabindex="-1" aria-labelledby="editBeasiswaFormLabel" style="display: none;" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
-        <div class="modal-content rounded-4">
+        <div class="modal-content rounded-4 p-3">
             <div class="modal-header">
                 <h4 class="modal-title" id="editBeasiswaFormLabel">
                     Ubah Data Beasiswa
@@ -123,8 +147,9 @@
                     </svg>
                 </button>
             </div>
-            <form action="/edit-beasiswa" method="POST">
-                <div class="modal-body">
+
+            <div class="modal-body">
+                <form id="editForm" action="/edit-beasiswa" method="POST" enctype="multipart/form-data">
                     <label for="edt_nama">Nama Beasiswa: </label>
                     <div class="form-group mb-3">
                         <input id="edt_nama" name="nama" type="text" placeholder="Nama beasiswa" class="form-control form-control-lg py-2 bg-gray-light rounded-05" required>
@@ -135,9 +160,9 @@
                         <input id="edt_ringkasan" name="ringkasan" type="text" placeholder="Ringkasan beasiswa" class="form-control form-control-lg py-2 bg-gray-light rounded-05" required>
                     </div>
 
-                    <label for="edt_lokasi">Lokasi Beasiswa: </label>
+                    <label for="edt_lokasi">Lokasi Pelaksanaan Beasiswa: </label>
                     <div class="form-group mb-3">
-                        <input id="edt_lokasi" name="lokasi" type="text" placeholder="Lokasi beasiswa" class="form-control form-control-lg py-2 bg-gray-light rounded-05" required>
+                        <input id="edt_lokasi" name="lokasi" type="text" placeholder="Lokasi pelaksanaan beasiswa" class="form-control form-control-lg py-2 bg-gray-light rounded-05" required>
                     </div>
                     
                     <label for="edt_date">Tanggal Pelaksanaan Beasiswa: </label>
@@ -152,7 +177,7 @@
 
                     <label for="edt_deskripsi">Deskripsi Beasiswa: </label>
                     <div class="form-group mb-3">
-                        <input id="edt_deskripsi" name="deskripsi" type="text" placeholder="Deskripsi beasiswa" class="form-control form-control-lg py-2 bg-gray-light rounded-05" required>
+                        <textarea id="edt_deskripsi" name="deskripsi" type="text" placeholder="Deskripsi beasiswa" class="form-control form-control-lg py-2 bg-gray-light rounded-05" required></textarea>
                     </div>
 
                     <label for="edt_status">Status Beasiswa: </label>
@@ -164,25 +189,37 @@
                         </select>
                     </div>
 
+                    <label for="edt_pedoman">File Pedoman Beasiswa (Optional): </label>
+                    <div class="form-group mb-3">
+                        <input type="file" id="edt_pedoman" name="pedoman" class="form-control form-control-lg py-2 bg-gray-light rounded-05" accept=".doc,.pdf" aria-describedby="inputGroupFileAddon04" aria-label="Upload">
+                    </div>
+
+                    <label for="edt_poster">Poster Beasiswa: </label>
+                    <div class="form-group mb-3">
+                        <input type="file" id="edt_poster" name="poster" class="form-control form-control-lg py-2 bg-gray-light rounded-05" accept="image/*" aria-describedby="inputGroupFileAddon04" aria-label="Upload">
+                    </div>
+                    <img id="edt_preview" class="img-fluid mt-2 img-thumbnail" src="" width="190" height="190">
+
                     <input type="hidden" name="penyelenggara_uid" value="{{ user['localId'] }}">
+                    <input id="old_poster" type="hidden" name="old_poster">
+                    <input id="old_pedoman" type="hidden" name="old_pedoman">
                     <input id="edt_created_at" type="hidden" name="created_at">
                     <input id="edt_email" type="hidden" name="email">
                     <input id="edt_jenis" type="hidden" name="jenis">
                     <input id="edt_nama_penyelenggara" type="hidden" name="nama_penyelenggara">
                     <input id="edt_id" type="hidden" name="id">
-
-                </div>
-                <div class="modal-footer">
-                    <button type="submit" class="btn btn-primary rounded-05">Submit</button>
-                </div>
-            </form>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" id="submitEdit" class="btn btn-primary rounded-05">Submit</button>
+            </div>
         </div>
     </div>
 </div>
 
 <div class="modal fade text-left modal-borderless" id="detailBeasiswa" tabindex="-1" aria-labelledby="detailBeasiswaLabel" style="display: none;" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
-        <div class="modal-content rounded-4">
+        <div class="modal-content rounded-4 p-3">
             <div class="modal-header">
                 <h4 class="modal-title" id="detailBeasiswaLabel">
                     Detail Beasiswa
@@ -197,43 +234,46 @@
             <div class="modal-body">
                 <label for="view_ringkasan">Singkatan Nama Beasiswa: </label>
                 <div class="form-group mb-3">
-                    <input id="view_ringkasan" type="text" class="form-control form-control-lg py-2 bg-gray-light rounded-05" value="aa" readonly="readonly" disabled>
+                    <input id="view_ringkasan" type="text" class="form-control form-control-lg py-2 bg-gray-light rounded-05" readonly="readonly" disabled>
                 </div>
 
                 <label for="view_nama">Nama Beasiswa: </label>
                 <div class="form-group mb-3">
-                    <input id="view_nama" type="text" class="form-control form-control-lg py-2 bg-gray-light rounded-05" value="aa" readonly="readonly" disabled>
+                    <input id="view_nama" type="text" class="form-control form-control-lg py-2 bg-gray-light rounded-05" readonly="readonly" disabled>
                 </div>
 
-                <label for="view_lokasi">Lokasi Beasiswa: </label>
+                <label for="view_lokasi">Lokasi Pelaksanaan Beasiswa: </label>
                 <div class="form-group mb-3">
-                    <input id="view_lokasi" type="text" class="form-control form-control-lg py-2 bg-gray-light rounded-05" value="bb" readonly="readonly" disabled>
+                    <input id="view_lokasi" type="text" class="form-control form-control-lg py-2 bg-gray-light rounded-05" readonly="readonly" disabled>
                 </div>
 
                 <label for="view_date">Tanggal Pelaksanaan Beasiswa: </label>
                 <div class="form-group">
-                    <input id="view_date" type="text" class="form-control form-control-lg py-2 bg-gray-light rounded-05" value="cc" readonly="readonly" disabled>
+                    <input id="view_date" type="text" class="form-control form-control-lg py-2 bg-gray-light rounded-05" readonly="readonly" disabled>
                 </div>
 
                 <label for="view_url">URL Beasiswa: </label>
                 <div class="form-group mb-3">
-                    <input id="view_url" type="text" class="form-control form-control-lg py-2 bg-gray-light rounded-05" value="bb" readonly="readonly" disabled>
+                    <input id="view_url" type="text" class="form-control form-control-lg py-2 bg-gray-light rounded-05" readonly="readonly" disabled>
                 </div>
 
                 <label for="view_deskripsi">Deskripsi Beasiswa: </label>
                 <div class="form-group mb-3">
-                    <input id="view_deskripsi" type="text" class="form-control form-control-lg py-2 bg-gray-light rounded-05" value="bb" readonly="readonly" disabled>
+                    <textarea id="view_deskripsi" type="text" placeholder="Deskripsi beasiswa" class="form-control form-control-lg py-2 bg-gray-light rounded-05" readonly="readonly" disabled></textarea>
                 </div>
 
                 <label for="view_status">Status Beasiswa: </label>
                 <div class="form-group mb-3">
-                    <input id="view_status" type="text" class="form-control form-control-lg py-2 bg-gray-light rounded-05" value="bb" readonly="readonly" disabled>
+                    <input id="view_status" type="text" class="form-control form-control-lg py-2 bg-gray-light rounded-05" readonly="readonly" disabled>
                 </div>
 
                 <label for="view_datecreated">Tanggal Pembuatan Beasiswa: </label>
                 <div class="form-group mb-3">
-                    <input id="view_datecreated" type="text" class="form-control form-control-lg py-2 bg-gray-light rounded-05" value="bb" readonly="readonly" disabled>
+                    <input id="view_datecreated" type="text" class="form-control form-control-lg py-2 bg-gray-light rounded-05" readonly="readonly" disabled>
                 </div>
+
+                <label for="view_poster">Poster Beasiswa: </label><br>
+                <img id="view_poster" class="img-fluid mt-2 img-thumbnail" src="" width="190" height="190">
 
                 <input type="hidden" name="penyelenggara_uid" value="{{ user['localId'] }}">
 
@@ -291,6 +331,7 @@
             $('#view_deskripsi').val(data.deskripsi)
             $('#view_status').val(data.status)
             $('#view_datecreated').val(data.created_at)
+            $('#view_poster').attr('src', data.poster);
             detailBeasiswaModal.show()
         })
     }
@@ -308,7 +349,10 @@
             $('#edt_email').val(data.email_penyelenggara)
             $('#edt_jenis').val(data.jenis_kegiatan)
             $('#edt_nama_penyelenggara').val(data.nama_penyelenggara)
+            $('#old_poster').val(data.poster)
+            $('#old_pedoman').val(data.pedoman)
             $('#edt_id').val(docId)
+            $('#edt_preview').attr('src', data.poster);
             editBeasiswaModal.show()
         })
     }
@@ -337,6 +381,62 @@
             }
         })
     }
+
+    $(document).ready(function() {
+        $('#poster').on('change', function(event) {
+            var input = event.target;
+            var reader = new FileReader();
+
+            reader.onload = function() {
+                var dataURL = reader.result;
+                $('#preview').attr('src', dataURL);
+                $('#preview').attr('width', "190");
+                $('#preview').attr('height', "190");
+            };
+
+            reader.readAsDataURL(input.files[0]);
+            });
+    });
+
+    $(document).ready(function() {
+        $('#edt_poster').on('change', function(event) {
+            var input = event.target;
+            var reader = new FileReader();
+
+            reader.onload = function() {
+                var dataURL = reader.result;
+                $('#edt_preview').attr('src', dataURL);
+            };
+
+            reader.readAsDataURL(input.files[0]);
+        });
+    });
+
+    $(document).ready(function() {
+        $('#submitAdd').click(function() {
+            $('#addForm').submit();
+        });
+    });
+
+    $(document).ready(function() {
+        $('#submitEdit').click(function() {
+            $('#editForm').submit();
+        });
+    });
+
+    $(document).ready(function() {
+        $('input[name="radioLokasi"]').change(function() {
+            var selectedValue = $(this).val();
+
+            if (selectedValue === "Daring") {
+                $('#textLokasi').attr('type', "hidden");
+                $('#textLokasi').val("Daring");
+            } else {
+                $('#textLokasi').attr('type', "text");
+                $('#textLokasi').val("");
+            }
+        });
+    });
 
 </script>
 

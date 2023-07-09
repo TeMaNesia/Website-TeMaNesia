@@ -2,10 +2,11 @@ import os
 import pyrebase
 import json
 import locale
+import uuid
 
 from requests.exceptions import HTTPError
 from flask import Flask, session, render_template, request, redirect, url_for, flash, jsonify
-from firebase_admin import credentials, firestore, initialize_app
+from firebase_admin import credentials, firestore, initialize_app, storage
 from datetime import datetime
 
 
@@ -28,8 +29,12 @@ firebase = pyrebase.initialize_app(config)
 auth = firebase.auth()
 
 cred = credentials.Certificate('key.json')
-initialize_app(cred)
+initialize_app(cred, {
+    'storageBucket': 'temanesia-6feb4.appspot.com'
+})
+
 db = firestore.client()
+bucket = storage.bucket()
 
 
 @app.route('/', methods=['POST', 'GET'])
@@ -388,6 +393,24 @@ def add_beasiswa():
         new_beasiswa['status'] = 'Aktif'
         new_beasiswa['jenis_kegiatan'] = 'Beasiswa'
 
+        poster = request.files['poster']
+        unique_filename = str(uuid.uuid4()) + '.' + poster.filename.split('.')[-1] 
+        blob = bucket.blob(unique_filename)
+        blob.upload_from_file(poster)
+        blob.make_public()
+        new_beasiswa['poster'] = blob.public_url
+
+        if request.files['pedoman'].filename != '':
+            pedoman = request.files['pedoman']
+            unique_filename = str(uuid.uuid4()) + '.' + pedoman.filename.split('.')[-1] 
+            blob = bucket.blob(unique_filename)
+            blob.upload_from_file(pedoman)
+            blob.make_public()
+            new_beasiswa['pedoman'] = blob.public_url
+
+        else:
+            new_beasiswa['pedoman'] = "No file uploaded"
+
         try:
             db.collection('beasiswa').document().set(new_beasiswa)
             flash('beasiswa baru berhasil ditambahkan', 'success')
@@ -418,6 +441,34 @@ def edit_beasiswa():
         edited_beasiswa['email_penyelenggara'] = request.form.get('email')
         edited_beasiswa['nama_penyelenggara'] = request.form.get('nama_penyelenggara')
 
+        if request.files['poster'].filename != '':
+            poster = request.files['poster']
+            unique_filename = str(uuid.uuid4()) + '.' + poster.filename.split('.')[-1] 
+            blob = bucket.blob(unique_filename)
+            blob.upload_from_file(poster)
+            blob.make_public()
+            edited_beasiswa['poster'] = blob.public_url
+            blob = bucket.blob(os.path.basename(request.form.get('old_poster').rstrip('/')))
+            blob.delete()
+
+        else:
+            edited_beasiswa['poster'] = request.form.get('old_poster')
+
+        if request.files['pedoman'].filename != '':
+            pedoman = request.files['pedoman']
+            unique_filename = str(uuid.uuid4()) + '.' + pedoman.filename.split('.')[-1] 
+            blob = bucket.blob(unique_filename)
+            blob.upload_from_file(pedoman)
+            blob.make_public()
+            edited_beasiswa['pedoman'] = blob.public_url
+
+            if request.form.get('old_pedoman') != "No file uploaded":
+                blob = bucket.blob(os.path.basename(request.form.get('old_pedoman').rstrip('/')))
+                blob.delete()
+                
+        else:
+            edited_beasiswa['pedoman'] = request.form.get('old_pedoman')
+
         try:
             db.collection('beasiswa').document(request.form.get('id')).set(edited_beasiswa)
             flash('Data beasiswa berhasil diperbaharui', 'success')
@@ -444,6 +495,15 @@ def get_beasiswa(id):
 @app.route('/delete-beasiswa/<id>', methods=['GET'])
 def delete_beasiswa(id):
     try:
+        data = db.collection('beasiswa').document(id).get()
+        data_dict = data.to_dict()
+        blob = bucket.blob(os.path.basename(data_dict['poster'].rstrip('/')))
+        blob.delete()
+
+        if data_dict['pedoman'] != "No file uploaded":
+            blob = bucket.blob(os.path.basename(data_dict['pedoman'].rstrip('/')))
+            blob.delete()
+
         db.collection('beasiswa').document(id).delete()
         flash('Berhasil hapus beasiswa', 'success')
         return redirect(url_for('dashboard', role='beasiswa', page='beasiswa'))
