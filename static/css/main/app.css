@@ -2755,8 +2755,8 @@ textarea.form-control-lg {
 }
 
 .form-check-input:checked {
-    background-color: #435ebe;
-    border-color: #435ebe
+    background-color: var(--bs-primary);
+    border-color: var(--bs-primary)
 }
 
 .form-check-input:checked[type=checkbox] {
