@@ -1,10 +1,10 @@
-.dataTable-wrapper.no-header .dataTable-container {
+/* .dataTable-wrapper.no-header .dataTable-container {
 	border-top: 1px solid var(--bs-primary);
 }
 
 .dataTable-wrapper.no-footer .dataTable-container {
 	border-bottom: 1px solid var(--bs-primary);
-}
+} */
 
 .dataTable-bottom {
 	padding-top: 1.5rem;
