@@ -1,3 +1,7 @@
+FilePond.registerPlugin(
+  FilePondPluginImagePreview,
+);
+
 // Need: Toastify
 // Filepond: Basic
 FilePond.create(document.querySelector(".basic-filepond"), {

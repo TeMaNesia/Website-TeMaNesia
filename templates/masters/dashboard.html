@@ -5,6 +5,57 @@
 {% block head %}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/pages/simple-datatables.css') }}">
 <link rel="stylesheet" href="{{ url_for('static', filename='css/pages/sidebar.css') }}">
+
+<style>
+    .filepond--drop-label {
+        border-radius: 0.5rem !important;
+        border: var(--bs-border-width) var(--bs-border-style) var(--bs-border-color) !important;
+        border-color: rgba(var(--bs-primary-rgb), var(--bs-border-opacity)) !important;
+        background-color: var(--bs-gray-light) !important;
+    }
+
+    .mf-filepond>.filepond--drop-label {
+        border-radius: 0.5rem !important;
+        border: var(--bs-border-width) var(--bs-border-style) var(--bs-border-color) !important;
+        border-color: rgba(var(--bs-primary-rgb), var(--bs-border-opacity)) !important;
+        background-color: var(--bs-gray-light) !important;
+        border-width: 1px 1px 0 1px !important;
+    }
+
+    .mf-filepond>.filepond--panel-root[data-scalable="true"] {
+        border-radius: 0.5rem !important;
+        border: var(--bs-border-width) var(--bs-border-style) var(--bs-border-color) !important;
+        border-color: rgba(var(--bs-primary-rgb), var(--bs-border-opacity)) !important;
+        background-color: var(--bs-gray-light) !important;
+    }
+
+    .mf-filepond>.filepond--drip {
+        border-radius: 0.5rem !important;
+        border: var(--bs-border-width) var(--bs-border-style) var(--bs-border-color) !important;
+        border-color: rgba(var(--bs-primary-rgb), var(--bs-border-opacity)) !important;
+        background-color: var(--bs-gray-light) !important;
+    }
+
+    .mf-filepond>.filepond--panel-root[data-scalable="true"] .filepond--panel-bottom {
+        border: var(--bs-border-width) var(--bs-border-style) var(--bs-border-color) !important;
+        border-color: rgba(var(--bs-primary-rgb), var(--bs-border-opacity)) !important;
+        background-color: var(--bs-gray-light) !important;
+    }
+
+    .mf-filepond>.filepond--panel-root[data-scalable="true"] .filepond--panel-center {
+        background-color: var(--bs-gray-light) !important;
+    }
+
+    .mf-filepond>.filepond--panel-root[data-scalable="true"] .filepond--panel-top {
+        background-color: var(--bs-gray-light) !important;
+    }
+
+    .poster-placeholder {
+        content: url("{{ url_for('static', filename='images/placeholder/img-placeholder.jpg') }}");
+        aspect-ratio: 1/1.4142;
+        width: 100%;
+    }
+</style>
 {% endblock %}
 
 {% block body %}
@@ -73,8 +124,10 @@
 {% endblock %}
 
 
-{% block script %}
+{% block dashboardScript %}
 <script type="text/javascript">
+
+    // *********** Toast *************
 
     const Toast = Swal.mixin({
         toast: true,
@@ -100,6 +153,153 @@
     {% endfor %}
     {% endif %}
     {% endwith %}
+
+    const swalCustom = Swal.mixin({
+        customClass: {
+            confirmButton: 'btn btn-danger rounded-05 me-3',
+            cancelButton: 'btn btn-outline-danger rounded-05',
+            popup: 'rounded-4 py-5 px-3',
+            icon: 'mt-0'
+        },
+        buttonsStyling: false
+    })
+
+    // *****************************
+
+
+
+    // *********** FilePond *************
+
+    FilePond.registerPlugin(FilePondPluginFileValidateType);
+
+    FilePond.setOptions({
+        server: {
+            headers: { 'Access-Control-Allow-Origin': '*' },
+            load: function (source, load) {
+                fetch(source.url).then((res) => res.blob()).then(load);
+            },
+        }
+    });
+
+    const multipleFilePond = FilePond.create(document.querySelector(".multiple-files-filepond"), {
+        credits: null,
+        allowMultiple: true,
+        required: false,
+        storeAsFile: true,
+        acceptedFileTypes: ["application/pdf"],
+        labelIdle: '<b>Tarik dan Taruh</b> satu atau lebih file disini atau <span class="filepond--label-action"> <b>Cari File</b> </span>',
+        labelFileTypeNotAllowed: 'Tipe file tidak valid',
+        fileValidateTypeLabelExpectedTypes: 'Hanya file pdf'
+    });
+
+    const multipleFilePondEdit = FilePond.create(document.querySelector(".multiple-files-filepond-edit"), {
+        credits: null,
+        allowMultiple: true,
+        required: false,
+        storeAsFile: true,
+        acceptedFileTypes: ["application/pdf"],
+        labelIdle: '<b>Tarik dan Taruh</b> satu atau lebih file disini atau <span class="filepond--label-action"> <b>Cari File</b> </span>',
+        labelFileTypeNotAllowed: 'Tipe file tidak valid',
+        fileValidateTypeLabelExpectedTypes: 'Hanya file pdf'
+    });
+
+
+    const imgPond = FilePond.create(document.querySelector(".image-filepond"), {
+        credits: null,
+        storeAsFile: true,
+        acceptedFileTypes: ['image/*'],
+        labelIdle: '<b>Tarik dan Taruh</b> gambar poster disini atau <span class="filepond--label-action"> <b>Cari Gambar</b> </span>',
+        labelFileTypeNotAllowed: 'Tipe file tidak valid',
+        fileValidateTypeLabelExpectedTypes: 'Hanya file gambar'
+    });
+
+    imgPond.on('addfile', (error, file) => {
+        if (error) {
+            console.log('Error adding file:', error);
+            return;
+        }
+
+        var reader = new FileReader();
+        reader.onload = function (e) {
+            $("#img-poster").attr("src", e.target.result);
+            $('#img-poster').removeClass('poster-placeholder');
+            $('#img-poster').addClass('w-100');
+        }
+        reader.readAsDataURL(file.file);
+    });
+
+    imgPond.on('removefile', (error, file) => {
+        if (error) {
+            console.log('Error adding file:', error);
+            return;
+        }
+
+        var reader = new FileReader();
+        reader.onload = function (e) {
+            $("#img-poster").remove("src");
+            $('#img-poster').addClass('poster-placeholder');
+            $('#img-poster').removeClass('w-100');
+        }
+        reader.readAsDataURL(file.file);
+    });
+
+
+    const imgPondEdit = FilePond.create(document.querySelector(".image-filepond-edit"), {
+        credits: null,
+        storeAsFile: true,
+        acceptedFileTypes: ['image/*'],
+        labelIdle: '<b>Tarik dan Taruh</b> gambar poster disini atau <span class="filepond--label-action"> <b>Cari Gambar</b> </span>',
+        labelFileTypeNotAllowed: 'Tipe file tidak valid',
+        fileValidateTypeLabelExpectedTypes: 'Hanya file gambar'
+    });
+
+    imgPondEdit.on('addfile', (error, file) => {
+        if (error) {
+            console.log('Error adding file:', error);
+            return;
+        }
+
+        var reader = new FileReader();
+        reader.onload = function (e) {
+            $("#img-poster-edit").attr("src", e.target.result);
+            $('#img-poster-edit').removeClass('poster-placeholder');
+            $('#img-poster-edit').addClass('w-100');
+        }
+        reader.readAsDataURL(file.file);
+    });
+
+    imgPondEdit.on('removefile', (error, file) => {
+        if (error) {
+            console.log('Error adding file:', error);
+            return;
+        }
+
+        var reader = new FileReader();
+        reader.onload = function (e) {
+            $("#img-poster-edit").remove("src");
+            $('#img-poster-edit').addClass('poster-placeholder');
+            $('#img-poster-edit').removeClass('w-100');
+        }
+        reader.readAsDataURL(file.file);
+    });
+
+    function addToPond(url, filename, type, pond) {
+        const filetype = filename.split('.').pop()
+
+        fetch(url)
+            .then(response => response.blob())
+            .then(data => {
+                const file = new File([data], filename, { type: `${type}/${filetype}` });
+                pond.addFile(file)
+            });
+    }
+
+    // *****************************
+
+
+    flatpickr('.flatpickr-no-config', {
+        dateFormat: "Y-m-d",
+    })
 
 </script>
 {% endblock %}
