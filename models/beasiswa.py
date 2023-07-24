@@ -1,15 +1,10 @@
-import os
-import pyrebase
 import json
-import locale
-import uuid
 
 from requests.exceptions import HTTPError
-from flask import Blueprint, Flask, session, render_template, request, redirect, url_for, flash, jsonify
-from firebase_admin import credentials, firestore, initialize_app, storage
+from flask import Blueprint, render_template, request, redirect, url_for, flash, jsonify
 from datetime import datetime
 
-from firebase import firebase, db, bucket, auth, storage_upload, storage_multiple_upload, storage_delete_file
+from firebase import db, storage_upload, storage_multiple_upload, storage_delete_file
 
 
 beasiswa = Blueprint('beasiswa', __name__)
@@ -43,7 +38,7 @@ def add_beasiswa():
             for i_file in important_files:
                 db.collection('beasiswa').document(uploaded_beasiswa[1].id).collection('file-penting').add(i_file)
 
-            flash('beasiswa baru berhasil ditambahkan', 'success')
+            flash('Beasiswa baru berhasil ditambahkan', 'success')
             return redirect(url_for('dashboard', role='beasiswa', page='beasiswa'))
 
         except HTTPError as e:
@@ -76,6 +71,7 @@ def edit_beasiswa():
 
             edited_beasiswa['poster_filename'] = request.files['poster'].filename
             edited_beasiswa['poster'] = storage_upload(request.files['poster'], 'poster')
+            
         else:
             edited_beasiswa['poster'] = request.form.get('old_poster')
         

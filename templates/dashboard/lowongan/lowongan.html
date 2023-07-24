@@ -1,44 +1,44 @@
-{% extends 'dashboard/lomba/master.html' %}
+{% extends 'dashboard/lowongan/master.html' %}
 
-{% block title %} Lomba {% endblock %}
+{% block title %} Lowongan {% endblock %}
 
 {% block page_content %}
 <div class="card">
     <div class="card-header mb-0">
-        <h3>Daftar Lomba</h3>
-        <p class="text-subtitle mb-0">Manajemen penyelengaraan lomba lembaga anda di halaman ini.</p>
+        <h3>Daftar Lowongan</h3>
+        <p class="text-subtitle mb-0">Manajemen penyelengaraan lowongan lembaga anda di halaman ini.</p>
     </div>
     <div class="card-body">
-        <button class="btn btn-primary rounded-05 mb-4" data-bs-toggle="modal" data-bs-target="#addlombaForm">Tambah Lomba</button>
+        <button class="btn btn-primary rounded-05 mb-4" data-bs-toggle="modal" data-bs-target="#addlowonganForm">Tambah Lowongan</button>
         <table class="table" id="table1">
             <thead>
                 <tr>
-                    <th>Nama Lomba</th>
-                    <th>Tanggal Lomba</th>
+                    <th>Nama Lowongan</th>
+                    <th>Tanggal Lowongan</th>
                     <th>Status</th>
                     <th>Aksi</th>
                 </tr>
             </thead>
             <tbody>
-                {% for lomba in data_lomba %}
+                {% for lowongan in data_lowongan %}
 
                 <tr>
-                    <td style="width: 40%;">{{ lomba['nama'] }}</td>
-                    <td class="text-center">{{ lomba['date'] }}</td>
+                    <td style="width: 40%;">{{ lowongan['nama'] }}</td>
+                    <td class="text-center">{{ lowongan['date'] }}</td>
                     <td class="text-center">
-                        <span class="badge bg-{% if lomba['status'] == 'Nonaktif' %}danger{% else %}success{% endif %} bg-opacity-20 text-{% if lomba['status'] == 'Nonaktif' %}danger{% else %}success{% endif %}">{{ lomba['status'] }}</span>
+                        <span class="badge bg-{% if lowongan['status'] == 'Nonaktif' %}danger{% else %}success{% endif %} bg-opacity-20 text-{% if lowongan['status'] == 'Nonaktif' %}danger{% else %}success{% endif %}">{{ lowongan['status'] }}</span>
                     </td>
                     <td class="text-center">
 
-                        <span class="badge bg-warning bg-opacity-20 text-warning fs-6 py-2 hover-zoom" onclick="editlomba('{{ lomba['id'] }}')">
+                        <span class="badge bg-warning bg-opacity-20 text-warning fs-6 py-2 hover-zoom" onclick="editlowongan('{{ lowongan['id'] }}')">
                             <i class="bi bi-pencil fs-6"></i>
                         </span>
 
-                        <span class="badge bg-danger bg-opacity-20 text-danger fs-6 py-2 hover-zoom" onclick="deletelomba('{{ lomba['id'] }}')">
+                        <span class="badge bg-danger bg-opacity-20 text-danger fs-6 py-2 hover-zoom" onclick="deletelowongan('{{ lowongan['id'] }}')">
                             <i class="bi bi-trash3 fs-6"></i>
                         </span>
 
-                        <span class="badge bg-primary bg-opacity-20 text-primary fs-6 py-2 hover-zoom" onclick="showDetail('{{ lomba['id'] }}')">
+                        <span class="badge bg-primary bg-opacity-20 text-primary fs-6 py-2 hover-zoom" onclick="showDetail('{{ lowongan['id'] }}')">
                             <i class="bi bi-eye fs-6"></i>
                         </span>
 
@@ -51,12 +51,12 @@
     </div>
 </div>
 
-<div class="modal fade text-left modal-borderless" id="addlombaForm" tabindex="-1" aria-labelledby="addlombaFormLabel" style="display: none;" aria-hidden="true">
+<div class="modal fade text-left modal-borderless" id="addlowonganForm" tabindex="-1" aria-labelledby="addlowonganFormLabel" style="display: none;" aria-hidden="true">
     <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable" role="document">
         <div class="modal-content rounded-4 p-3">
             <div class="modal-header">
-                <h4 class="modal-title" id="addlombaFormLabel">
-                    Form Tambah Lomba
+                <h4 class="modal-title" id="addlowonganFormLabel">
+                    Form Tambah Lowongan
                 </h4>
                 <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-x">
@@ -66,10 +66,10 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form id="addForm" action="/add-lomba" method="POST" enctype="multipart/form-data">
+                <form id="addForm" action="/add-lowongan" method="POST" enctype="multipart/form-data">
                     <div class="row">
                         <div class="col-4">
-                            <label for="poster">Poster Lomba</label>
+                            <label for="poster">Poster Lowongan</label>
                             <img id="img-poster" class="rounded-05 border-primary border mt-1 poster-placeholder">
                             <div class="form-group mb-5 mt-3">
                                 <input type="file" id="poster" name="poster" type="file" accept="image/*" class="image-filepond border-primary border-1" aria-describedby="inputGroupFileAddon04" aria-label="Upload" required>
@@ -81,17 +81,17 @@
                             </div>
                         </div>
                         <div class="col-8 ps-3">
-                            <label for="nama">Nama Lomba </label>
+                            <label for="nama">Nama Lowongan </label>
                             <div class="form-group mb-3 mt-1">
-                                <input id="nama" name="nama" type="text" placeholder="Nama lomba" class="form-control form-control-lg py-2 bg-gray-light rounded-05" required>
+                                <input id="nama" name="nama" type="text" placeholder="Nama lowongan" class="form-control form-control-lg py-2 bg-gray-light rounded-05" required>
                             </div>
 
-                            <label for="ringkasan">Ringkasan Lomba </label>
+                            <label for="ringkasan">Ringkasan Lowongan </label>
                             <div class="form-group mb-3  mt-1">
-                                <input id="ringkasan" name="ringkasan" type="text" placeholder="Ringkasan lomba" class="form-control form-control-lg py-2 bg-gray-light rounded-05" required>
+                                <input id="ringkasan" name="ringkasan" type="text" placeholder="Ringkasan lowongan" class="form-control form-control-lg py-2 bg-gray-light rounded-05" required>
                             </div>
 
-                            <label for="lokasi">Jenis Pelaksanaan Lomba </label>
+                            <label for="lokasi">Jenis Pelaksanaan Lowongan </label>
                             <div class="form-check mb-2">
                                 <input class="form-check-input" type="radio" name="radioLokasi" value="Daring" id="radioDaring">
                                 <label class="form-check-label">
@@ -105,24 +105,24 @@
                                 </label>
                             </div>
 
-                            <label for="lokasi" id="labelLokasi" class="d-none">Lokasi Pelaksanaan Lomba </label>
+                            <label for="lokasi" id="labelLokasi" class="d-none">Lokasi Pelaksanaan Lowongan </label>
                             <div class="form-group mb-3  mt-1">
                                 <input id="textLokasi" name="lokasi" type="hidden" placeholder="Lokasi offline" class="form-control form-control-lg py-2 bg-gray-light rounded-05">
                             </div>
 
-                            <label for="date">Tanggal Pelaksanaan Lomba </label>
+                            <label for="date">Tanggal Pelaksanaan Lowongan </label>
                             <div class="form-group mb-3  mt-1">
                                 <input id="date" type="text" name="date" class="form-control form-control-lg py-2 bg-gray-light rounded-05 flatpickr-no-config flatpickr-input active" placeholder="Klik untuk pilih tanggal" readonly="readonly" required>
                             </div>
 
-                            <label for="url">URL Lomba </label>
+                            <label for="url">URL Lowongan </label>
                             <div class="form-group mb-3  mt-1">
-                                <input id="url" name="url" type="text" placeholder="URL Lomba" class="form-control form-control-lg py-2 bg-gray-light rounded-05" required>
+                                <input id="url" name="url" type="text" placeholder="URL lowongan" class="form-control form-control-lg py-2 bg-gray-light rounded-05" required>
                             </div>
 
-                            <label for="deskripsi">Deskripsi Lomba </label>
+                            <label for="deskripsi">Deskripsi Lowongan </label>
                             <div class="form-group mb-3  mt-1">
-                                <textarea id="deskripsi" name="deskripsi" type="text" placeholder="Deskripsi Lomba" class="form-control form-control-lg py-2 bg-gray-light rounded-05" rows="10" required></textarea>
+                                <textarea id="deskripsi" name="deskripsi" type="text" placeholder="Deskripsi lowongan" class="form-control form-control-lg py-2 bg-gray-light rounded-05" rows="10" required></textarea>
                             </div>
 
                             <input type="hidden" name="nama_penyelenggara" value="{{ user['nama_lembaga'] }}">
@@ -139,12 +139,12 @@
     </div>
 </div>
 
-<div class="modal fade text-left modal-borderless" id="editlombaForm" tabindex="-1" aria-labelledby="editlombaFormLabel" style="display: none;" aria-hidden="true">
+<div class="modal fade text-left modal-borderless" id="editlowonganForm" tabindex="-1" aria-labelledby="editlowonganFormLabel" style="display: none;" aria-hidden="true">
     <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable" role="document">
         <div class="modal-content rounded-4 p-3">
             <div class="modal-header">
-                <h4 class="modal-title" id="editlombaFormLabel">
-                    Ubah Data Lomba
+                <h4 class="modal-title" id="editlowonganFormLabel">
+                    Ubah Data Lowongan
                 </h4>
                 <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-x">
@@ -155,10 +155,10 @@
             </div>
 
             <div class="modal-body">
-                <form id="editForm" action="/edit-lomba" method="POST" enctype="multipart/form-data">
+                <form id="editForm" action="/edit-lowongan" method="POST" enctype="multipart/form-data">
                     <div class="row">
                         <div class="col-4">
-                            <label for="poster">Poster Lomba </label>
+                            <label for="poster">Poster Lowongan </label>
                             <img id="img-poster-edit" class="rounded-05 border-primary border mt-1 poster-placeholder">
                             <div class="form-group mb-5 mt-3">
                                 <input type="file" id="edt_poster" name="poster" type="file" accept="image/*" class="image-filepond-edit border-primary border-1" aria-describedby="inputGroupFileAddon04" aria-label="Upload" required>
@@ -170,17 +170,17 @@
                             </div>
                         </div>
                         <div class="col-8 ps-3">
-                            <label for="edt_nama">Nama Lomba </label>
+                            <label for="edt_nama">Nama Lowongan </label>
                             <div class="form-group mb-3 mt-1">
-                                <input id="edt_nama" name="nama" type="text" placeholder="Nama lomba" class="form-control form-control-lg py-2 bg-gray-light rounded-05" required>
+                                <input id="edt_nama" name="nama" type="text" placeholder="Nama lowongan" class="form-control form-control-lg py-2 bg-gray-light rounded-05" required>
                             </div>
 
-                            <label for="edt_ringkasan">Ringkasan Lomba </label>
+                            <label for="edt_ringkasan">Ringkasan Lowongan </label>
                             <div class="form-group mb-3 mt-1">
-                                <input id="edt_ringkasan" name="ringkasan" type="text" placeholder="Ringkasan lomba" class="form-control form-control-lg py-2 bg-gray-light rounded-05" required>
+                                <input id="edt_ringkasan" name="ringkasan" type="text" placeholder="Ringkasan lowongan" class="form-control form-control-lg py-2 bg-gray-light rounded-05" required>
                             </div>
 
-                            <label for="edt_lokasi">Jenis Pelaksanaan Lomba </label>
+                            <label for="edt_lokasi">Jenis Pelaksanaan Lowongan </label>
                             <div class="form-check mb-2">
                                 <input class="form-check-input" type="radio" name="edtRadioLokasi" value="Daring" id="edtRadioDaring">
                                 <label class="form-check-label">
@@ -194,27 +194,27 @@
                                 </label>
                             </div>
 
-                            <label for="lokasi" id="edtLabelLokasi" class="d-none">Lokasi Pelaksanaan Lomba </label>
+                            <label for="lokasi" id="edtLabelLokasi" class="d-none">Lokasi Pelaksanaan Lowongan </label>
                             <div class="form-group mb-3 mt-1">
                                 <input id="edtTextLokasi" name="lokasi" type="hidden" placeholder="Lokasi offline" class="form-control form-control-lg py-2 bg-gray-light rounded-05">
                             </div>
 
-                            <label for="edt_date">Tanggal Pelaksanaan Lomba </label>
+                            <label for="edt_date">Tanggal Pelaksanaan Lowongan </label>
                             <div class="form-group">
                                 <input id="edt_date" type="text" name="date" class="form-control form-control-lg py-2 bg-gray-light rounded-05 flatpickr-no-config flatpickr-input active" placeholder="Klik untuk pilih tanggal" readonly="readonly" required>
                             </div>
 
-                            <label for="edt_url">URL Lomba </label>
+                            <label for="edt_url">URL Lowongan </label>
                             <div class="form-group mb-3 mt-1">
-                                <input id="edt_url" name="url" type="text" placeholder="URL lomba" class="form-control form-control-lg py-2 bg-gray-light rounded-05" required>
+                                <input id="edt_url" name="url" type="text" placeholder="URL lowongan" class="form-control form-control-lg py-2 bg-gray-light rounded-05" required>
                             </div>
 
-                            <label for="edt_deskripsi">Deskripsi Lomba </label>
+                            <label for="edt_deskripsi">Deskripsi Lowongan </label>
                             <div class="form-group mb-3 mt-1">
-                                <textarea id="edt_deskripsi" name="deskripsi" type="text" placeholder="Deskripsi lomba" class="form-control form-control-lg py-2 bg-gray-light rounded-05" rows="10" required></textarea>
+                                <textarea id="edt_deskripsi" name="deskripsi" type="text" placeholder="Deskripsi lowongan" class="form-control form-control-lg py-2 bg-gray-light rounded-05" rows="10" required></textarea>
                             </div>
 
-                            <label for="edt_status">Status Lomba </label>
+                            <label for="edt_status">Status Lowongan </label>
                             <div class="form-group mb-3 mt-1">
                                 <select class="form-select py-2 bg-gray-light rounded-05 text-start" name="status" id="edt_status" required>
                                     <option class="text-start" disabled selected value="default">Pilih Status</option>
@@ -242,12 +242,12 @@
     </div>
 </div>
 
-<div class="modal fade text-left modal-borderless" id="detaillomba" tabindex="-1" aria-labelledby="detaillombaLabel" style="display: none;" aria-hidden="true">
+<div class="modal fade text-left modal-borderless" id="detaillowongan" tabindex="-1" aria-labelledby="detaillowonganLabel" style="display: none;" aria-hidden="true">
     <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable" role="document">
         <div class="modal-content rounded-4 p-3">
             <div class="modal-header">
-                <h4 class="modal-title" id="detaillombaLabel">
-                    Detail Lomba
+                <h4 class="modal-title" id="detaillowonganLabel">
+                    Detail Lowongan
                 </h4>
                 <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-x">
@@ -259,7 +259,7 @@
             <div class="modal-body">
                 <div class="row">
                     <div class="col-4">
-                        <label for="view_poster">Poster Lomba </label>
+                        <label for="view_poster">Poster Lowongan </label>
                         <img id="view_img-poster" class="rounded-05 border-primary border mt-1 w-100 mb-5">
 
                         <label>File Penting</label>
@@ -268,42 +268,42 @@
                     </div>
                     <div class="col-8 ps-3">
 
-                        <label for="view_nama">Nama Lomba </label>
+                        <label for="view_nama">Nama Lowongan </label>
                         <div class="form-group mb-3 mt-1">
                             <input id="view_nama" type="text" class="form-control form-control-lg py-2 bg-gray-light rounded-05" readonly="readonly" disabled>
                         </div>
 
-                        <label for="view_ringkasan">Ringkasan Lomba </label>
+                        <label for="view_ringkasan">Ringkasan Lowongan </label>
                         <div class="form-group mb-3 mt-1">
                             <input id="view_ringkasan" type="text" class="form-control form-control-lg py-2 bg-gray-light rounded-05" readonly="readonly" disabled>
                         </div>
 
-                        <label for="view_lokasi">Lokasi Pelaksanaan Lomba </label>
+                        <label for="view_lokasi">Lokasi Pelaksanaan Lowongan </label>
                         <div class="form-group mb-3 mt-1">
                             <input id="view_lokasi" type="text" class="form-control form-control-lg py-2 bg-gray-light rounded-05" readonly="readonly" disabled>
                         </div>
 
-                        <label for="view_date">Tanggal Pelaksanaan Lomba </label>
+                        <label for="view_date">Tanggal Pelaksanaan Lowongan </label>
                         <div class="form-group">
                             <input id="view_date" type="text" class="form-control form-control-lg py-2 bg-gray-light rounded-05" readonly="readonly" disabled>
                         </div>
 
-                        <label for="view_url">URL Lomba </label>
+                        <label for="view_url">URL Lowongan </label>
                         <div class="form-group mb-3 mt-1">
                             <input id="view_url" type="text" class="form-control form-control-lg py-2 bg-gray-light rounded-05" readonly="readonly" disabled>
                         </div>
 
-                        <label for="view_deskripsi">Deskripsi Lomba </label>
+                        <label for="view_deskripsi">Deskripsi Lowongan </label>
                         <div class="form-group mb-3 mt-1">
-                            <textarea id="view_deskripsi" type="text" placeholder="Deskripsi Lomba" class="form-control form-control-lg py-2 bg-gray-light rounded-05" readonly="readonly" disabled rows="10"></textarea>
+                            <textarea id="view_deskripsi" type="text" placeholder="Deskripsi lowongan" class="form-control form-control-lg py-2 bg-gray-light rounded-05" readonly="readonly" disabled rows="10"></textarea>
                         </div>
 
-                        <label for="view_status">Status Lomba </label>
+                        <label for="view_status">Status Lowongan </label>
                         <div class="form-group mb-3 mt-1">
                             <input id="view_status" type="text" class="form-control form-control-lg py-2 bg-gray-light rounded-05" readonly="readonly" disabled>
                         </div>
 
-                        <label for="view_datecreated">Tanggal Pembuatan Lomba </label>
+                        <label for="view_datecreated">Tanggal Pembuatan Lowongan </label>
                         <div class="form-group mb-3 mt-1">
                             <input id="view_datecreated" type="text" class="form-control form-control-lg py-2 bg-gray-light rounded-05" readonly="readonly" disabled>
                         </div>
@@ -325,14 +325,14 @@
 
 <script>
 
-    var detaillombaModal = new bootstrap.Modal($('#detaillomba'));
-    var editlombaModal = new bootstrap.Modal($('#editlombaForm'));
+    var detaillowonganModal = new bootstrap.Modal($('#detaillowongan'));
+    var editlowonganModal = new bootstrap.Modal($('#editlowonganForm'));
 
     function showDetail(docId) {
         $('.spinner').removeClass('d-none')
         $('.overlay').removeClass('d-none')
 
-        $.get(`/get-lomba/${docId}`, function (data) {
+        $.get(`/get-lowongan/${docId}`, function (data) {
             $('#view_ringkasan').val(data.ringkasan)
             $('#view_nama').val(data.nama)
             $('#view_lokasi').val(data.lokasi)
@@ -355,17 +355,17 @@
 
             $('#view_file-penting').html(viewFilePenting);
 
-            detaillombaModal.show()
+            detaillowonganModal.show()
             $('.spinner').addClass('d-none')
             $('.overlay').addClass('d-none')
         })
     }
 
-    function editlomba(docId) {
+    function editlowongan(docId) {
         $('.spinner').removeClass('d-none')
         $('.overlay').removeClass('d-none')
 
-        $.get(`/get-lomba/${docId}`, function (data) {
+        $.get(`/get-lowongan/${docId}`, function (data) {
             $('#edt_ringkasan').val(data.ringkasan)
             $('#edt_nama').val(data.nama)
             $('#edt_date').val(data.date)
@@ -402,23 +402,23 @@
                 $('#edtTextLokasi').val(data.lokasi);
             }
 
-            editlombaModal.show()
+            editlowonganModal.show()
             $('.spinner').addClass('d-none')
             $('.overlay').addClass('d-none')
         })
     }
 
-    function deletelomba(docId) {
+    function deletelowongan(docId) {
         swalCustom.fire({
-            title: 'Hapus lomba?',
-            text: "Apakah anda yakin akan menghapus lomba? Anda tidak dapat mengembalikan lomba yang sudah dihapus.",
+            title: 'Hapus lowongan?',
+            text: "Apakah anda yakin akan menghapus lowongan? Anda tidak dapat mengembalikan lowongan yang sudah dihapus.",
             icon: 'warning',
             showCancelButton: true,
             confirmButtonText: '&nbsp;&nbsp;&nbsp;Ya&nbsp;&nbsp;&nbsp;',
             cancelButtonText: 'Tidak',
         }).then((result) => {
             if (result.isConfirmed) {
-                window.open(`/delete-lomba/${docId}`, "_self");
+                window.open(`/delete-lowongan/${docId}`, "_self");
             }
         })
     }
@@ -429,14 +429,14 @@
                 $('#nama').addClass('is-invalid');
                 Toast.fire({
                     icon: 'error',
-                    title: 'Harap isi nama lomba'
+                    title: 'Harap isi nama lowongan'
                 })
                 return;
             } else if ($("#ringkasan").val() === "") {
                 $('#ringkasan').addClass('is-invalid');
                 Toast.fire({
                     icon: 'error',
-                    title: 'Harap isi ringkasan lomba'
+                    title: 'Harap isi ringkasan lowongan'
                 })
                 return;
             } else if ($("#textLokasi").val() === "") {
@@ -445,28 +445,28 @@
                 $('#textLokasi').addClass('is-invalid');
                 Toast.fire({
                     icon: 'error',
-                    title: 'Harap isi lokasi penyelenggaraan lomba'
+                    title: 'Harap isi lokasi penyelenggaraan lowongan'
                 })
                 return;
             } else if ($("#date").val() === "") {
                 $('#date').addClass('is-invalid');
                 Toast.fire({
                     icon: 'error',
-                    title: 'Harap isi tanggal penyelenggaraan lomba'
+                    title: 'Harap isi tanggal penyelenggaraan lowongan'
                 })
                 return;
             } else if ($("#url").val() === "") {
                 $('#url').addClass('is-invalid');
                 Toast.fire({
                     icon: 'error',
-                    title: 'Harap isi URL lomba'
+                    title: 'Harap isi URL lowongan'
                 })
                 return;
             } else if ($("#deskripsi").val() === "") {
                 $('#deskripsi').addClass('is-invalid');
                 Toast.fire({
                     icon: 'error',
-                    title: 'Harap isi deskripsi lomba'
+                    title: 'Harap isi deskripsi lowongan'
                 })
                 return;
             }
@@ -483,14 +483,14 @@
                 $('#edt_nama').addClass('is-invalid');
                 Toast.fire({
                     icon: 'error',
-                    title: 'Harap isi nama lomba'
+                    title: 'Harap isi nama lowongan'
                 })
                 return;
             } else if ($("#edt_ringkasan").val() === "") {
                 $('#edt_ringkasan').addClass('is-invalid');
                 Toast.fire({
                     icon: 'error',
-                    title: 'Harap isi ringkasan lomba'
+                    title: 'Harap isi ringkasan lowongan'
                 })
                 return;
             } else if ($("#edtTextLokasi").val() === "") {
@@ -499,28 +499,28 @@
                 $('#edtTextLokasi').addClass('is-invalid');
                 Toast.fire({
                     icon: 'error',
-                    title: 'Harap isi lokasi penyelenggaraan lomba'
+                    title: 'Harap isi lokasi penyelenggaraan lowongan'
                 })
                 return;
             } else if ($("#edt_date").val() === "") {
                 $('#edt_date').addClass('is-invalid');
                 Toast.fire({
                     icon: 'error',
-                    title: 'Harap isi tanggal penyelenggaraan lomba'
+                    title: 'Harap isi tanggal penyelenggaraan lowongan'
                 })
                 return;
             } else if ($("#edt_url").val() === "") {
                 $('#edt_url').addClass('is-invalid');
                 Toast.fire({
                     icon: 'error',
-                    title: 'Harap isi URL lomba'
+                    title: 'Harap isi URL lowongan'
                 })
                 return;
             } else if ($("#edt_deskripsi").val() === "") {
                 $('#edt_deskripsi').addClass('is-invalid');
                 Toast.fire({
                     icon: 'error',
-                    title: 'Harap isi deskripsi lomba'
+                    title: 'Harap isi deskripsi lowongan'
                 })
                 return;
             }

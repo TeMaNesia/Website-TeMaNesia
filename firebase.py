@@ -32,6 +32,7 @@ def storage_upload(the_file, destination_folder):
     
     temp = tempfile.NamedTemporaryFile(delete=False)
     the_file.save(temp.name)
+    temp.close()
 
     unique_filename = str(uuid.uuid4()) + '.' + the_file.filename.split('.')[-1]
 
@@ -49,6 +50,7 @@ def storage_multiple_upload(multiple_files, destination_folder):
     results = []
 
     for important_file in multiple_files:
+        # if important_file.read() != b'': # add no file
         results.append(
             {
                 'nama_file': important_file.filename,

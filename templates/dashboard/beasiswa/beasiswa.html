@@ -345,9 +345,13 @@
 
             var viewFilePenting = ''
 
-            data.file_penting.forEach(function (fileData) {
-                viewFilePenting = viewFilePenting + `<div class="bg-gray-light border border-1 border-primary rounded-05 mb-2 text-primary text-center py-3 px-2">${fileData.nama_file}</div>`
-            });
+            if (data.file_penting.length > 0) {
+                data.file_penting.forEach(function (fileData) {
+                    viewFilePenting = viewFilePenting + `<div class="bg-gray-light border border-1 border-primary rounded-05 mb-2 text-primary text-center py-3 px-2">${fileData.nama_file}</div>`
+                });
+            } else{
+                viewFilePenting = viewFilePenting + `<div class="bg-gray-light border border-1 border-danger rounded-05 mb-2 text-danger text-center py-3 px-2">Tidak ada file yang diupload</div>`
+            }
 
             $('#view_file-penting').html(viewFilePenting);
 
@@ -379,7 +383,8 @@
             $('#img-poster-edit').removeClass('poster-placeholder');
             $('#img-poster-edit').addClass('w-100');
 
-
+            imgPondEdit.removeFiles();
+            multipleFilePondEdit.removeFiles();
             addToPond(data.poster, data.poster_filename, 'image', imgPondEdit)
 
             data.file_penting.forEach(function (fileData) {
@@ -420,6 +425,52 @@
 
     $(document).ready(function () {
         $('#submitAdd').click(function () {
+            if ($("#nama").val() === "") {
+                $('#nama').addClass('is-invalid');
+                Toast.fire({
+                    icon: 'error',
+                    title: 'Harap isi nama beasiswa'
+                })
+                return;
+            } else if ($("#ringkasan").val() === "") {
+                $('#ringkasan').addClass('is-invalid');
+                Toast.fire({
+                    icon: 'error',
+                    title: 'Harap isi ringkasan beasiswa'
+                })
+                return;
+            } else if ($("#textLokasi").val() === "") {
+                $('#radioDaring').addClass('is-invalid');
+                $('#radioOffline').addClass('is-invalid');
+                $('#textLokasi').addClass('is-invalid');
+                Toast.fire({
+                    icon: 'error',
+                    title: 'Harap isi lokasi penyelenggaraan beasiswa'
+                })
+                return;
+            } else if ($("#date").val() === "") {
+                $('#date').addClass('is-invalid');
+                Toast.fire({
+                    icon: 'error',
+                    title: 'Harap isi tanggal penyelenggaraan beasiswa'
+                })
+                return;
+            } else if ($("#url").val() === "") {
+                $('#url').addClass('is-invalid');
+                Toast.fire({
+                    icon: 'error',
+                    title: 'Harap isi URL beasiswa'
+                })
+                return;
+            } else if ($("#deskripsi").val() === "") {
+                $('#deskripsi').addClass('is-invalid');
+                Toast.fire({
+                    icon: 'error',
+                    title: 'Harap isi deskripsi beasiswa'
+                })
+                return;
+            }
+
             $('.spinner').removeClass('d-none')
             $('.overlay').removeClass('d-none')
             $('#addForm').submit();
@@ -428,6 +479,52 @@
 
     $(document).ready(function () {
         $('#submitEdit').click(function () {
+            if ($("#edt_nama").val() === "") {
+                $('#edt_nama').addClass('is-invalid');
+                Toast.fire({
+                    icon: 'error',
+                    title: 'Harap isi nama beasiswa'
+                })
+                return;
+            } else if ($("#edt_ringkasan").val() === "") {
+                $('#edt_ringkasan').addClass('is-invalid');
+                Toast.fire({
+                    icon: 'error',
+                    title: 'Harap isi ringkasan beasiswa'
+                })
+                return;
+            } else if ($("#edtTextLokasi").val() === "") {
+                $('#edtRadioDaring').addClass('is-invalid');
+                $('#edtRadioOffline').addClass('is-invalid');
+                $('#edtTextLokasi').addClass('is-invalid');
+                Toast.fire({
+                    icon: 'error',
+                    title: 'Harap isi lokasi penyelenggaraan beasiswa'
+                })
+                return;
+            } else if ($("#edt_date").val() === "") {
+                $('#edt_date').addClass('is-invalid');
+                Toast.fire({
+                    icon: 'error',
+                    title: 'Harap isi tanggal penyelenggaraan beasiswa'
+                })
+                return;
+            } else if ($("#edt_url").val() === "") {
+                $('#edt_url').addClass('is-invalid');
+                Toast.fire({
+                    icon: 'error',
+                    title: 'Harap isi URL beasiswa'
+                })
+                return;
+            } else if ($("#edt_deskripsi").val() === "") {
+                $('#edt_deskripsi').addClass('is-invalid');
+                Toast.fire({
+                    icon: 'error',
+                    title: 'Harap isi deskripsi beasiswa'
+                })
+                return;
+            }
+
             $('.spinner').removeClass('d-none')
             $('.overlay').removeClass('d-none')
             $('#editForm').submit();

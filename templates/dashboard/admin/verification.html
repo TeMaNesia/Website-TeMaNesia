@@ -12,15 +12,16 @@
         <table class="table" id="table1">
             <thead>
                 <tr>
-                    <th>NAMA LEMBAGA</th>
-                    <th>NO TELEPON</th>
-                    <th>TANGGAL DAFTAR</th>
-                    <th>STATUS</th>
-                    <th>AKSI</th>
+                    <th>Nama Lembaga</th>
+                    <th>No Telepon</th>
+                    <th>Tanggal Daftar</th>
+                    <th>Status</th>
+                    <th>Aksi</th>
                 </tr>
             </thead>
             <tbody>
                 {% for user in data_user %}
+
                 <tr>
                     <td>{{ user.nama_lembaga }}</td>
                     <td class="text-center">{{ user.telepon_lembaga }}</td>
@@ -47,7 +48,7 @@
 </div>
 
 <div class="modal fade text-left modal-borderless" id="editStatusForm" tabindex="-1" aria-labelledby="editStatusFormLabel" style="display: none;" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable" role="document">
         <div class="modal-content rounded-4 p-3">
             <div class="modal-header">
                 <h4 class="modal-title" id="editStatusFormLabel">
@@ -81,7 +82,7 @@
 </div>
 
 <div class="modal fade text-left modal-borderless" id="detailUser" tabindex="-1" aria-labelledby="detailUserLabel" style="display: none;" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
+    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable" role="document">
         <div class="modal-content rounded-4 p-3">
             <div class="modal-header">
                 <h4 class="modal-title" id="detailUserLabel">
@@ -122,7 +123,7 @@
 
                 <label for="view_alamat">Alamat Lembaga: </label>
                 <div class="form-group mb-3">
-                    <textarea id="view_alamat" type="text" class="form-control form-control-lg py-2 bg-gray-light rounded-05" readonly="readonly" disabled></textarea>
+                    <textarea id="view_alamat" type="text" class="form-control form-control-lg py-2 bg-gray-light rounded-05" readonly="readonly" rows="3" disabled></textarea>
                 </div>
 
                 <label for="view_status">Status Pengguna: </label>
@@ -147,35 +148,13 @@
 {% block script %}
 
 <script>
-    const Toast = Swal.mixin({
-        toast: true,
-        position: 'top-end',
-        showConfirmButton: false,
-        timer: 3000,
-        timerProgressBar: true,
-        didOpen: (toast) => {
-            toast.addEventListener('mouseenter', Swal.stopTimer)
-            toast.addEventListener('mouseleave', Swal.resumeTimer)
-        }
-    })
-
-    {% with messages = get_flashed_messages(with_categories = true) %}
-    {% if messages %}
-    {% for category, message in messages %}
-
-    Toast.fire({
-        icon: '{{ category }}',
-        title: '{{ message }}'
-    })
-
-    {% endfor %}
-    {% endif %}
-    {% endwith %}
-
     var detailUserModal = new bootstrap.Modal($('#detailUser'));
     var editStatusModal = new bootstrap.Modal($('#editStatusForm'));
 
     function showDetail(docId) {
+        $('.spinner').removeClass('d-none')
+        $('.overlay').removeClass('d-none')
+
         $.get(`/get-user/${docId}`, function (data) {
             $('#view_alamat').val(data.alamat_lembaga)
             $('#view_email').val(data.email)
@@ -186,26 +165,23 @@
             $('#view_telepon').val(data.telepon_lembaga)
             $('#view_tanggal_daftar').val(data.tanggal_daftar)
             detailUserModal.show()
+            $('.spinner').addClass('d-none')
+            $('.overlay').addClass('d-none')
         })
     }
 
     function editStatus(docId) {
+        $('.spinner').removeClass('d-none')
+        $('.overlay').removeClass('d-none')
+
         $.get(`/get-user/${docId}`, function (data) {
             $('#edt_status').val(data.status)
             $('#edt_id').val(docId)
             editStatusModal.show()
+            $('.spinner').addClass('d-none')
+            $('.overlay').addClass('d-none')
         })
     }
-
-    const swalCustom = Swal.mixin({
-        customClass: {
-            confirmButton: 'btn btn-danger rounded-05 me-3',
-            cancelButton: 'btn btn-outline-danger rounded-05',
-            popup: 'rounded-4 py-5 px-3',
-            icon: 'mt-0'
-        },
-        buttonsStyling: false
-    })
 
     function deleteUser(docId) {
         swalCustom.fire({
@@ -224,6 +200,8 @@
 
     $(document).ready(function() {
         $('#submitEdit').click(function() {
+            $('.spinner').removeClass('d-none')
+            $('.overlay').removeClass('d-none')
             $('#editForm').submit();
         });
     });
