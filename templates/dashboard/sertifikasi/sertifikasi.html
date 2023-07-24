@@ -469,6 +469,12 @@
                     title: 'Harap isi deskripsi sertifikasi'
                 })
                 return;
+            } else if ($("#img-poster").attr('src') == '' || typeof $("#img-poster").attr('src') === 'undefined') {
+                Toast.fire({
+                    icon: 'error',
+                    title: 'Harap upload poster sertifikasi'
+                })
+                return;
             }
 
             $('.spinner').removeClass('d-none')
@@ -521,6 +527,12 @@
                 Toast.fire({
                     icon: 'error',
                     title: 'Harap isi deskripsi sertifikasi'
+                })
+                return;
+            } else if ($("#img-poster-edit").attr('src') == '' || typeof $("#img-poster-edit").attr('src') === 'undefined') {
+                Toast.fire({
+                    icon: 'error',
+                    title: 'Harap upload poster sertifikasi'
                 })
                 return;
             }

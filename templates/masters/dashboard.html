@@ -236,7 +236,7 @@
 
         var reader = new FileReader();
         reader.onload = function (e) {
-            $("#img-poster").remove("src");
+            $("#img-poster").attr("src", "");
             $('#img-poster').addClass('poster-placeholder');
             $('#img-poster').removeClass('w-100');
         }
@@ -276,7 +276,7 @@
 
         var reader = new FileReader();
         reader.onload = function (e) {
-            $("#img-poster-edit").remove("src");
+            $("#img-poster-edit").attr("src", "");
             $('#img-poster-edit').addClass('poster-placeholder');
             $('#img-poster-edit').removeClass('w-100');
         }
