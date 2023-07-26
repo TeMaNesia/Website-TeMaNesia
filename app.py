@@ -68,6 +68,7 @@ def login():
             data = db.collection('users_website').document(session['user_info']['localId']).get().to_dict()
             session['user_info']['role'] = data.get('role')
             session['user_info']['nama_lembaga'] = data.get('nama_lembaga')
+            session['user_info']['foto'] = data.get('logo')
 
             if session['user_info']['role'] == 'Admin':
                 flash('Selamat datang di TeMaNesia', 'success')
@@ -244,6 +245,7 @@ def get_all_user_beasiswa(user_id):
 
     return data
 
+
 def get_all_user_lowongan(user_id):
     documents = db.collection('lowongan').where("penyelenggara_uid", "==", user_id).order_by("created_at", direction=firestore.Query.DESCENDING).stream()
 
@@ -255,7 +257,6 @@ def get_all_user_lowongan(user_id):
         data.append(doc_dict)
 
     return data
-
 
 
 port = int(os.environ.get('PORT', 5000))

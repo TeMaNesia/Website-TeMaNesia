@@ -121,7 +121,15 @@
                             </div>
                             
                             <label>Target Jurusan Lomba </label>
-                            <ul class="list-unstyled">         
+                            <ul class="list-unstyled">     
+                                <li class="d-block me-2 mb-1">
+                                    <div class="form-check">
+                                        <div class="checkbox">
+                                            <input type="checkbox" class="form-check-input" id="select-all">
+                                            <label >Pilih Semua</label>
+                                        </div>
+                                    </div>
+                                </li>    
                                 <li class="d-block me-2 mb-1">
                                     <div class="form-check">
                                         <div class="checkbox">
@@ -146,6 +154,22 @@
                                         </div>
                                     </div>
                                 </li>
+                                <li class="d-block me-2 mb-1">
+                                    <div class="form-check">
+                                        <div class="checkbox">
+                                            <input type="checkbox" class="form-check-input" name="jurusan" value="Sipil">
+                                            <label >Sipil</label>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li class="d-block me-2 mb-1">
+                                    <div class="form-check">
+                                        <div class="checkbox">
+                                            <input type="checkbox" class="form-check-input" name="jurusan" value="Grafika">
+                                            <label >Grafika</label>
+                                        </div>
+                                    </div>
+                                </li>
                             </ul>
 
                             <label for="deskripsi">Deskripsi Lomba </label>
@@ -156,6 +180,7 @@
                             <input type="hidden" name="nama_penyelenggara" value="{{ user['nama_lembaga'] }}">
                             <input type="hidden" name="email_penyelenggara" value="{{ user['email'] }}">
                             <input type="hidden" name="penyelenggara_uid" value="{{ user['localId'] }}">
+                            <input type="hidden" name="foto_penyelenggara" value="{{ user['foto'] }}">
                         </div>
                     </div>
                 </form>
@@ -238,11 +263,19 @@
                             </div>
 
                             <label>Target Jurusan Lomba </label>
-                            <ul class="list-unstyled">         
+                            <ul class="list-unstyled">     
                                 <li class="d-block me-2 mb-1">
                                     <div class="form-check">
                                         <div class="checkbox">
-                                            <input type="checkbox" class="form-check-input" name="edt_jurusan" value="Informatika">
+                                            <input type="checkbox" class="form-check-input" id="edt-select-all">
+                                            <label >Pilih Semua</label>
+                                        </div>
+                                    </div>
+                                </li>    
+                                <li class="d-block me-2 mb-1">
+                                    <div class="form-check">
+                                        <div class="checkbox">
+                                            <input type="checkbox" class="form-check-input" name="jurusan" value="Informatika">
                                             <label >Informatika</label>
                                         </div>
                                     </div>
@@ -250,7 +283,7 @@
                                 <li class="d-block me-2 mb-1">
                                     <div class="form-check">
                                         <div class="checkbox">
-                                            <input type="checkbox" class="form-check-input" name="edt_jurusan" value="Mesin">
+                                            <input type="checkbox" class="form-check-input" name="jurusan" value="Mesin">
                                             <label >Mesin</label>
                                         </div>
                                     </div>
@@ -258,8 +291,24 @@
                                 <li class="d-block me-2 mb-1">
                                     <div class="form-check">
                                         <div class="checkbox">
-                                            <input type="checkbox" class="form-check-input" name="edt_jurusan" value="Listrik">
+                                            <input type="checkbox" class="form-check-input" name="jurusan" value="Listrik">
                                             <label >Listrik</label>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li class="d-block me-2 mb-1">
+                                    <div class="form-check">
+                                        <div class="checkbox">
+                                            <input type="checkbox" class="form-check-input" name="jurusan" value="Sipil">
+                                            <label >Sipil</label>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li class="d-block me-2 mb-1">
+                                    <div class="form-check">
+                                        <div class="checkbox">
+                                            <input type="checkbox" class="form-check-input" name="jurusan" value="Grafika">
+                                            <label >Grafika</label>
                                         </div>
                                     </div>
                                 </li>
@@ -287,6 +336,7 @@
                             <input id="edt_jenis" type="hidden" name="jenis">
                             <input id="edt_nama_penyelenggara" type="hidden" name="nama_penyelenggara">
                             <input id="edt_id" type="hidden" name="id">
+                            <input id="edt_foto_penyelenggara" type="hidden" name="foto_penyelenggara">
                         </div>
                     </div>
                 </form>
@@ -438,6 +488,7 @@
             $('#edt_email').val(data.email_penyelenggara)
             $('#edt_jenis').val(data.jenis_kegiatan)
             $('#edt_nama_penyelenggara').val(data.nama_penyelenggara)
+            $('#edt_foto_penyelenggara').val(data.foto_penyelenggara)
             $('#old_poster').val(data.poster)
             $('#old_pedoman').val(data.pedoman)
             $('#edt_id').val(docId)
@@ -446,7 +497,7 @@
             $('#img-poster-edit').addClass('w-100');
 
             data.jurusan.forEach(function(value) {
-                $('input[name="edt_jurusan"][value="' + value + '"]').prop('checked', true);
+                $('input[name="jurusan"][value="' + value + '"]').prop('checked', true);
             })
 
             imgPondEdit.removeFiles();
@@ -488,6 +539,16 @@
             }
         })
     }
+
+    $("#select-all").click(function() {
+        const masterChecked = $(this).prop("checked");
+        $("input[name='jurusan']").prop("checked", masterChecked);
+    });
+
+    $("input[name='jurusan']").click(function() {
+        const allChecked = $("input[name='jurusan']:checked").length === $("input[name='jurusan']").length;
+        $("#select-all").prop("checked", allChecked);
+    });
 
     $(document).ready(function () {
         $('#submitAdd').click(function () {
@@ -555,6 +616,16 @@
         });
     });
 
+    $("#edt-select-all").click(function() {
+        const masterChecked = $(this).prop("checked");
+        $("input[name='jurusan']").prop("checked", masterChecked);
+    });
+
+    $("input[name='jurusan']").click(function() {
+        const allChecked = $("input[name='jurusan']:checked").length === $("input[name='jurusan']").length;
+        $("#edt-select-all").prop("checked", allChecked);
+    });
+
     $(document).ready(function () {
         $('#submitEdit').click(function () {
             if ($("#edt_nama").val() === "") {
@@ -601,7 +672,7 @@
                     title: 'Harap isi deskripsi lomba'
                 })
                 return;
-            } else if ($('input[name="edt_jurusan"]:checked').length === 0) {
+            } else if ($('input[name="jurusan"]:checked').length === 0) {
                 Toast.fire({
                     icon: 'error',
                     title: 'Harap isi setidaknya satu target jurusan lomba'
