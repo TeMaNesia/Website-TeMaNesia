@@ -2,7 +2,7 @@ import json
 
 from requests.exceptions import HTTPError
 from flask import Blueprint, render_template, request, redirect, url_for, flash, jsonify
-from firebase import db
+from firebase import db, storage_delete_file
 
 
 verification = Blueprint('verification', __name__)
@@ -35,6 +35,11 @@ def get_user(id):
 @verification.route('/delete-user/<id>', methods=['GET'])
 def delete_user(id):
     try:
+        data = db.collection('users_website').document(id).get()
+        data_dict = data.to_dict()
+
+        storage_delete_file(data_dict['logo'])
+    
         db.collection('users_website').document(id).delete()
         flash('Berhasil hapus pengguna', 'success')
         return redirect(url_for('dashboard', role='admin', page='verification'))

@@ -7,7 +7,7 @@ from flask import Flask, session, render_template, request, redirect, url_for, f
 from firebase_admin import firestore
 from datetime import datetime
 
-from firebase import db, auth
+from firebase import db, auth, storage_upload
 from models.beasiswa import beasiswa
 from models.verification import verification
 from models.lomba import lomba
@@ -113,6 +113,7 @@ def register():
         password = request.form.get('password')
         new_account['status'] = 'Nonaktif'
         new_account['tanggal_daftar'] = datetime.now()
+        new_account['logo'] = storage_upload(request.files['logo'], 'profile_picture')
 
         try:
             user = auth.create_user_with_email_and_password(new_account['email'], password)

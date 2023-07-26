@@ -15,7 +15,7 @@
             <div class="card rounded-4 p-3" style="transition: height 0.3s ease;">
                 <div class="card-content rounded-4 bg-white px-5 py-5 text-center">
 
-                    <form action="/register" method="POST" id="register-form">
+                    <form action="/register" method="POST" id="register-form" enctype="multipart/form-data">
 
                         <div class="step-1" id="step-1">
                             <h4 class="text-primary text-start">Buat Akun Baru 🔥</h4>
@@ -48,7 +48,6 @@
                                 </div>
                             </div>
 
-
                             <div class="form-group position-relative has-icon-left mt-3">
                                 <input type="number" name="telepon" class="form-control form-control-lg ps-5 py-3 bg-gray-light rounded-3" placeholder="Nomor Telepon Lembaga" required>
                                 <div class="form-control-icon d-flex align-items-center top-0 h-100 px-3">
@@ -63,16 +62,31 @@
                                 </div>
                             </div>
 
-                            <div class="form-group position-relative has-icon-left mt-3">
-                                
-                            </div>
-
                             <button class="btn btn-primary btn-block btn-lg mt-5 rounded-3 py-3" onclick="toStep('#step-1', '#step-2')">Selanjutnya</button>
                             <p class=" text-center w-100 mt-2 mb-0">Sudah punya akun? <a href="/login" class="text-primary font-semibold">Masuk Disini</a></p>
                         </div>
 
+
                         <div class="step-2 d-none" id="step-2">
                             <div class="d-flex justify-content-start"><i class="bi bi-arrow-left-circle h-auto text-primary" style="cursor: pointer; font-size: 2rem;" onclick="toStep('#step-2', '#step-1')"></i></div>
+                            <h4 class="text-primary text-start mt-3">Buat Akun Baru 🔥</h4>
+                            <p class="text-gray-500 text-start">Silahkan upload <b>logo lembaga</b> Anda.</p>
+
+                            <div class="form-group position-relative mt-5">
+                                <img id ="preview" class="rounded-05 border-primary border mt-1 mb-1" src="static/images/placeholder/small-img-placeholder.jpg" width="250" height="250">
+                            </div>
+
+                            <div class="form-group position-relative mt-5">
+                                <input type="file" id="logo" name="logo" class="form-control form-control-lg py-2 bg-gray-light rounded-05" accept="image/*" aria-describedby="inputGroupFileAddon04" aria-label="Upload" required>
+                            </div>
+
+                            <button class="btn btn-primary btn-block btn-lg mt-5 rounded-3 py-3" onclick="toStep('#step-2', '#step-3')">Selanjutnya</button>
+                            <p class=" text-center w-100 mt-2 mb-0">Sudah punya akun? <a href="/login" class="text-primary font-semibold">Masuk Disini</a></p>
+                        </div>
+
+
+                        <div class="step-3 d-none" id="step-3">
+                            <div class="d-flex justify-content-start"><i class="bi bi-arrow-left-circle h-auto text-primary" style="cursor: pointer; font-size: 2rem;" onclick="toStep('#step-3', '#step-2')"></i></div>
                             <h4 class="text-primary text-start mt-3">Buat Akun Baru 🔥</h4>
                             <p class="text-gray-500 text-start">Silahkan ini form dibawah ini dengan lengkap dan sesuaikan dengan data Anda.</p>
 
@@ -127,8 +141,21 @@
         }
     })
 
-    function toStep(currStep, desStep) {
+    $(document).ready(function() {
+        $('#logo').on('change', function(event) {
+            var input = event.target;
+            var reader = new FileReader();
 
+            reader.onload = function() {
+                var dataURL = reader.result;
+                $('#preview').attr('src', dataURL);
+            };
+
+            reader.readAsDataURL(input.files[0]);
+            });
+    });
+
+    function toStep(currStep, desStep) {
         var goNext = true
 
         $(`${currStep} :input:not(button)`).each(function () {
@@ -149,7 +176,7 @@
         if (!goNext) {
             Toast.fire({
                 icon: 'error',
-                title: 'Harap isi semua kolom'
+                title: 'Harap isi data yang diperlukan'
             })
 
             return
@@ -170,7 +197,7 @@
     function submitRegForm() {
         var submit = true
 
-        $(`#step-2 :input:not(button)`).each(function () {
+        $(`#step-3 :input:not(button)`).each(function () {
             if ($(this).val() == "") {
                 $(this).addClass('is-invalid')
                 submit = false

@@ -119,12 +119,40 @@
                             <div class="form-group mb-3  mt-1">
                                 <input id="url" name="url" type="text" placeholder="URL Lomba" class="form-control form-control-lg py-2 bg-gray-light rounded-05" required>
                             </div>
+                            
+                            <label>Target Jurusan Lomba </label>
+                            <ul class="list-unstyled">         
+                                <li class="d-block me-2 mb-1">
+                                    <div class="form-check">
+                                        <div class="checkbox">
+                                            <input type="checkbox" class="form-check-input" name="jurusan" value="Informatika">
+                                            <label >Informatika</label>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li class="d-block me-2 mb-1">
+                                    <div class="form-check">
+                                        <div class="checkbox">
+                                            <input type="checkbox" class="form-check-input" name="jurusan" value="Mesin">
+                                            <label >Mesin</label>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li class="d-block me-2 mb-1">
+                                    <div class="form-check">
+                                        <div class="checkbox">
+                                            <input type="checkbox" class="form-check-input" name="jurusan" value="Listrik">
+                                            <label >Listrik</label>
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul>
 
                             <label for="deskripsi">Deskripsi Lomba </label>
                             <div class="form-group mb-3  mt-1">
-                                <textarea id="deskripsi" name="deskripsi" type="text" placeholder="Deskripsi Lomba" class="form-control form-control-lg py-2 bg-gray-light rounded-05" rows="10" required></textarea>
+                                <textarea id="deskripsi" name="deskripsi" type="text" placeholder="Deskripsi Lomba" class="form-control form-control-lg py-2 bg-gray-light rounded-05" rows="5" required></textarea>
                             </div>
-
+                            
                             <input type="hidden" name="nama_penyelenggara" value="{{ user['nama_lembaga'] }}">
                             <input type="hidden" name="email_penyelenggara" value="{{ user['email'] }}">
                             <input type="hidden" name="penyelenggara_uid" value="{{ user['localId'] }}">
@@ -209,9 +237,37 @@
                                 <input id="edt_url" name="url" type="text" placeholder="URL lomba" class="form-control form-control-lg py-2 bg-gray-light rounded-05" required>
                             </div>
 
+                            <label>Target Jurusan Lomba </label>
+                            <ul class="list-unstyled">         
+                                <li class="d-block me-2 mb-1">
+                                    <div class="form-check">
+                                        <div class="checkbox">
+                                            <input type="checkbox" class="form-check-input" name="edt_jurusan" value="Informatika">
+                                            <label >Informatika</label>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li class="d-block me-2 mb-1">
+                                    <div class="form-check">
+                                        <div class="checkbox">
+                                            <input type="checkbox" class="form-check-input" name="edt_jurusan" value="Mesin">
+                                            <label >Mesin</label>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li class="d-block me-2 mb-1">
+                                    <div class="form-check">
+                                        <div class="checkbox">
+                                            <input type="checkbox" class="form-check-input" name="edt_jurusan" value="Listrik">
+                                            <label >Listrik</label>
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul>
+
                             <label for="edt_deskripsi">Deskripsi Lomba </label>
                             <div class="form-group mb-3 mt-1">
-                                <textarea id="edt_deskripsi" name="deskripsi" type="text" placeholder="Deskripsi lomba" class="form-control form-control-lg py-2 bg-gray-light rounded-05" rows="10" required></textarea>
+                                <textarea id="edt_deskripsi" name="deskripsi" type="text" placeholder="Deskripsi lomba" class="form-control form-control-lg py-2 bg-gray-light rounded-05" rows="5" required></textarea>
                             </div>
 
                             <label for="edt_status">Status Lomba </label>
@@ -293,9 +349,14 @@
                             <input id="view_url" type="text" class="form-control form-control-lg py-2 bg-gray-light rounded-05" readonly="readonly" disabled>
                         </div>
 
+                        <label for="view_jurusan">Target Jurusan Lomba </label>
+                        <div class="form-group mb-3 mt-1">
+                            <input id="view_jurusan" type="text" class="form-control form-control-lg py-2 bg-gray-light rounded-05" readonly="readonly" disabled>
+                        </div>
+
                         <label for="view_deskripsi">Deskripsi Lomba </label>
                         <div class="form-group mb-3 mt-1">
-                            <textarea id="view_deskripsi" type="text" placeholder="Deskripsi Lomba" class="form-control form-control-lg py-2 bg-gray-light rounded-05" readonly="readonly" disabled rows="10"></textarea>
+                            <textarea id="view_deskripsi" type="text" placeholder="Deskripsi Lomba" class="form-control form-control-lg py-2 bg-gray-light rounded-05" readonly="readonly" disabled rows="9"></textarea>
                         </div>
 
                         <label for="view_status">Status Lomba </label>
@@ -341,6 +402,7 @@
             $('#view_deskripsi').val(data.deskripsi)
             $('#view_status').val(data.status)
             $('#view_datecreated').val(data.created_at)
+            $('#view_jurusan').val(data.jurusan.join(', '))
             $('#view_img-poster').attr('src', data.poster);
 
             var viewFilePenting = ''
@@ -382,6 +444,10 @@
             $('#img-poster-edit').attr('src', data.poster);
             $('#img-poster-edit').removeClass('poster-placeholder');
             $('#img-poster-edit').addClass('w-100');
+
+            data.jurusan.forEach(function(value) {
+                $('input[name="edt_jurusan"][value="' + value + '"]').prop('checked', true);
+            })
 
             imgPondEdit.removeFiles();
             multipleFilePondEdit.removeFiles();
@@ -469,6 +535,12 @@
                     title: 'Harap isi deskripsi lomba'
                 })
                 return;
+            } else if ($('input[name="jurusan"]:checked').length === 0) {
+                Toast.fire({
+                    icon: 'error',
+                    title: 'Harap isi setidaknya satu target jurusan lomba'
+                })
+                return;
             } else if ($("#img-poster").attr('src') == '' || typeof $("#img-poster").attr('src') === 'undefined') {
                 Toast.fire({
                     icon: 'error',
@@ -527,6 +599,12 @@
                 Toast.fire({
                     icon: 'error',
                     title: 'Harap isi deskripsi lomba'
+                })
+                return;
+            } else if ($('input[name="edt_jurusan"]:checked').length === 0) {
+                Toast.fire({
+                    icon: 'error',
+                    title: 'Harap isi setidaknya satu target jurusan lomba'
                 })
                 return;
             } else if ($("#img-poster-edit").attr('src') == '' || typeof $("#img-poster-edit").attr('src') === 'undefined') {

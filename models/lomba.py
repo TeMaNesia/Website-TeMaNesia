@@ -26,6 +26,7 @@ def add_lomba():
         new_lomba['penyelenggara_uid'] = request.form.get('penyelenggara_uid')
         new_lomba['status'] = 'Aktif'
         new_lomba['jenis_kegiatan'] = 'Lomba'
+        new_lomba['jurusan'] = request.form.getlist('jurusan')
 
         new_lomba['poster_filename'] = request.files['poster'].filename
         new_lomba['poster'] = storage_upload(request.files['poster'], 'poster')
@@ -65,6 +66,7 @@ def edit_lomba():
         edited_lomba['jenis_kegiatan'] = request.form.get('jenis')
         edited_lomba['email_penyelenggara'] = request.form.get('email')
         edited_lomba['nama_penyelenggara'] = request.form.get('nama_penyelenggara')
+        edited_lomba['jurusan'] = request.form.getlist('edt_jurusan')
 
         if request.files['poster'].filename != '':
             storage_delete_file(request.form.get('old_poster'))

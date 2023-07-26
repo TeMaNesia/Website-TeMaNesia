@@ -96,6 +96,10 @@
                 </button>
             </div>
             <div class="modal-body">
+                <div class="form-group mb-3 d-flex justify-content-center align-items-center">
+                    <img id ="view_logo" class="rounded-05 border-primary border mt-1 mb-1" width="250" height="250">
+                </div>
+
                 <label for="view_nama">Nama Lembaga: </label>
                 <div class="form-group mb-3">
                     <input id="view_nama" type="text" class="form-control form-control-lg py-2 bg-gray-light rounded-05" value="aa" readonly="readonly" disabled>
@@ -164,6 +168,7 @@
             $('#view_status').val(data.status)
             $('#view_telepon').val(data.telepon_lembaga)
             $('#view_tanggal_daftar').val(data.tanggal_daftar)
+            $('#view_logo').attr('src', data.logo);
             detailUserModal.show()
             $('.spinner').addClass('d-none')
             $('.overlay').addClass('d-none')
