@@ -25,7 +25,9 @@ def add_beasiswa():
         new_beasiswa['created_at'] = datetime.now()
         new_beasiswa['penyelenggara_uid'] = request.form.get('penyelenggara_uid')
         new_beasiswa['status'] = 'Aktif'
-        new_beasiswa['jenis_kegiatan'] = 'Beasiswa'
+        new_beasiswa['jenis_kegiatan'] = 'beasiswa'
+        new_beasiswa['foto_penyelenggara'] = request.form.get('foto_penyelenggara')
+        new_beasiswa['jurusan'] = request.form.getlist('jurusan')
 
         new_beasiswa['poster_filename'] = request.files['poster'].filename
         new_beasiswa['poster'] = storage_upload(request.files['poster'], 'poster')
@@ -63,8 +65,10 @@ def edit_beasiswa():
         edited_beasiswa['created_at'] = datetime.strptime(request.form.get('created_at'), '%Y-%m-%d')
         edited_beasiswa['status'] = request.form.get('status')
         edited_beasiswa['jenis_kegiatan'] = request.form.get('jenis')
+        edited_beasiswa['foto_penyelenggara'] = request.form.get('foto_penyelenggara')
         edited_beasiswa['email_penyelenggara'] = request.form.get('email')
         edited_beasiswa['nama_penyelenggara'] = request.form.get('nama_penyelenggara')
+        edited_beasiswa['jurusan'] = request.form.getlist('jurusan')
 
         if request.files['poster'].filename != '':
             storage_delete_file(request.form.get('old_poster'))

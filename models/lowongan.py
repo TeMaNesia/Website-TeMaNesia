@@ -25,7 +25,9 @@ def add_lowongan():
         new_lowongan['created_at'] = datetime.now()
         new_lowongan['penyelenggara_uid'] = request.form.get('penyelenggara_uid')
         new_lowongan['status'] = 'Aktif'
-        new_lowongan['jenis_kegiatan'] = 'Lowongan'
+        new_lowongan['jenis_kegiatan'] = 'lowongan'
+        new_lowongan['foto_penyelenggara'] = request.form.get('foto_penyelenggara')
+        new_lowongan['jurusan'] = request.form.getlist('jurusan')
 
         new_lowongan['poster_filename'] = request.files['poster'].filename
         new_lowongan['poster'] = storage_upload(request.files['poster'], 'poster')
@@ -63,8 +65,10 @@ def edit_lowongan():
         edited_lowongan['created_at'] = datetime.strptime(request.form.get('created_at'), '%Y-%m-%d')
         edited_lowongan['status'] = request.form.get('status')
         edited_lowongan['jenis_kegiatan'] = request.form.get('jenis')
+        edited_lowongan['foto_penyelenggara'] = request.form.get('foto_penyelenggara')
         edited_lowongan['email_penyelenggara'] = request.form.get('email')
         edited_lowongan['nama_penyelenggara'] = request.form.get('nama_penyelenggara')
+        edited_lowongan['jurusan'] = request.form.getlist('jurusan')
 
         if request.files['poster'].filename != '':
             storage_delete_file(request.form.get('old_poster'))

@@ -9,7 +9,7 @@
         <p class="text-subtitle mb-0">Manajemen penyelengaraan beasiswa lembaga anda di halaman ini.</p>
     </div>
     <div class="card-body">
-        <button class="btn btn-primary rounded-05 mb-4" data-bs-toggle="modal" data-bs-target="#addBeasiswaForm">Tambah Beasiswa</button>
+        <button class="btn btn-primary rounded-05 mb-4" data-bs-toggle="modal" data-bs-target="#addbeasiswaForm">Tambah Beasiswa</button>
         <table class="table" id="table1">
             <thead>
                 <tr>
@@ -30,11 +30,11 @@
                     </td>
                     <td class="text-center">
 
-                        <span class="badge bg-warning bg-opacity-20 text-warning fs-6 py-2 hover-zoom" onclick="editBeasiswa('{{ beasiswa['id'] }}')">
+                        <span class="badge bg-warning bg-opacity-20 text-warning fs-6 py-2 hover-zoom" onclick="editbeasiswa('{{ beasiswa['id'] }}')">
                             <i class="bi bi-pencil fs-6"></i>
                         </span>
 
-                        <span class="badge bg-danger bg-opacity-20 text-danger fs-6 py-2 hover-zoom" onclick="deleteBeasiswa('{{ beasiswa['id'] }}')">
+                        <span class="badge bg-danger bg-opacity-20 text-danger fs-6 py-2 hover-zoom" onclick="deletebeasiswa('{{ beasiswa['id'] }}')">
                             <i class="bi bi-trash3 fs-6"></i>
                         </span>
 
@@ -51,11 +51,11 @@
     </div>
 </div>
 
-<div class="modal fade text-left modal-borderless" id="addBeasiswaForm" tabindex="-1" aria-labelledby="addBeasiswaFormLabel" style="display: none;" aria-hidden="true">
+<div class="modal fade text-left modal-borderless" id="addbeasiswaForm" tabindex="-1" aria-labelledby="addbeasiswaFormLabel" style="display: none;" aria-hidden="true">
     <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable" role="document">
         <div class="modal-content rounded-4 p-3">
             <div class="modal-header">
-                <h4 class="modal-title" id="addBeasiswaFormLabel">
+                <h4 class="modal-title" id="addbeasiswaFormLabel">
                     Form Tambah Beasiswa
                 </h4>
                 <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
@@ -119,15 +119,100 @@
                             <div class="form-group mb-3  mt-1">
                                 <input id="url" name="url" type="text" placeholder="URL beasiswa" class="form-control form-control-lg py-2 bg-gray-light rounded-05" required>
                             </div>
+                            
+                            <label>Target Jurusan Beasiswa </label>
+                            <ul class="list-unstyled">     
+                                <li class="d-block me-2 mb-1">
+                                    <div class="form-check">
+                                        <div class="checkbox">
+                                            <input type="checkbox" class="form-check-input" id="select-all">
+                                            <label >Pilih Semua</label>
+                                        </div>
+                                    </div>
+                                </li>    
+                                <li class="d-block me-2 mb-1">
+                                    <div class="form-check">
+                                        <div class="checkbox">
+                                            <input type="checkbox" class="form-check-input" name="jurusan" value="Sipil">
+                                            <label >Sipil</label>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li class="d-block me-2 mb-1">
+                                    <div class="form-check">
+                                        <div class="checkbox">
+                                            <input type="checkbox" class="form-check-input" name="jurusan" value="Mesin">
+                                            <label >Mesin</label>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li class="d-block me-2 mb-1">
+                                    <div class="form-check">
+                                        <div class="checkbox">
+                                            <input type="checkbox" class="form-check-input" name="jurusan" value="Administrasi Niaga">
+                                            <label >Administrasi Niaga</label>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li class="d-block me-2 mb-1">
+                                    <div class="form-check">
+                                        <div class="checkbox">
+                                            <input type="checkbox" class="form-check-input" name="jurusan" value="Akuntansi">
+                                            <label >Akuntansi</label>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li class="d-block me-2 mb-1">
+                                    <div class="form-check">
+                                        <div class="checkbox">
+                                            <input type="checkbox" class="form-check-input" name="jurusan" value="Grafika dan Penerbitan">
+                                            <label >Grafika dan Penerbitan</label>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li class="d-block me-2 mb-1">
+                                    <div class="form-check">
+                                        <div class="checkbox">
+                                            <input type="checkbox" class="form-check-input" name="jurusan" value="Elektro">
+                                            <label >Elektro</label>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li class="d-block me-2 mb-1">
+                                    <div class="form-check">
+                                        <div class="checkbox">
+                                            <input type="checkbox" class="form-check-input" name="jurusan" value="Informatika dan Komputer">
+                                            <label >Informatika dan Komputer</label>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li class="d-block me-2 mb-1">
+                                    <div class="form-check">
+                                        <div class="checkbox">
+                                            <input type="checkbox" class="form-check-input" name="jurusan" value="Kesehatan">
+                                            <label >Kesehatan</label>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li class="d-block me-2 mb-1">
+                                    <div class="form-check">
+                                        <div class="checkbox">
+                                            <input type="checkbox" class="form-check-input" name="jurusan" value="Sastra dan Bahasa">
+                                            <label >Sastra dan Bahasa</label>
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul>
 
                             <label for="deskripsi">Deskripsi Beasiswa </label>
                             <div class="form-group mb-3  mt-1">
-                                <textarea id="deskripsi" name="deskripsi" type="text" placeholder="Deskripsi beasiswa" class="form-control form-control-lg py-2 bg-gray-light rounded-05" rows="10" required></textarea>
+                                <textarea id="deskripsi" name="deskripsi" type="text" placeholder="Deskripsi Beasiswa" class="form-control form-control-lg py-2 bg-gray-light rounded-05" rows="5" required></textarea>
                             </div>
-
+                            
                             <input type="hidden" name="nama_penyelenggara" value="{{ user['nama_lembaga'] }}">
                             <input type="hidden" name="email_penyelenggara" value="{{ user['email'] }}">
                             <input type="hidden" name="penyelenggara_uid" value="{{ user['localId'] }}">
+                            <input type="hidden" name="foto_penyelenggara" value="{{ user['foto'] }}">
                         </div>
                     </div>
                 </form>
@@ -139,11 +224,11 @@
     </div>
 </div>
 
-<div class="modal fade text-left modal-borderless" id="editBeasiswaForm" tabindex="-1" aria-labelledby="editBeasiswaFormLabel" style="display: none;" aria-hidden="true">
+<div class="modal fade text-left modal-borderless" id="editbeasiswaForm" tabindex="-1" aria-labelledby="editbeasiswaFormLabel" style="display: none;" aria-hidden="true">
     <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable" role="document">
         <div class="modal-content rounded-4 p-3">
             <div class="modal-header">
-                <h4 class="modal-title" id="editBeasiswaFormLabel">
+                <h4 class="modal-title" id="editbeasiswaFormLabel">
                     Ubah Data Beasiswa
                 </h4>
                 <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
@@ -209,9 +294,93 @@
                                 <input id="edt_url" name="url" type="text" placeholder="URL beasiswa" class="form-control form-control-lg py-2 bg-gray-light rounded-05" required>
                             </div>
 
+                            <label>Target Jurusan Beasiswa </label>
+                            <ul class="list-unstyled">     
+                                <li class="d-block me-2 mb-1">
+                                    <div class="form-check">
+                                        <div class="checkbox">
+                                            <input type="checkbox" class="form-check-input" id="edt-select-all">
+                                            <label >Pilih Semua</label>
+                                        </div>
+                                    </div>
+                                </li>    
+                                <li class="d-block me-2 mb-1">
+                                    <div class="form-check">
+                                        <div class="checkbox">
+                                            <input type="checkbox" class="form-check-input" name="jurusan" value="Sipil">
+                                            <label >Sipil</label>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li class="d-block me-2 mb-1">
+                                    <div class="form-check">
+                                        <div class="checkbox">
+                                            <input type="checkbox" class="form-check-input" name="jurusan" value="Mesin">
+                                            <label >Mesin</label>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li class="d-block me-2 mb-1">
+                                    <div class="form-check">
+                                        <div class="checkbox">
+                                            <input type="checkbox" class="form-check-input" name="jurusan" value="Administrasi Niaga">
+                                            <label >Administrasi Niaga</label>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li class="d-block me-2 mb-1">
+                                    <div class="form-check">
+                                        <div class="checkbox">
+                                            <input type="checkbox" class="form-check-input" name="jurusan" value="Akuntansi">
+                                            <label >Akuntansi</label>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li class="d-block me-2 mb-1">
+                                    <div class="form-check">
+                                        <div class="checkbox">
+                                            <input type="checkbox" class="form-check-input" name="jurusan" value="Grafika dan Penerbitan">
+                                            <label >Grafika dan Penerbitan</label>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li class="d-block me-2 mb-1">
+                                    <div class="form-check">
+                                        <div class="checkbox">
+                                            <input type="checkbox" class="form-check-input" name="jurusan" value="Elektro">
+                                            <label >Elektro</label>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li class="d-block me-2 mb-1">
+                                    <div class="form-check">
+                                        <div class="checkbox">
+                                            <input type="checkbox" class="form-check-input" name="jurusan" value="Informatika dan Komputer">
+                                            <label >Informatika dan Komputer</label>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li class="d-block me-2 mb-1">
+                                    <div class="form-check">
+                                        <div class="checkbox">
+                                            <input type="checkbox" class="form-check-input" name="jurusan" value="Kesehatan">
+                                            <label >Kesehatan</label>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li class="d-block me-2 mb-1">
+                                    <div class="form-check">
+                                        <div class="checkbox">
+                                            <input type="checkbox" class="form-check-input" name="jurusan" value="Sastra dan Bahasa">
+                                            <label >Sastra dan Bahasa</label>
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul>
+
                             <label for="edt_deskripsi">Deskripsi Beasiswa </label>
                             <div class="form-group mb-3 mt-1">
-                                <textarea id="edt_deskripsi" name="deskripsi" type="text" placeholder="Deskripsi beasiswa" class="form-control form-control-lg py-2 bg-gray-light rounded-05" rows="10" required></textarea>
+                                <textarea id="edt_deskripsi" name="deskripsi" type="text" placeholder="Deskripsi beasiswa" class="form-control form-control-lg py-2 bg-gray-light rounded-05" rows="5" required></textarea>
                             </div>
 
                             <label for="edt_status">Status Beasiswa </label>
@@ -231,6 +400,7 @@
                             <input id="edt_jenis" type="hidden" name="jenis">
                             <input id="edt_nama_penyelenggara" type="hidden" name="nama_penyelenggara">
                             <input id="edt_id" type="hidden" name="id">
+                            <input id="edt_foto_penyelenggara" type="hidden" name="foto_penyelenggara">
                         </div>
                     </div>
                 </form>
@@ -242,11 +412,11 @@
     </div>
 </div>
 
-<div class="modal fade text-left modal-borderless" id="detailBeasiswa" tabindex="-1" aria-labelledby="detailBeasiswaLabel" style="display: none;" aria-hidden="true">
+<div class="modal fade text-left modal-borderless" id="detailbeasiswa" tabindex="-1" aria-labelledby="detailbeasiswaLabel" style="display: none;" aria-hidden="true">
     <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable" role="document">
         <div class="modal-content rounded-4 p-3">
             <div class="modal-header">
-                <h4 class="modal-title" id="detailBeasiswaLabel">
+                <h4 class="modal-title" id="detailbeasiswaLabel">
                     Detail Beasiswa
                 </h4>
                 <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
@@ -293,9 +463,14 @@
                             <input id="view_url" type="text" class="form-control form-control-lg py-2 bg-gray-light rounded-05" readonly="readonly" disabled>
                         </div>
 
+                        <label for="view_jurusan">Target Jurusan Beasiswa </label>
+                        <div class="form-group mb-3 mt-1">
+                            <input id="view_jurusan" type="text" class="form-control form-control-lg py-2 bg-gray-light rounded-05" readonly="readonly" disabled>
+                        </div>
+
                         <label for="view_deskripsi">Deskripsi Beasiswa </label>
                         <div class="form-group mb-3 mt-1">
-                            <textarea id="view_deskripsi" type="text" placeholder="Deskripsi beasiswa" class="form-control form-control-lg py-2 bg-gray-light rounded-05" readonly="readonly" disabled rows="10"></textarea>
+                            <textarea id="view_deskripsi" type="text" placeholder="Deskripsi beasiswa" class="form-control form-control-lg py-2 bg-gray-light rounded-05" readonly="readonly" disabled rows="9"></textarea>
                         </div>
 
                         <label for="view_status">Status Beasiswa </label>
@@ -325,8 +500,8 @@
 
 <script>
 
-    var detailBeasiswaModal = new bootstrap.Modal($('#detailBeasiswa'));
-    var editBeasiswaModal = new bootstrap.Modal($('#editBeasiswaForm'));
+    var detailbeasiswaModal = new bootstrap.Modal($('#detailbeasiswa'));
+    var editbeasiswaModal = new bootstrap.Modal($('#editbeasiswaForm'));
 
     function showDetail(docId) {
         $('.spinner').removeClass('d-none')
@@ -341,6 +516,7 @@
             $('#view_deskripsi').val(data.deskripsi)
             $('#view_status').val(data.status)
             $('#view_datecreated').val(data.created_at)
+            $('#view_jurusan').val(data.jurusan.join(', '))
             $('#view_img-poster').attr('src', data.poster);
 
             var viewFilePenting = ''
@@ -355,13 +531,13 @@
 
             $('#view_file-penting').html(viewFilePenting);
 
-            detailBeasiswaModal.show()
+            detailbeasiswaModal.show()
             $('.spinner').addClass('d-none')
             $('.overlay').addClass('d-none')
         })
     }
 
-    function editBeasiswa(docId) {
+    function editbeasiswa(docId) {
         $('.spinner').removeClass('d-none')
         $('.overlay').removeClass('d-none')
 
@@ -376,12 +552,17 @@
             $('#edt_email').val(data.email_penyelenggara)
             $('#edt_jenis').val(data.jenis_kegiatan)
             $('#edt_nama_penyelenggara').val(data.nama_penyelenggara)
+            $('#edt_foto_penyelenggara').val(data.foto_penyelenggara)
             $('#old_poster').val(data.poster)
             $('#old_pedoman').val(data.pedoman)
             $('#edt_id').val(docId)
             $('#img-poster-edit').attr('src', data.poster);
             $('#img-poster-edit').removeClass('poster-placeholder');
             $('#img-poster-edit').addClass('w-100');
+
+            data.jurusan.forEach(function(value) {
+                $('input[name="jurusan"][value="' + value + '"]').prop('checked', true);
+            })
 
             imgPondEdit.removeFiles();
             multipleFilePondEdit.removeFiles();
@@ -402,15 +583,15 @@
                 $('#edtTextLokasi').val(data.lokasi);
             }
 
-            editBeasiswaModal.show()
+            editbeasiswaModal.show()
             $('.spinner').addClass('d-none')
             $('.overlay').addClass('d-none')
         })
     }
 
-    function deleteBeasiswa(docId) {
+    function deletebeasiswa(docId) {
         swalCustom.fire({
-            title: 'Hapus Beasiswa?',
+            title: 'Hapus beasiswa?',
             text: "Apakah anda yakin akan menghapus beasiswa? Anda tidak dapat mengembalikan beasiswa yang sudah dihapus.",
             icon: 'warning',
             showCancelButton: true,
@@ -422,6 +603,16 @@
             }
         })
     }
+
+    $("#select-all").click(function() {
+        const masterChecked = $(this).prop("checked");
+        $("input[name='jurusan']").prop("checked", masterChecked);
+    });
+
+    $("input[name='jurusan']").click(function() {
+        const allChecked = $("input[name='jurusan']:checked").length === $("input[name='jurusan']").length;
+        $("#select-all").prop("checked", allChecked);
+    });
 
     $(document).ready(function () {
         $('#submitAdd').click(function () {
@@ -469,6 +660,12 @@
                     title: 'Harap isi deskripsi beasiswa'
                 })
                 return;
+            } else if ($('input[name="jurusan"]:checked').length === 0) {
+                Toast.fire({
+                    icon: 'error',
+                    title: 'Harap isi setidaknya satu target jurusan beasiswa'
+                })
+                return;
             } else if ($("#img-poster").attr('src') == '' || typeof $("#img-poster").attr('src') === 'undefined') {
                 Toast.fire({
                     icon: 'error',
@@ -481,6 +678,16 @@
             $('.overlay').removeClass('d-none')
             $('#addForm').submit();
         });
+    });
+
+    $("#edt-select-all").click(function() {
+        const masterChecked = $(this).prop("checked");
+        $("input[name='jurusan']").prop("checked", masterChecked);
+    });
+
+    $("input[name='jurusan']").click(function() {
+        const allChecked = $("input[name='jurusan']:checked").length === $("input[name='jurusan']").length;
+        $("#edt-select-all").prop("checked", allChecked);
     });
 
     $(document).ready(function () {
@@ -527,6 +734,12 @@
                 Toast.fire({
                     icon: 'error',
                     title: 'Harap isi deskripsi beasiswa'
+                })
+                return;
+            } else if ($('input[name="jurusan"]:checked').length === 0) {
+                Toast.fire({
+                    icon: 'error',
+                    title: 'Harap isi setidaknya satu target jurusan beasiswa'
                 })
                 return;
             } else if ($("#img-poster-edit").attr('src') == '' || typeof $("#img-poster-edit").attr('src') === 'undefined') {

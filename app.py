@@ -3,7 +3,7 @@ import json
 import locale
 
 from requests.exceptions import HTTPError
-from flask import Flask, session, render_template, request, redirect, url_for, flash, jsonify
+from flask import Flask, session, render_template, request, redirect, url_for, flash
 from firebase_admin import firestore
 from datetime import datetime
 

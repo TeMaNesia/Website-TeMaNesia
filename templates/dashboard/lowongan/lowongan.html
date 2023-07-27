@@ -119,15 +119,100 @@
                             <div class="form-group mb-3  mt-1">
                                 <input id="url" name="url" type="text" placeholder="URL lowongan" class="form-control form-control-lg py-2 bg-gray-light rounded-05" required>
                             </div>
+                            
+                            <label>Target Jurusan Lowongan </label>
+                            <ul class="list-unstyled">     
+                                <li class="d-block me-2 mb-1">
+                                    <div class="form-check">
+                                        <div class="checkbox">
+                                            <input type="checkbox" class="form-check-input" id="select-all">
+                                            <label >Pilih Semua</label>
+                                        </div>
+                                    </div>
+                                </li>    
+                                <li class="d-block me-2 mb-1">
+                                    <div class="form-check">
+                                        <div class="checkbox">
+                                            <input type="checkbox" class="form-check-input" name="jurusan" value="Sipil">
+                                            <label >Sipil</label>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li class="d-block me-2 mb-1">
+                                    <div class="form-check">
+                                        <div class="checkbox">
+                                            <input type="checkbox" class="form-check-input" name="jurusan" value="Mesin">
+                                            <label >Mesin</label>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li class="d-block me-2 mb-1">
+                                    <div class="form-check">
+                                        <div class="checkbox">
+                                            <input type="checkbox" class="form-check-input" name="jurusan" value="Administrasi Niaga">
+                                            <label >Administrasi Niaga</label>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li class="d-block me-2 mb-1">
+                                    <div class="form-check">
+                                        <div class="checkbox">
+                                            <input type="checkbox" class="form-check-input" name="jurusan" value="Akuntansi">
+                                            <label >Akuntansi</label>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li class="d-block me-2 mb-1">
+                                    <div class="form-check">
+                                        <div class="checkbox">
+                                            <input type="checkbox" class="form-check-input" name="jurusan" value="Grafika dan Penerbitan">
+                                            <label >Grafika dan Penerbitan</label>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li class="d-block me-2 mb-1">
+                                    <div class="form-check">
+                                        <div class="checkbox">
+                                            <input type="checkbox" class="form-check-input" name="jurusan" value="Elektro">
+                                            <label >Elektro</label>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li class="d-block me-2 mb-1">
+                                    <div class="form-check">
+                                        <div class="checkbox">
+                                            <input type="checkbox" class="form-check-input" name="jurusan" value="Informatika dan Komputer">
+                                            <label >Informatika dan Komputer</label>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li class="d-block me-2 mb-1">
+                                    <div class="form-check">
+                                        <div class="checkbox">
+                                            <input type="checkbox" class="form-check-input" name="jurusan" value="Kesehatan">
+                                            <label >Kesehatan</label>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li class="d-block me-2 mb-1">
+                                    <div class="form-check">
+                                        <div class="checkbox">
+                                            <input type="checkbox" class="form-check-input" name="jurusan" value="Sastra dan Bahasa">
+                                            <label >Sastra dan Bahasa</label>
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul>
 
                             <label for="deskripsi">Deskripsi Lowongan </label>
                             <div class="form-group mb-3  mt-1">
-                                <textarea id="deskripsi" name="deskripsi" type="text" placeholder="Deskripsi lowongan" class="form-control form-control-lg py-2 bg-gray-light rounded-05" rows="10" required></textarea>
+                                <textarea id="deskripsi" name="deskripsi" type="text" placeholder="Deskripsi lowongan" class="form-control form-control-lg py-2 bg-gray-light rounded-05" rows="5" required></textarea>
                             </div>
-
+                            
                             <input type="hidden" name="nama_penyelenggara" value="{{ user['nama_lembaga'] }}">
                             <input type="hidden" name="email_penyelenggara" value="{{ user['email'] }}">
                             <input type="hidden" name="penyelenggara_uid" value="{{ user['localId'] }}">
+                            <input type="hidden" name="foto_penyelenggara" value="{{ user['foto'] }}">
                         </div>
                     </div>
                 </form>
@@ -209,9 +294,93 @@
                                 <input id="edt_url" name="url" type="text" placeholder="URL lowongan" class="form-control form-control-lg py-2 bg-gray-light rounded-05" required>
                             </div>
 
+                            <label>Target Jurusan Lowongan </label>
+                            <ul class="list-unstyled">     
+                                <li class="d-block me-2 mb-1">
+                                    <div class="form-check">
+                                        <div class="checkbox">
+                                            <input type="checkbox" class="form-check-input" id="edt-select-all">
+                                            <label >Pilih Semua</label>
+                                        </div>
+                                    </div>
+                                </li>    
+                                <li class="d-block me-2 mb-1">
+                                    <div class="form-check">
+                                        <div class="checkbox">
+                                            <input type="checkbox" class="form-check-input" name="jurusan" value="Sipil">
+                                            <label >Sipil</label>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li class="d-block me-2 mb-1">
+                                    <div class="form-check">
+                                        <div class="checkbox">
+                                            <input type="checkbox" class="form-check-input" name="jurusan" value="Mesin">
+                                            <label >Mesin</label>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li class="d-block me-2 mb-1">
+                                    <div class="form-check">
+                                        <div class="checkbox">
+                                            <input type="checkbox" class="form-check-input" name="jurusan" value="Administrasi Niaga">
+                                            <label >Administrasi Niaga</label>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li class="d-block me-2 mb-1">
+                                    <div class="form-check">
+                                        <div class="checkbox">
+                                            <input type="checkbox" class="form-check-input" name="jurusan" value="Akuntansi">
+                                            <label >Akuntansi</label>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li class="d-block me-2 mb-1">
+                                    <div class="form-check">
+                                        <div class="checkbox">
+                                            <input type="checkbox" class="form-check-input" name="jurusan" value="Grafika dan Penerbitan">
+                                            <label >Grafika dan Penerbitan</label>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li class="d-block me-2 mb-1">
+                                    <div class="form-check">
+                                        <div class="checkbox">
+                                            <input type="checkbox" class="form-check-input" name="jurusan" value="Elektro">
+                                            <label >Elektro</label>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li class="d-block me-2 mb-1">
+                                    <div class="form-check">
+                                        <div class="checkbox">
+                                            <input type="checkbox" class="form-check-input" name="jurusan" value="Informatika dan Komputer">
+                                            <label >Informatika dan Komputer</label>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li class="d-block me-2 mb-1">
+                                    <div class="form-check">
+                                        <div class="checkbox">
+                                            <input type="checkbox" class="form-check-input" name="jurusan" value="Kesehatan">
+                                            <label >Kesehatan</label>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li class="d-block me-2 mb-1">
+                                    <div class="form-check">
+                                        <div class="checkbox">
+                                            <input type="checkbox" class="form-check-input" name="jurusan" value="Sastra dan Bahasa">
+                                            <label >Sastra dan Bahasa</label>
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul>
+
                             <label for="edt_deskripsi">Deskripsi Lowongan </label>
                             <div class="form-group mb-3 mt-1">
-                                <textarea id="edt_deskripsi" name="deskripsi" type="text" placeholder="Deskripsi lowongan" class="form-control form-control-lg py-2 bg-gray-light rounded-05" rows="10" required></textarea>
+                                <textarea id="edt_deskripsi" name="deskripsi" type="text" placeholder="Deskripsi lowongan" class="form-control form-control-lg py-2 bg-gray-light rounded-05" rows="5" required></textarea>
                             </div>
 
                             <label for="edt_status">Status Lowongan </label>
@@ -231,6 +400,7 @@
                             <input id="edt_jenis" type="hidden" name="jenis">
                             <input id="edt_nama_penyelenggara" type="hidden" name="nama_penyelenggara">
                             <input id="edt_id" type="hidden" name="id">
+                            <input id="edt_foto_penyelenggara" type="hidden" name="foto_penyelenggara">
                         </div>
                     </div>
                 </form>
@@ -293,9 +463,14 @@
                             <input id="view_url" type="text" class="form-control form-control-lg py-2 bg-gray-light rounded-05" readonly="readonly" disabled>
                         </div>
 
+                        <label for="view_jurusan">Target Jurusan Lowongan </label>
+                        <div class="form-group mb-3 mt-1">
+                            <input id="view_jurusan" type="text" class="form-control form-control-lg py-2 bg-gray-light rounded-05" readonly="readonly" disabled>
+                        </div>
+
                         <label for="view_deskripsi">Deskripsi Lowongan </label>
                         <div class="form-group mb-3 mt-1">
-                            <textarea id="view_deskripsi" type="text" placeholder="Deskripsi lowongan" class="form-control form-control-lg py-2 bg-gray-light rounded-05" readonly="readonly" disabled rows="10"></textarea>
+                            <textarea id="view_deskripsi" type="text" placeholder="Deskripsi lowongan" class="form-control form-control-lg py-2 bg-gray-light rounded-05" readonly="readonly" disabled rows="9"></textarea>
                         </div>
 
                         <label for="view_status">Status Lowongan </label>
@@ -341,6 +516,7 @@
             $('#view_deskripsi').val(data.deskripsi)
             $('#view_status').val(data.status)
             $('#view_datecreated').val(data.created_at)
+            $('#view_jurusan').val(data.jurusan.join(', '))
             $('#view_img-poster').attr('src', data.poster);
 
             var viewFilePenting = ''
@@ -376,12 +552,17 @@
             $('#edt_email').val(data.email_penyelenggara)
             $('#edt_jenis').val(data.jenis_kegiatan)
             $('#edt_nama_penyelenggara').val(data.nama_penyelenggara)
+            $('#edt_foto_penyelenggara').val(data.foto_penyelenggara)
             $('#old_poster').val(data.poster)
             $('#old_pedoman').val(data.pedoman)
             $('#edt_id').val(docId)
             $('#img-poster-edit').attr('src', data.poster);
             $('#img-poster-edit').removeClass('poster-placeholder');
             $('#img-poster-edit').addClass('w-100');
+
+            data.jurusan.forEach(function(value) {
+                $('input[name="jurusan"][value="' + value + '"]').prop('checked', true);
+            })
 
             imgPondEdit.removeFiles();
             multipleFilePondEdit.removeFiles();
@@ -422,6 +603,16 @@
             }
         })
     }
+
+    $("#select-all").click(function() {
+        const masterChecked = $(this).prop("checked");
+        $("input[name='jurusan']").prop("checked", masterChecked);
+    });
+
+    $("input[name='jurusan']").click(function() {
+        const allChecked = $("input[name='jurusan']:checked").length === $("input[name='jurusan']").length;
+        $("#select-all").prop("checked", allChecked);
+    });
 
     $(document).ready(function () {
         $('#submitAdd').click(function () {
@@ -469,6 +660,12 @@
                     title: 'Harap isi deskripsi lowongan'
                 })
                 return;
+            } else if ($('input[name="jurusan"]:checked').length === 0) {
+                Toast.fire({
+                    icon: 'error',
+                    title: 'Harap isi setidaknya satu target jurusan lowongan'
+                })
+                return;
             } else if ($("#img-poster").attr('src') == '' || typeof $("#img-poster").attr('src') === 'undefined') {
                 Toast.fire({
                     icon: 'error',
@@ -481,6 +678,16 @@
             $('.overlay').removeClass('d-none')
             $('#addForm').submit();
         });
+    });
+
+    $("#edt-select-all").click(function() {
+        const masterChecked = $(this).prop("checked");
+        $("input[name='jurusan']").prop("checked", masterChecked);
+    });
+
+    $("input[name='jurusan']").click(function() {
+        const allChecked = $("input[name='jurusan']:checked").length === $("input[name='jurusan']").length;
+        $("#edt-select-all").prop("checked", allChecked);
     });
 
     $(document).ready(function () {
@@ -527,6 +734,12 @@
                 Toast.fire({
                     icon: 'error',
                     title: 'Harap isi deskripsi lowongan'
+                })
+                return;
+            } else if ($('input[name="jurusan"]:checked').length === 0) {
+                Toast.fire({
+                    icon: 'error',
+                    title: 'Harap isi setidaknya satu target jurusan lowongan'
                 })
                 return;
             } else if ($("#img-poster-edit").attr('src') == '' || typeof $("#img-poster-edit").attr('src') === 'undefined') {
