@@ -429,6 +429,15 @@
             <div class="modal-body">
                 <div class="row">
                     <div class="col-4">
+                        <form action="/dashboard/lomba/send-sertificate" method="POST">
+                            <input type="hidden" name="id" id="id">
+                            <input type="hidden" name="nama" id="nama_lomba">
+                            <button type="submit" class="btn btn-primary rounded-05 mb-4">Kirim Sertifikat</button>
+                        </form>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-4">
                         <label for="view_poster">Poster Lomba </label>
                         <img id="view_img-poster" class="rounded-05 border-primary border mt-1 w-100 mb-5">
 
@@ -518,6 +527,9 @@
             $('#view_datecreated').val(data.created_at)
             $('#view_jurusan').val(data.jurusan.join(', '))
             $('#view_img-poster').attr('src', data.poster);
+            
+            $('#id').val(docId)
+            $('#nama_lomba').val(data.nama)
 
             var viewFilePenting = ''
 

@@ -1,0 +1,358 @@
+{% extends 'dashboard/lomba/master2.html' %}
+
+{% block title %} Lomba {% endblock %}
+
+{% block page_content %}
+<div class="card">
+    <div class="card-header mb-0">
+        <h3>{{ data_lomba['nama'] }}</h3>
+        <p class="text-subtitle mb-0">Kirim sertifikat ke peserta lomba ini.</p>
+    </div>
+    <div class="card-body">
+        <button class="btn btn-primary rounded-05 mb-4" data-bs-toggle="modal" data-bs-target="#addsertificateForm" onclick="setId('{{ data_lomba['id'] }}')">Kirim Sertifikat</button>
+        <table class="table" id="table1">
+            <thead>
+                <tr>
+                    <th>Nama Sertifikat</th>
+                    <th>Nomor Sertifikat</th>
+                    <th>Nama Peserta</th>
+                    <th>Tanggal Pembuatan</th>
+                    <th>Aksi</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for sertifikat in data_sertifikat %}
+
+                <tr>
+                    <td style="width: 20%;">{{ sertifikat['nama'] }}</td>
+                    <td class="text-center">{{ sertifikat['nomor'] }}</td>
+                    <td class="text-center">{{ sertifikat['nama_peserta'] }}</td>
+                    <td class="text-center">{{ sertifikat['tanggal_pembuatan'] }}</td>
+                    <td class="text-center">
+
+                        <span class="badge bg-warning bg-opacity-20 text-warning fs-6 py-2 hover-zoom" onclick="editsertifikat('{{ data_lomba['id'] }}', '{{ sertifikat['id'] }}')">
+                            <i class="bi bi-pencil fs-6"></i>
+                        </span>
+
+                        <span class="badge bg-danger bg-opacity-20 text-danger fs-6 py-2 hover-zoom" onclick="deletesertifikat('{{ data_lomba['id'] }}', '{{ sertifikat['id'] }}')">
+                            <i class="bi bi-trash3 fs-6"></i>
+                        </span>
+
+                        <span class="badge bg-primary bg-opacity-20 text-primary fs-6 py-2 hover-zoom" onclick="showDetail('{{ data_lomba['id'] }}', '{{ sertifikat['id'] }}')">
+                            <i class="bi bi-eye fs-6"></i>
+                        </span>
+
+                    </td>
+                </tr>
+
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="modal fade text-left modal-borderless" id="addsertificateForm" tabindex="-1" aria-labelledby="addsertificateFormLabel" style="display: none;" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable" role="document">
+        <div class="modal-content rounded-4 p-3">
+            <div class="modal-header">
+                <h4 class="modal-title" id="addsertificateFormLabel">
+                    Form Pengiriman Sertifikat Lomba
+                </h4>
+                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-x">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="addForm" action="/add-sertificate" method="POST" enctype="multipart/form-data">
+                    <div class="row">
+                        <div class="col">
+                            <label for="peserta">Peserta </label>
+                            <div class="input-group mb-1 mt-1">
+                                <input id="peserta" name="peserta" type="number" placeholder="Masukkan NIM/NISN peserta" class="form-control form-control-lg py-2 bg-gray-light rounded-05" required>
+                            </div>
+                            <p id="view_nama"></p>
+
+                            <label for="nama">Nama Sertifikat </label>
+                            <div class="form-group mb-3 mt-1">
+                                <input id="nama" name="nama" type="text" placeholder="Nama sertifikat" class="form-control form-control-lg py-2 bg-gray-light rounded-05" required>
+                            </div>
+
+                            <label for="nomor">Nomor Sertifikat </label>
+                            <div class="form-group mb-3 mt-1">
+                                <input id="nomor" name="nomor" type="text" placeholder="Nomor sertifikat" class="form-control form-control-lg py-2 bg-gray-light rounded-05" required>
+                            </div>
+
+                            <label for="date">Tanggal Pembuatan Sertifikat </label>
+                            <div class="form-group mb-3  mt-1">
+                                <input id="date" type="text" name="date" class="form-control form-control-lg py-2 bg-gray-light rounded-05 flatpickr-no-config flatpickr-input active" placeholder="Klik untuk pilih tanggal" readonly="readonly" required>
+                            </div>
+
+                            <label for="file-sertifikat">File Sertifikat (File PDF) </label>
+                            <div class="form-group mb-3  mt-1">
+                                <input type="file" id="file-sertifikat" name="file-sertifikat" multiple class="mf-filepond multiple-files-filepond border-primary" accept="application/pdf" aria-describedby="inputGroupFileAddon04" aria-label="Upload" multiple>
+                            </div>
+                            
+                            <input id="id_lomba" type="hidden" name="id">
+                            <input id="nama_peserta" type="hidden" name="nama_peserta">
+                            <input id="nomor_induk" type="hidden" name="no_peserta">
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" id="submitAdd" class="btn btn-primary rounded-05">Submit</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade text-left modal-borderless" id="detailsertifikat" tabindex="-1" aria-labelledby="detailsertifikatLabel" style="display: none;" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable" role="document">
+        <div class="modal-content rounded-4 p-3">
+            <div class="modal-header">
+                <h4 class="modal-title" id="detailsertifikatLabel">
+                    Detail Sertifikat Lomba
+                </h4>
+                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-x">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="col">
+                    <label for="view_nama_sertifikat">Nama Sertifikat </label>
+                    <div class="form-group mb-3 mt-1">
+                        <input id="view_nama_sertifikat" type="text" class="form-control form-control-lg py-2 bg-gray-light rounded-05" readonly="readonly" disabled>
+                    </div>
+
+                    <label for="view_nomor">Nomor Sertifikat </label>
+                    <div class="form-group mb-3 mt-1">
+                        <input id="view_nomor" type="text" class="form-control form-control-lg py-2 bg-gray-light rounded-05" readonly="readonly" disabled>
+                    </div>
+
+                    <label for="view_peserta">Peserta Lomba</label>
+                    <div class="form-group mb-3 mt-1">
+                        <input id="view_peserta" type="text" class="form-control form-control-lg py-2 bg-gray-light rounded-05" readonly="readonly" disabled>
+                    </div>
+
+                    <label for="view_nim_nisn">NIM/NISN Peserta Lomba </label>
+                    <div class="form-group mb-3 mt-1">
+                        <input id="view_nim_nisn" type="text" class="form-control form-control-lg py-2 bg-gray-light rounded-05" readonly="readonly" disabled>
+                    </div>
+
+                    <label for="view_tanggal">Tanggal Pembuatan Sertifikat</label>
+                    <div class="form-group mb-3 mt-1">
+                        <input id="view_tanggal" type="text" class="form-control form-control-lg py-2 bg-gray-light rounded-05" readonly="readonly" disabled>
+                    </div>
+
+                    <label>File Sertifikat</label>
+                        <div id="view_file-sertifikat" class="mt-1">
+                        </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn btn-primary rounded-05" data-bs-dismiss="modal">Tutup</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade text-left modal-borderless" id="editsertifikatForm" tabindex="-1" aria-labelledby="editsertifikatFormLabel" style="display: none;" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable" role="document">
+        <div class="modal-content rounded-4 p-3">
+            <div class="modal-header">
+                <h4 class="modal-title" id="editsertifikatFormLabel">
+                    Ubah Data Sertifikat Lomba
+                </h4>
+                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-x">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+
+            <div class="modal-body">
+                <form id="editForm" action="/edit-sertificate" method="POST" enctype="multipart/form-data">
+                    <div class="row">
+                        <div class="col">
+                            <label for="edt_peserta">Peserta </label>
+                            <div class="input-group mb-1 mt-1">
+                                <input id="edt_peserta" name="peserta" type="number" placeholder="Masukkan NIM/NISN peserta" class="form-control form-control-lg py-2 bg-gray-light rounded-05" required>
+                            </div>
+                            <p id="edt_view_nama"></p>
+
+                            <label for="edt_nama">Nama Sertifikat </label>
+                            <div class="form-group mb-3 mt-1">
+                                <input id="edt_nama" name="nama" type="text" placeholder="Nama sertifikat" class="form-control form-control-lg py-2 bg-gray-light rounded-05" required>
+                            </div>
+
+                            <label for="edt_nomor">Nomor Sertifikat </label>
+                            <div class="form-group mb-3 mt-1">
+                                <input id="edt_nomor" name="nomor" type="text" placeholder="Nomor sertifikat" class="form-control form-control-lg py-2 bg-gray-light rounded-05" required>
+                            </div>
+
+                            <label for="edt_date">Tanggal Pembuatan Sertifikat </label>
+                            <div class="form-group mb-3  mt-1">
+                                <input id="edt_date" type="text" name="date" class="form-control form-control-lg py-2 bg-gray-light rounded-05 flatpickr-no-config flatpickr-input active" placeholder="Klik untuk pilih tanggal" readonly="readonly" required>
+                            </div>
+
+                            <label for="edt_file-sertifikat">File Sertifikat (File PDF) </label>
+                            <div class="form-group mb-3 mt-1">
+                                <input type="file" id="edt_file-sertifikat" name="file-sertifikat" multiple class="mf-filepond multiple-files-filepond-edit border-primary" accept="application/pdf" aria-describedby="inputGroupFileAddon04" aria-label="Upload" multiple>
+                            </div>
+                            
+                            <input id="edt_id_lomba" type="hidden" name="id_lomba">
+                            <input id="edt_nama_peserta" type="hidden" name="nama_peserta">
+                            <input id="edt_nomor_induk" type="hidden" name="no_peserta">
+                            <input id="edt_id" type="hidden" name="id">
+                            <input id="old_sertificate" type="hidden" name="old_sertificate">
+                            <input id="old_sertificate_name" type="hidden" name="old_sertificate_name">
+                            <input id="edt_created_at" type="hidden" name="created_at">
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" id="submitEdit" class="btn btn-primary rounded-05">Submit</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block script %}
+
+<script>
+    var detailsertifikatModal = new bootstrap.Modal($('#detailsertifikat'));
+    var editsertifikatModal = new bootstrap.Modal($('#editsertifikatForm'));
+
+    function editsertifikat(doc, docId) {
+        $('.spinner').removeClass('d-none')
+        $('.overlay').removeClass('d-none')
+
+        $.get(`/get-sertifikat/${doc}/${docId}`, function (data) {
+            $('#edt_peserta').val(data.nim_nisn_peserta)
+            $('#edt_nama').val(data.nama)
+            $('#edt_nomor').val(data.nomor)
+            $('#edt_date').val(data.tanggal_pembuatan)
+            $('#edt_id').val(docId)
+            $('#edt_created_at').val(data.created_at)
+            $('#old_sertificate').val(data.file_sertifikat)
+            $('#old_sertificate_name').val(data.sertifikat_filename)
+
+            multipleFilePondEdit.removeFiles();
+            addToPond(data.file_sertifikat, data.sertifikat_filename, 'application', multipleFilePondEdit)
+
+            $('#edt_id_lomba').val(doc)
+            $('#edt_nama_peserta').val(data.nama_peserta)
+            $('#edt_nomor_induk').val(data.nim_nisn_peserta)
+
+            editsertifikatModal.show()
+            $('.spinner').addClass('d-none')
+            $('.overlay').addClass('d-none')
+        })
+    }
+
+
+    $(document).ready(function() {
+        $("#peserta").on("input", function() {
+            const searchText = $(this).val();
+            $.ajax({
+                url: "/search_peserta",
+                method: "GET",
+                data: { search_text: searchText }, 
+                success: function(data) {
+                    $("#view_nama").html(`<p>Data siswa/mahasiswa ditemukan: <b>${data.nama}</b></p>`);
+                    $('#nama_peserta').val(data.nama)
+                    $('#nomor_induk').val(data.nim_nisn)
+                },
+                error: function(error) {
+                    $("#view_nama").html(`<p>Data siswa/mahasiswa tidak ditemukan, <b>periksa kembali NIM/NISN</b>`);
+                }
+            });
+        });
+    });
+
+    $(document).ready(function() {
+        $("#edt_peserta").on("input", function() {
+            const searchText = $(this).val();
+            $.ajax({
+                url: "/search_peserta",
+                method: "GET",
+                data: { search_text: searchText }, 
+                success: function(data) {
+                    $("#edt_view_nama").html(`<p>Data siswa/mahasiswa ditemukan: <b>${data.nama}</b></p>`);
+                    $('#edt_nama_peserta').val(data.nama)
+                    $('#edt_nomor_induk').val(data.nim_nisn)
+                },
+                error: function(error) {
+                    $("#edt_view_nama").html(`<p>Data siswa/mahasiswa tidak ditemukan, <b>periksa kembali NIM/NISN</b>`);
+                }
+            });
+        });
+    });
+
+    function showDetail(doc, docId) {
+        $('.spinner').removeClass('d-none')
+        $('.overlay').removeClass('d-none')
+
+        $.get(`/get-sertifikat/${doc}/${docId}`, function (data) {
+            $('#view_nama_sertifikat').val(data.nama)
+            $('#view_nomor').val(data.nomor)
+            $('#view_peserta').val(data.nama_peserta)
+            $('#view_nim_nisn').val(data.nim_nisn_peserta)
+            $('#view_tanggal').val(data.tanggal_pembuatan)
+
+            $('#view_file-sertifikat').html(`<div class="bg-gray-light border border-1 border-primary rounded-05 mb-2 text-primary text-center py-3 px-2">${data.sertifikat_filename}</div>`);
+
+            detailsertifikatModal.show()
+            $('.spinner').addClass('d-none')
+            $('.overlay').addClass('d-none')
+        })
+    }
+
+    function deletesertifikat(doc, docId) {
+        swalCustom.fire({
+            title: 'Hapus sertifikat?',
+            text: "Apakah anda yakin akan menghapus sertifikat? Anda tidak dapat mengembalikan sertifikat yang sudah dihapus.",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: '&nbsp;&nbsp;&nbsp;Ya&nbsp;&nbsp;&nbsp;',
+            cancelButtonText: 'Tidak',
+        }).then((result) => {
+            if (result.isConfirmed) {
+                window.open(`/delete-sertifikat/${doc}/${docId}`, "_self");
+            }
+        })
+    }
+
+    function setId(docId) {
+        $('#id_lomba').val(docId)
+    }
+
+    $(document).ready(function () {
+        $('#submitAdd').click(function () {
+            $('.spinner').removeClass('d-none')
+            $('.overlay').removeClass('d-none')
+            $('#addForm').submit();
+        });
+    });
+
+    $(document).ready(function () {
+        $('#submitEdit').click(function () {
+            $('.spinner').removeClass('d-none')
+            $('.overlay').removeClass('d-none')
+            $('#editForm').submit();
+        });
+    });
+</script>
+
+{% endblock %}

@@ -1,8 +1,9 @@
 import json
 
 from requests.exceptions import HTTPError
-from flask import Blueprint, render_template, request, redirect, url_for, flash, jsonify
+from flask import Blueprint, render_template, request, redirect, url_for, flash, jsonify, session
 from datetime import datetime
+from firebase_admin import firestore
 
 from firebase import db, storage_upload, storage_multiple_upload, storage_delete_file
 
@@ -137,3 +138,121 @@ def delete_lomba(id):
     except HTTPError as e:
         flash(json.loads(e.strerror)['error']['message'], 'error')
         return redirect(url_for('dashboard', role='lomba', page='lomba'))
+    
+
+@lomba.route("/search_peserta", methods=["GET"])
+def search_peserta():
+    search_text = request.args.get("search_text")
+    docs = db.collection("users_mobile").where("nim_nisn", "==", int(search_text)).get()
+
+    for doc in docs:
+        data = doc.to_dict()
+        
+    return jsonify(data)
+    
+
+@lomba.route('/dashboard/lomba/send-sertificate', methods=['POST', 'GET'])
+def send_sertificate():
+    if request.method == 'POST':
+        lomba = {}
+        lomba['id'] = request.form.get('id')
+        lomba['nama'] = request.form.get('nama')
+
+        sertificate = db.collection('lomba').document(request.form.get('id')).collection('sertificate').order_by("created_at", direction=firestore.Query.DESCENDING).stream()
+        data = []
+        for doc in sertificate:
+            doc_dict = doc.to_dict()
+            doc_dict['tanggal_pembuatan'] = doc_dict['tanggal_pembuatan'].strftime("%d %B %Y")
+            doc_dict['id'] = doc.id
+            data.append(doc_dict)
+
+        return render_template(f'dashboard/lomba/send_sertificate.html', user=session['user_info'], data_sertifikat=data, data_lomba=lomba)
+    
+    return render_template('errors/error-403.html'), 403
+
+
+@lomba.route('/add-sertificate', methods=['POST'])
+def add_sertificate():
+    new_sertificate = {}
+
+    if request.method == 'POST':
+        new_sertificate['nama'] = request.form.get('nama')
+        new_sertificate['nama_peserta'] = request.form.get('nama_peserta')
+        new_sertificate['nim_nisn_peserta'] = request.form.get('no_peserta')
+        new_sertificate['nomor'] = request.form.get('nomor')
+        new_sertificate['tanggal_pembuatan'] = datetime.strptime(request.form.get('date'), '%Y-%m-%d') 
+
+        new_sertificate['sertifikat_filename'] = request.files['file-sertifikat'].filename
+        new_sertificate['file_sertifikat'] = storage_upload(request.files['file-sertifikat'], 'file-sertifikat')
+        new_sertificate['created_at'] = datetime.now()
+
+        try:
+            db.collection('lomba').document(request.form.get('id')).collection('sertificate').add(new_sertificate)
+            flash('Sertifikat lomba berhasil dikirimkan', 'success')
+            return redirect("dashboard/lomba/lomba")
+
+        except HTTPError as e:
+            flash(json.loads(e.strerror)['error']['message'], 'error')
+            return redirect("dashboard/lomba/lomba")
+
+    return render_template('errors/error-404.html'), 404
+
+
+@lomba.route('/delete-sertifikat/<doc>/<id>', methods=['GET'])
+def delete_sertifikat(doc, id):
+    try:
+        data = db.collection('lomba').document(doc).collection('sertificate').document(id).get()
+        data_dict = data.to_dict()
+
+        storage_delete_file(data_dict['file_sertifikat'])
+
+        db.collection('lomba').document(doc).collection('sertificate').document(id).delete()
+        flash('Berhasil hapus sertifikat lomba', 'success')
+        return redirect("dashboard/lomba/lomba")
+    
+    except HTTPError as e:
+        flash(json.loads(e.strerror)['error']['message'], 'error')
+        return redirect("dashboard/lomba/lomba")
+
+
+@lomba.route('/get-sertifikat/<doc>/<id>', methods=['GET'])
+def get_sertifikat(doc, id):
+    data_dict = db.collection('lomba').document(doc).collection('sertificate').document(id).get().to_dict()
+
+    data_dict['tanggal_pembuatan'] = data_dict['tanggal_pembuatan'].strftime("%Y-%m-%d")
+    data_dict['created_at'] = data_dict['created_at'].strftime("%Y-%m-%d")
+
+    return jsonify(data_dict)
+
+
+@lomba.route('/edit-sertificate', methods=['POST'])
+def edit_sertificate():
+    edited_sertificate = {}
+
+    if request.method == 'POST':
+        edited_sertificate['nama'] = request.form.get('nama')
+        edited_sertificate['nama_peserta'] = request.form.get('nama_peserta')
+        edited_sertificate['nim_nisn_peserta'] = request.form.get('no_peserta')
+        edited_sertificate['nomor'] = request.form.get('nomor')
+        edited_sertificate['tanggal_pembuatan'] = datetime.strptime(request.form.get('date'), '%Y-%m-%d') 
+        edited_sertificate['created_at'] = datetime.strptime(request.form.get('created_at'), '%Y-%m-%d')
+
+        if request.files['file-sertifikat'].filename != '':
+            storage_delete_file(request.form.get('old_sertificate'))
+            edited_sertificate['sertifikat_filename'] = request.files['file-sertifikat'].filename
+            edited_sertificate['file-sertifikat'] = storage_upload(request.files['file-sertifikat'], 'file-sertifikat')
+            
+        else:
+            edited_sertificate['file-sertifikat'] = request.form.get('old_sertificate')
+            edited_sertificate['sertifikat_filename'] = request.form.get('old_sertificate_name')
+    
+        try:
+            db.collection('lomba').document(request.form.get('id_lomba')).collection('sertificate').document(request.form.get('id')).set(edited_sertificate)
+            flash('Data sertifikat lomba berhasil diperbaharui', 'success')
+            return redirect("dashboard/lomba/lomba")
+
+        except HTTPError as e:
+            flash(json.loads(e.strerror)['error']['message'], 'error')
+            return redirect("dashboard/lomba/lomba")
+
+    return render_template('errors/error-404.html'), 404
