@@ -147,6 +147,7 @@ def search_peserta():
 
     for doc in docs:
         data = doc.to_dict()
+        data['id_peserta'] = doc.id
         
     return jsonify(data)
     
@@ -158,7 +159,7 @@ def send_sertificate():
         lomba['id'] = request.form.get('id')
         lomba['nama'] = request.form.get('nama')
 
-        sertificate = db.collection('lomba').document(request.form.get('id')).collection('sertificate').order_by("created_at", direction=firestore.Query.DESCENDING).stream()
+        sertificate = db.collection('sertificate').where("id_lomba", "==", request.form.get('id')).order_by("created_at", direction=firestore.Query.DESCENDING).stream()
         data = []
         for doc in sertificate:
             doc_dict = doc.to_dict()
@@ -186,14 +187,17 @@ def add_sertificate():
         new_sertificate['file_sertifikat'] = storage_upload(request.files['file-sertifikat'], 'file-sertifikat')
         new_sertificate['created_at'] = datetime.now()
 
+        new_sertificate['id_lomba'] = request.form.get('id')
+        new_sertificate['id_peserta'] =  request.form.get('id_peserta')
+
         try:
-            db.collection('lomba').document(request.form.get('id')).collection('sertificate').add(new_sertificate)
+            db.collection('sertificate').add(new_sertificate)
             flash('Sertifikat lomba berhasil dikirimkan', 'success')
-            return redirect("dashboard/lomba/lomba")
+            return redirect(url_for('dashboard', role='lomba', page='lomba'))
 
         except HTTPError as e:
             flash(json.loads(e.strerror)['error']['message'], 'error')
-            return redirect("dashboard/lomba/lomba")
+            return redirect(url_for('dashboard', role='lomba', page='lomba'))
 
     return render_template('errors/error-404.html'), 404
 
@@ -201,23 +205,23 @@ def add_sertificate():
 @lomba.route('/delete-sertifikat/<doc>/<id>', methods=['GET'])
 def delete_sertifikat(doc, id):
     try:
-        data = db.collection('lomba').document(doc).collection('sertificate').document(id).get()
+        data = db.collection('sertificate').document(id).get()
         data_dict = data.to_dict()
 
         storage_delete_file(data_dict['file_sertifikat'])
 
-        db.collection('lomba').document(doc).collection('sertificate').document(id).delete()
+        db.collection('sertificate').document(id).delete()
         flash('Berhasil hapus sertifikat lomba', 'success')
-        return redirect("dashboard/lomba/lomba")
+        return redirect(url_for('dashboard', role='lomba', page='lomba'))
     
     except HTTPError as e:
         flash(json.loads(e.strerror)['error']['message'], 'error')
-        return redirect("dashboard/lomba/lomba")
+        return redirect(url_for('dashboard', role='lomba', page='lomba'))
 
 
 @lomba.route('/get-sertifikat/<doc>/<id>', methods=['GET'])
 def get_sertifikat(doc, id):
-    data_dict = db.collection('lomba').document(doc).collection('sertificate').document(id).get().to_dict()
+    data_dict = db.collection('sertificate').document(id).get().to_dict()
 
     data_dict['tanggal_pembuatan'] = data_dict['tanggal_pembuatan'].strftime("%Y-%m-%d")
     data_dict['created_at'] = data_dict['created_at'].strftime("%Y-%m-%d")
@@ -237,22 +241,26 @@ def edit_sertificate():
         edited_sertificate['tanggal_pembuatan'] = datetime.strptime(request.form.get('date'), '%Y-%m-%d') 
         edited_sertificate['created_at'] = datetime.strptime(request.form.get('created_at'), '%Y-%m-%d')
 
+        edited_sertificate['id_lomba'] = request.form.get('id_lomba')
+        edited_sertificate['id_peserta'] = request.form.get('id_peserta')
+
         if request.files['file-sertifikat'].filename != '':
             storage_delete_file(request.form.get('old_sertificate'))
             edited_sertificate['sertifikat_filename'] = request.files['file-sertifikat'].filename
-            edited_sertificate['file-sertifikat'] = storage_upload(request.files['file-sertifikat'], 'file-sertifikat')
+            edited_sertificate['file_sertifikat'] = storage_upload(request.files['file-sertifikat'], 'file-sertifikat')
             
         else:
-            edited_sertificate['file-sertifikat'] = request.form.get('old_sertificate')
+            edited_sertificate['file_sertifikat'] = request.form.get('old_sertificate')
             edited_sertificate['sertifikat_filename'] = request.form.get('old_sertificate_name')
     
         try:
-            db.collection('lomba').document(request.form.get('id_lomba')).collection('sertificate').document(request.form.get('id')).set(edited_sertificate)
+            # db.collection('lomba').document(request.form.get('id_lomba')).collection('sertificate').document(request.form.get('id')).set(edited_sertificate)
+            db.collection('sertificate').document(request.form.get('id')).set(edited_sertificate)
             flash('Data sertifikat lomba berhasil diperbaharui', 'success')
-            return redirect("dashboard/lomba/lomba")
+            return redirect(url_for('dashboard', role='lomba', page='lomba'))
 
         except HTTPError as e:
             flash(json.loads(e.strerror)['error']['message'], 'error')
-            return redirect("dashboard/lomba/lomba")
+            return redirect(url_for('dashboard', role='lomba', page='lomba'))
 
     return render_template('errors/error-404.html'), 404

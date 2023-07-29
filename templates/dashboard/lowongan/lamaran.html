@@ -1,0 +1,114 @@
+{% extends 'dashboard/lowongan/master2.html' %}
+
+{% block title %} Lamaran {% endblock %}
+
+{% block page_content %}
+<div class="card">
+    <div class="card-header mb-0">
+        <h3>{{ data_lowongan['nama'] }}</h3>
+        <p class="text-subtitle mb-0">Periksa lamaran masuk pada lowongan ini.</p>
+    </div>
+    <div class="card-body">
+        <table class="table" id="table1">
+            <thead>
+                <tr>
+                    <th>Nama Pelamar</th>
+                    <th>Tanggal Melamar</th>
+                    <th>Status</th>
+                    <th>Aksi</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for lamaran in data_lamaran %}
+
+                <tr>
+                    <td style="width: 20%;">{{ lamaran['nama'] }}</td>
+                    <td class="text-center">{{ lamaran['created_at'] }}</td>
+                    <td class="text-center">
+                        <span class="badge bg-{% if lamaran.status == 'Dalam Proses' %}warning{% elif lamaran.status == 'Ditolak' %}danger{% else %}success{% endif %} bg-opacity-20 text-{% if lamaran.status == 'Dalam Proses' %}warning{% elif lamaran.status == 'Ditolak' %}danger{% else %}success{% endif %}">{{ lamaran.status }}</span>
+                    </td>
+                    <td class="text-center">
+
+                        <span class="badge bg-success bg-opacity-20 text-success fs-6 py-2 hover-zoom" onclick="editStatus('{{ lamaran.id }}')">
+                            <i class="bi bi-check-square"></i>
+                        </span>
+
+                        <span class="badge bg-primary bg-opacity-20 text-primary fs-6 py-2 hover-zoom" onclick="">
+                            <i class="bi bi-eye fs-6"></i>
+                        </span>
+
+                    </td>
+                </tr>
+
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="modal fade text-left modal-borderless" id="editStatusForm" tabindex="-1" aria-labelledby="editStatusFormLabel" style="display: none;" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable" role="document">
+        <div class="modal-content rounded-4 p-3">
+            <div class="modal-header">
+                <h4 class="modal-title" id="editStatusFormLabel">
+                    Ubah Status Lamaran
+                </h4>
+                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-x">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="editForm" action="/status-lamaran" method="POST">
+                    <label for="edt_status">Status Lamaran: </label>
+                    <div class="form-group mb-3">
+                        <select class="form-select py-2 bg-gray-light rounded-05 text-start" name="status" id="edt_status" required>
+                            <option class="text-start" disabled selected value="default">Pilih Status</option>
+                            <option class="text-start" value="Dalam Proses">Dalam Proses</option>
+                            <option class="text-start" value="Ditolak">Ditolak</option>
+                            <option class="text-start" value="Diterima">Diterima</option>
+                        </select>
+                    </div>
+                    <input id="edt_id" type="hidden" name="id">
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button id="submitEdit" type="submit" class="btn btn-primary rounded-05">Submit</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block script %}
+
+<script>
+    var editStatusModal = new bootstrap.Modal($('#editStatusForm'));
+
+    function editStatus(docId) {
+        $('.spinner').removeClass('d-none')
+        $('.overlay').removeClass('d-none')
+
+        $.get(`/get-lamaran/${docId}`, function (data) {
+            $('#edt_status').val(data.status)
+            $('#edt_id').val(docId)
+            editStatusModal.show()
+            $('.spinner').addClass('d-none')
+            $('.overlay').addClass('d-none')
+        })
+    }
+
+    $(document).ready(function() {
+        $('#submitEdit').click(function() {
+            $('.spinner').removeClass('d-none')
+            $('.overlay').removeClass('d-none')
+            $('#editForm').submit();
+        });
+    });
+
+</script>
+
+{% endblock %}

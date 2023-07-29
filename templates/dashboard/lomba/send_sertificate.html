@@ -96,6 +96,7 @@
                             </div>
                             
                             <input id="id_lomba" type="hidden" name="id">
+                            <input id="id_peserta" type="hidden" name="id_peserta">
                             <input id="nama_peserta" type="hidden" name="nama_peserta">
                             <input id="nomor_induk" type="hidden" name="no_peserta">
                         </div>
@@ -209,9 +210,11 @@
                             </div>
                             
                             <input id="edt_id_lomba" type="hidden" name="id_lomba">
+                            <input id="edt_id_peserta" type="hidden" name="id_peserta">
+                            <input id="edt_id" type="hidden" name="id">
+                            
                             <input id="edt_nama_peserta" type="hidden" name="nama_peserta">
                             <input id="edt_nomor_induk" type="hidden" name="no_peserta">
-                            <input id="edt_id" type="hidden" name="id">
                             <input id="old_sertificate" type="hidden" name="old_sertificate">
                             <input id="old_sertificate_name" type="hidden" name="old_sertificate_name">
                             <input id="edt_created_at" type="hidden" name="created_at">
@@ -252,6 +255,7 @@
             addToPond(data.file_sertifikat, data.sertifikat_filename, 'application', multipleFilePondEdit)
 
             $('#edt_id_lomba').val(doc)
+            $('#edt_id_peserta').val(data.id_peserta)
             $('#edt_nama_peserta').val(data.nama_peserta)
             $('#edt_nomor_induk').val(data.nim_nisn_peserta)
 
@@ -273,6 +277,7 @@
                     $("#view_nama").html(`<p>Data siswa/mahasiswa ditemukan: <b>${data.nama}</b></p>`);
                     $('#nama_peserta').val(data.nama)
                     $('#nomor_induk').val(data.nim_nisn)
+                    $('#id_peserta').val(data.id_peserta)
                 },
                 error: function(error) {
                     $("#view_nama").html(`<p>Data siswa/mahasiswa tidak ditemukan, <b>periksa kembali NIM/NISN</b>`);

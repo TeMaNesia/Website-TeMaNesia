@@ -1,8 +1,9 @@
 import json
 
 from requests.exceptions import HTTPError
-from flask import Blueprint, render_template, request, redirect, url_for, flash, jsonify
+from flask import Blueprint, render_template, request, redirect, url_for, flash, jsonify, session
 from datetime import datetime
+from firebase_admin import firestore
 
 from firebase import db, storage_upload, storage_multiple_upload, storage_delete_file
 
@@ -137,3 +138,48 @@ def delete_lowongan(id):
     except HTTPError as e:
         flash(json.loads(e.strerror)['error']['message'], 'error')
         return redirect(url_for('dashboard', role='lowongan', page='lowongan'))
+    
+@lowongan.route('/dashboard/lowongan/lamaran', methods=['POST', 'GET'])
+def lamaran():
+    if request.method == 'POST':
+        lowongan = {}
+        lowongan['id'] = request.form.get('id')
+        lowongan['nama'] = request.form.get('nama')
+
+        lamaran = db.collection('lamaran').where("id_lowongan", "==", request.form.get('id')).order_by("created_at", direction=firestore.Query.DESCENDING).stream()
+        data = []
+        for doc in lamaran:
+            doc_dict = doc.to_dict()
+            doc_dict['created_at'] = doc_dict['created_at'].strftime("%d %B %Y")
+            doc_dict['id'] = doc.id
+
+            doc_dict['nama'] = db.collection('users_mobile').document(doc_dict['id_users']).get().get('nama')
+            
+            data.append(doc_dict)
+
+        return render_template(f'dashboard/lowongan/lamaran.html', user=session['user_info'], data_lamaran=data, data_lowongan=lowongan)
+    
+    return render_template('errors/error-403.html'), 403
+
+@lowongan.route('/status-lamaran', methods=['POST'])
+def status_lamaran():
+    if request.method == 'POST':
+        try:
+            lamaran = db.collection('lamaran').document(request.form.get('id'))
+            lamaran.update({'status': request.form.get('status')})
+            flash('Status lamaran berhasil diperbaharui', 'success')
+            return redirect(url_for('dashboard', role='lowongan', page='lowongan'))
+
+        except HTTPError as e:
+            flash(json.loads(e.strerror)['error']['message'], 'error')
+            return redirect(url_for('dashboard', role='lowongan', page='lowongan'))
+
+    return render_template('errors/error-404.html'), 404
+
+
+@lowongan.route('/get-lamaran/<id>', methods=['GET'])
+def get_lamaran(id):
+    data = db.collection('lamaran').document(id).get()
+    data_dict = data.to_dict()
+
+    return jsonify(data_dict)
