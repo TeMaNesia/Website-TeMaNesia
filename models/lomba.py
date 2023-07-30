@@ -198,6 +198,7 @@ def add_sertificate():
     if request.method == 'POST':
         new_sertificate['nama'] = request.form.get('nama')
         new_sertificate['nama_peserta'] = request.form.get('nama_peserta')
+        new_sertificate['nama_lomba'] = request.form.get('nama_lomba')
         new_sertificate['nim_nisn_peserta'] = request.form.get('no_peserta')
         new_sertificate['nomor'] = request.form.get('nomor')
         new_sertificate['tanggal_pembuatan'] = datetime.strptime(request.form.get('date'), '%Y-%m-%d') 
@@ -255,6 +256,7 @@ def edit_sertificate():
     if request.method == 'POST':
         edited_sertificate['nama'] = request.form.get('nama')
         edited_sertificate['nama_peserta'] = request.form.get('nama_peserta')
+        edited_sertificate['nama_lomba'] = request.form.get('nama_lomba')
         edited_sertificate['nim_nisn_peserta'] = request.form.get('no_peserta')
         edited_sertificate['nomor'] = request.form.get('nomor')
         edited_sertificate['tanggal_pembuatan'] = datetime.strptime(request.form.get('date'), '%Y-%m-%d') 

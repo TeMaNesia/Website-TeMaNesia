@@ -9,7 +9,7 @@
         <p class="text-subtitle mb-0">Kirim sertifikat ke peserta lomba ini.</p>
     </div>
     <div class="card-body">
-        <button class="btn btn-primary rounded-05 mb-4" data-bs-toggle="modal" data-bs-target="#addsertificateForm" onclick="setId('{{ data_lomba['id'] }}')">Kirim Sertifikat</button>
+        <button class="btn btn-primary rounded-05 mb-4" data-bs-toggle="modal" data-bs-target="#addsertificateForm" onclick="setId('{{ data_lomba['id'] }}', '{{ data_lomba['nama'] }}')">Kirim Sertifikat</button>
         <table class="table" id="table1">
             <thead>
                 <tr>
@@ -94,10 +94,11 @@
                             <div class="form-group mb-3  mt-1">
                                 <input type="file" id="file-sertifikat" name="file-sertifikat" multiple class="mf-filepond multiple-files-filepond border-primary" accept="application/pdf" aria-describedby="inputGroupFileAddon04" aria-label="Upload" multiple>
                             </div>
-                            
+
                             <input id="id_lomba" type="hidden" name="id">
                             <input id="id_peserta" type="hidden" name="id_peserta">
                             <input id="nama_peserta" type="hidden" name="nama_peserta">
+                            <input id="nama_lomba" type="hidden" name="nama_lomba">
                             <input id="nomor_induk" type="hidden" name="no_peserta">
                         </div>
                     </div>
@@ -152,8 +153,8 @@
                     </div>
 
                     <label>File Sertifikat</label>
-                        <div id="view_file-sertifikat" class="mt-1">
-                        </div>
+                    <div id="view_file-sertifikat" class="mt-1">
+                    </div>
                 </div>
             </div>
 
@@ -208,12 +209,13 @@
                             <div class="form-group mb-3 mt-1">
                                 <input type="file" id="edt_file-sertifikat" name="file-sertifikat" multiple class="mf-filepond multiple-files-filepond-edit border-primary" accept="application/pdf" aria-describedby="inputGroupFileAddon04" aria-label="Upload" multiple>
                             </div>
-                            
+
                             <input id="edt_id_lomba" type="hidden" name="id_lomba">
                             <input id="edt_id_peserta" type="hidden" name="id_peserta">
                             <input id="edt_id" type="hidden" name="id">
-                            
+
                             <input id="edt_nama_peserta" type="hidden" name="nama_peserta">
+                            <input id="edt_nama_lomba" type="hidden" name="nama_lomba">
                             <input id="edt_nomor_induk" type="hidden" name="no_peserta">
                             <input id="old_sertificate" type="hidden" name="old_sertificate">
                             <input id="old_sertificate_name" type="hidden" name="old_sertificate_name">
@@ -257,6 +259,7 @@
             $('#edt_id_lomba').val(doc)
             $('#edt_id_peserta').val(data.id_peserta)
             $('#edt_nama_peserta').val(data.nama_peserta)
+            $('#edt_nama_lomba').val(data.nama_lomba)
             $('#edt_nomor_induk').val(data.nim_nisn_peserta)
 
             editsertifikatModal.show()
@@ -266,39 +269,39 @@
     }
 
 
-    $(document).ready(function() {
-        $("#peserta").on("input", function() {
+    $(document).ready(function () {
+        $("#peserta").on("input", function () {
             const searchText = $(this).val();
             $.ajax({
                 url: "/search_peserta",
                 method: "GET",
-                data: { search_text: searchText }, 
-                success: function(data) {
+                data: { search_text: searchText },
+                success: function (data) {
                     $("#view_nama").html(`<p>Data siswa/mahasiswa ditemukan: <b>${data.nama}</b></p>`);
                     $('#nama_peserta').val(data.nama)
                     $('#nomor_induk').val(data.nim_nisn)
                     $('#id_peserta').val(data.id_peserta)
                 },
-                error: function(error) {
+                error: function (error) {
                     $("#view_nama").html(`<p>Data siswa/mahasiswa tidak ditemukan, <b>periksa kembali NIM/NISN</b>`);
                 }
             });
         });
     });
 
-    $(document).ready(function() {
-        $("#edt_peserta").on("input", function() {
+    $(document).ready(function () {
+        $("#edt_peserta").on("input", function () {
             const searchText = $(this).val();
             $.ajax({
                 url: "/search_peserta",
                 method: "GET",
-                data: { search_text: searchText }, 
-                success: function(data) {
+                data: { search_text: searchText },
+                success: function (data) {
                     $("#edt_view_nama").html(`<p>Data siswa/mahasiswa ditemukan: <b>${data.nama}</b></p>`);
                     $('#edt_nama_peserta').val(data.nama)
                     $('#edt_nomor_induk').val(data.nim_nisn)
                 },
-                error: function(error) {
+                error: function (error) {
                     $("#edt_view_nama").html(`<p>Data siswa/mahasiswa tidak ditemukan, <b>periksa kembali NIM/NISN</b>`);
                 }
             });
@@ -339,8 +342,9 @@
         })
     }
 
-    function setId(docId) {
+    function setId(docId, docName) {
         $('#id_lomba').val(docId)
+        $('#nama_lomba').val(docName)
     }
 
     $(document).ready(function () {
