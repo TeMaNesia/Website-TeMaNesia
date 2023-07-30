@@ -42,6 +42,10 @@
                             <i class="bi bi-eye fs-6"></i>
                         </span>
 
+                        <span class="badge bg-success bg-opacity-20 text-success fs-6 py-2 hover-zoom" onclick="window.open(`/dashboard/lowongan/lamaran?name={{ lowongan['nama'] }}&id={{ lowongan['id'] }}`, '_self');">
+                            <i class="bi bi-person fs-6"></i>
+                        </span>
+
                     </td>
                 </tr>
 
@@ -119,22 +123,22 @@
                             <div class="form-group mb-3  mt-1">
                                 <input id="url" name="url" type="text" placeholder="URL lowongan" class="form-control form-control-lg py-2 bg-gray-light rounded-05" required>
                             </div>
-                            
+
                             <label>Target Jurusan Lowongan </label>
-                            <ul class="list-unstyled">     
+                            <ul class="list-unstyled">
                                 <li class="d-block me-2 mb-1">
                                     <div class="form-check">
                                         <div class="checkbox">
                                             <input type="checkbox" class="form-check-input" id="select-all">
-                                            <label >Pilih Semua</label>
+                                            <label>Pilih Semua</label>
                                         </div>
                                     </div>
-                                </li>    
+                                </li>
                                 <li class="d-block me-2 mb-1">
                                     <div class="form-check">
                                         <div class="checkbox">
                                             <input type="checkbox" class="form-check-input" name="jurusan" value="Sipil">
-                                            <label >Sipil</label>
+                                            <label>Sipil</label>
                                         </div>
                                     </div>
                                 </li>
@@ -142,7 +146,7 @@
                                     <div class="form-check">
                                         <div class="checkbox">
                                             <input type="checkbox" class="form-check-input" name="jurusan" value="Mesin">
-                                            <label >Mesin</label>
+                                            <label>Mesin</label>
                                         </div>
                                     </div>
                                 </li>
@@ -150,7 +154,7 @@
                                     <div class="form-check">
                                         <div class="checkbox">
                                             <input type="checkbox" class="form-check-input" name="jurusan" value="Administrasi Niaga">
-                                            <label >Administrasi Niaga</label>
+                                            <label>Administrasi Niaga</label>
                                         </div>
                                     </div>
                                 </li>
@@ -158,7 +162,7 @@
                                     <div class="form-check">
                                         <div class="checkbox">
                                             <input type="checkbox" class="form-check-input" name="jurusan" value="Akuntansi">
-                                            <label >Akuntansi</label>
+                                            <label>Akuntansi</label>
                                         </div>
                                     </div>
                                 </li>
@@ -166,7 +170,7 @@
                                     <div class="form-check">
                                         <div class="checkbox">
                                             <input type="checkbox" class="form-check-input" name="jurusan" value="Grafika dan Penerbitan">
-                                            <label >Grafika dan Penerbitan</label>
+                                            <label>Grafika dan Penerbitan</label>
                                         </div>
                                     </div>
                                 </li>
@@ -174,7 +178,7 @@
                                     <div class="form-check">
                                         <div class="checkbox">
                                             <input type="checkbox" class="form-check-input" name="jurusan" value="Elektro">
-                                            <label >Elektro</label>
+                                            <label>Elektro</label>
                                         </div>
                                     </div>
                                 </li>
@@ -182,7 +186,7 @@
                                     <div class="form-check">
                                         <div class="checkbox">
                                             <input type="checkbox" class="form-check-input" name="jurusan" value="Informatika dan Komputer">
-                                            <label >Informatika dan Komputer</label>
+                                            <label>Informatika dan Komputer</label>
                                         </div>
                                     </div>
                                 </li>
@@ -190,7 +194,7 @@
                                     <div class="form-check">
                                         <div class="checkbox">
                                             <input type="checkbox" class="form-check-input" name="jurusan" value="Kesehatan">
-                                            <label >Kesehatan</label>
+                                            <label>Kesehatan</label>
                                         </div>
                                     </div>
                                 </li>
@@ -198,7 +202,7 @@
                                     <div class="form-check">
                                         <div class="checkbox">
                                             <input type="checkbox" class="form-check-input" name="jurusan" value="Sastra dan Bahasa">
-                                            <label >Sastra dan Bahasa</label>
+                                            <label>Sastra dan Bahasa</label>
                                         </div>
                                     </div>
                                 </li>
@@ -208,7 +212,7 @@
                             <div class="form-group mb-3  mt-1">
                                 <textarea id="deskripsi" name="deskripsi" type="text" placeholder="Deskripsi lowongan" class="form-control form-control-lg py-2 bg-gray-light rounded-05" rows="5" required></textarea>
                             </div>
-                            
+
                             <input type="hidden" name="nama_penyelenggara" value="{{ user['nama_lembaga'] }}">
                             <input type="hidden" name="email_penyelenggara" value="{{ user['email'] }}">
                             <input type="hidden" name="penyelenggara_uid" value="{{ user['localId'] }}">
@@ -295,20 +299,20 @@
                             </div>
 
                             <label>Target Jurusan Lowongan </label>
-                            <ul class="list-unstyled">     
+                            <ul class="list-unstyled">
                                 <li class="d-block me-2 mb-1">
                                     <div class="form-check">
                                         <div class="checkbox">
                                             <input type="checkbox" class="form-check-input" id="edt-select-all">
-                                            <label >Pilih Semua</label>
+                                            <label>Pilih Semua</label>
                                         </div>
                                     </div>
-                                </li>    
+                                </li>
                                 <li class="d-block me-2 mb-1">
                                     <div class="form-check">
                                         <div class="checkbox">
                                             <input type="checkbox" class="form-check-input" name="jurusan" value="Sipil">
-                                            <label >Sipil</label>
+                                            <label>Sipil</label>
                                         </div>
                                     </div>
                                 </li>
@@ -316,7 +320,7 @@
                                     <div class="form-check">
                                         <div class="checkbox">
                                             <input type="checkbox" class="form-check-input" name="jurusan" value="Mesin">
-                                            <label >Mesin</label>
+                                            <label>Mesin</label>
                                         </div>
                                     </div>
                                 </li>
@@ -324,7 +328,7 @@
                                     <div class="form-check">
                                         <div class="checkbox">
                                             <input type="checkbox" class="form-check-input" name="jurusan" value="Administrasi Niaga">
-                                            <label >Administrasi Niaga</label>
+                                            <label>Administrasi Niaga</label>
                                         </div>
                                     </div>
                                 </li>
@@ -332,7 +336,7 @@
                                     <div class="form-check">
                                         <div class="checkbox">
                                             <input type="checkbox" class="form-check-input" name="jurusan" value="Akuntansi">
-                                            <label >Akuntansi</label>
+                                            <label>Akuntansi</label>
                                         </div>
                                     </div>
                                 </li>
@@ -340,7 +344,7 @@
                                     <div class="form-check">
                                         <div class="checkbox">
                                             <input type="checkbox" class="form-check-input" name="jurusan" value="Grafika dan Penerbitan">
-                                            <label >Grafika dan Penerbitan</label>
+                                            <label>Grafika dan Penerbitan</label>
                                         </div>
                                     </div>
                                 </li>
@@ -348,7 +352,7 @@
                                     <div class="form-check">
                                         <div class="checkbox">
                                             <input type="checkbox" class="form-check-input" name="jurusan" value="Elektro">
-                                            <label >Elektro</label>
+                                            <label>Elektro</label>
                                         </div>
                                     </div>
                                 </li>
@@ -356,7 +360,7 @@
                                     <div class="form-check">
                                         <div class="checkbox">
                                             <input type="checkbox" class="form-check-input" name="jurusan" value="Informatika dan Komputer">
-                                            <label >Informatika dan Komputer</label>
+                                            <label>Informatika dan Komputer</label>
                                         </div>
                                     </div>
                                 </li>
@@ -364,7 +368,7 @@
                                     <div class="form-check">
                                         <div class="checkbox">
                                             <input type="checkbox" class="form-check-input" name="jurusan" value="Kesehatan">
-                                            <label >Kesehatan</label>
+                                            <label>Kesehatan</label>
                                         </div>
                                     </div>
                                 </li>
@@ -372,7 +376,7 @@
                                     <div class="form-check">
                                         <div class="checkbox">
                                             <input type="checkbox" class="form-check-input" name="jurusan" value="Sastra dan Bahasa">
-                                            <label >Sastra dan Bahasa</label>
+                                            <label>Sastra dan Bahasa</label>
                                         </div>
                                     </div>
                                 </li>
@@ -427,7 +431,7 @@
                 </button>
             </div>
             <div class="modal-body">
-                <div class="row">
+                {# <div class="row">
                     <div class="col-4">
                         <form action="/dashboard/lowongan/lamaran" method="POST">
                             <input type="hidden" name="id" id="id">
@@ -435,7 +439,7 @@
                             <button type="submit" class="btn btn-primary rounded-05 mb-4">Periksa Lamaran</button>
                         </form>
                     </div>
-                </div>
+                </div> #}
                 <div class="row">
                     <div class="col-4">
                         <label for="view_poster">Poster Lowongan </label>
@@ -537,7 +541,7 @@
                 data.file_penting.forEach(function (fileData) {
                     viewFilePenting = viewFilePenting + `<div class="bg-gray-light border border-1 border-primary rounded-05 mb-2 text-primary text-center py-3 px-2">${fileData.nama_file}</div>`
                 });
-            } else{
+            } else {
                 viewFilePenting = viewFilePenting + `<div class="bg-gray-light border border-1 border-danger rounded-05 mb-2 text-danger text-center py-3 px-2">Tidak ada file yang diupload</div>`
             }
 
@@ -572,7 +576,7 @@
             $('#img-poster-edit').removeClass('poster-placeholder');
             $('#img-poster-edit').addClass('w-100');
 
-            data.jurusan.forEach(function(value) {
+            data.jurusan.forEach(function (value) {
                 $('input[name="jurusan"][value="' + value + '"]').prop('checked', true);
             })
 
@@ -616,12 +620,12 @@
         })
     }
 
-    $("#select-all").click(function() {
+    $("#select-all").click(function () {
         const masterChecked = $(this).prop("checked");
         $("input[name='jurusan']").prop("checked", masterChecked);
     });
 
-    $("input[name='jurusan']").click(function() {
+    $("input[name='jurusan']").click(function () {
         const allChecked = $("input[name='jurusan']:checked").length === $("input[name='jurusan']").length;
         $("#select-all").prop("checked", allChecked);
     });
@@ -692,12 +696,12 @@
         });
     });
 
-    $("#edt-select-all").click(function() {
+    $("#edt-select-all").click(function () {
         const masterChecked = $(this).prop("checked");
         $("input[name='jurusan']").prop("checked", masterChecked);
     });
 
-    $("input[name='jurusan']").click(function() {
+    $("input[name='jurusan']").click(function () {
         const allChecked = $("input[name='jurusan']:checked").length === $("input[name='jurusan']").length;
         $("#edt-select-all").prop("checked", allChecked);
     });

@@ -154,12 +154,16 @@ def search_peserta():
 
 @lomba.route('/dashboard/lomba/send-sertificate', methods=['POST', 'GET'])
 def send_sertificate():
-    if request.method == 'POST':
-        lomba = {}
-        lomba['id'] = request.form.get('id')
-        lomba['nama'] = request.form.get('nama')
 
-        sertificate = db.collection('sertificate').where("id_lomba", "==", request.form.get('id')).order_by("created_at", direction=firestore.Query.DESCENDING).stream()
+    if request.method == 'GET':
+        id = request.args.get('id')
+        name = request.args.get('name') 
+
+        lomba = {}
+        lomba['id'] = id
+        lomba['nama'] = name
+
+        sertificate = db.collection('sertificate').where("id_lomba", "==", id).order_by("created_at", direction=firestore.Query.DESCENDING).stream()
         data = []
         for doc in sertificate:
             doc_dict = doc.to_dict()
@@ -168,6 +172,21 @@ def send_sertificate():
             data.append(doc_dict)
 
         return render_template(f'dashboard/lomba/send_sertificate.html', user=session['user_info'], data_sertifikat=data, data_lomba=lomba)
+    
+    # if request.method == 'POST':
+    #     lomba = {}
+    #     lomba['id'] = request.form.get('id')
+    #     lomba['nama'] = request.form.get('nama')
+
+    #     sertificate = db.collection('sertificate').where("id_lomba", "==", request.form.get('id')).order_by("created_at", direction=firestore.Query.DESCENDING).stream()
+    #     data = []
+    #     for doc in sertificate:
+    #         doc_dict = doc.to_dict()
+    #         doc_dict['tanggal_pembuatan'] = doc_dict['tanggal_pembuatan'].strftime("%d %B %Y")
+    #         doc_dict['id'] = doc.id
+    #         data.append(doc_dict)
+
+    #     return render_template(f'dashboard/lomba/send_sertificate.html', user=session['user_info'], data_sertifikat=data, data_lomba=lomba)
     
     return render_template('errors/error-403.html'), 403
 

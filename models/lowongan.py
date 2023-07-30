@@ -141,12 +141,15 @@ def delete_lowongan(id):
     
 @lowongan.route('/dashboard/lowongan/lamaran', methods=['POST', 'GET'])
 def lamaran():
-    if request.method == 'POST':
-        lowongan = {}
-        lowongan['id'] = request.form.get('id')
-        lowongan['nama'] = request.form.get('nama')
+    if request.method == 'GET':
+        id = request.args.get('id')
+        name = request.args.get('name') 
 
-        lamaran = db.collection('lamaran').where("id_lowongan", "==", request.form.get('id')).order_by("created_at", direction=firestore.Query.DESCENDING).stream()
+        lowongan = {}
+        lowongan['id'] = id
+        lowongan['nama'] = name
+
+        lamaran = db.collection('lamaran').where("id_lowongan", "==", id).order_by("created_at", direction=firestore.Query.DESCENDING).stream()
         data = []
         for doc in lamaran:
             doc_dict = doc.to_dict()
@@ -158,6 +161,24 @@ def lamaran():
             data.append(doc_dict)
 
         return render_template(f'dashboard/lowongan/lamaran.html', user=session['user_info'], data_lamaran=data, data_lowongan=lowongan)
+    
+    # if request.method == 'POST':
+    #     lowongan = {}
+    #     lowongan['id'] = request.form.get('id')
+    #     lowongan['nama'] = request.form.get('nama')
+
+    #     lamaran = db.collection('lamaran').where("id_lowongan", "==", request.form.get('id')).order_by("created_at", direction=firestore.Query.DESCENDING).stream()
+    #     data = []
+    #     for doc in lamaran:
+    #         doc_dict = doc.to_dict()
+    #         doc_dict['created_at'] = doc_dict['created_at'].strftime("%d %B %Y")
+    #         doc_dict['id'] = doc.id
+
+    #         doc_dict['nama'] = db.collection('users_mobile').document(doc_dict['id_users']).get().get('nama')
+            
+    #         data.append(doc_dict)
+
+    #     return render_template(f'dashboard/lowongan/lamaran.html', user=session['user_info'], data_lamaran=data, data_lowongan=lowongan)
     
     return render_template('errors/error-403.html'), 403
 
@@ -183,3 +204,35 @@ def get_lamaran(id):
     data_dict = data.to_dict()
 
     return jsonify(data_dict)
+
+
+@lowongan.route('/dashboard/lowongan/detail-pelamar', methods=['GET'])
+def detail_pelamar():
+    if request.method == 'GET':
+        id = request.args.get('id')
+        pelamar = db.collection('users_mobile').document(id).get().to_dict()
+
+        pengalaman_kerja = db.collection('users_mobile').document(id).collection('pengalaman_kerja').stream()
+        data_pengalaman_kerja = [doc.to_dict() for doc in pengalaman_kerja]
+
+        pendidikan = db.collection('users_mobile').document(id).collection('pendidikan').stream()
+        data_pendidikan = [doc.to_dict() for doc in pendidikan]
+
+        sertifikat = db.collection('users_mobile').document(id).collection('sertifikat').stream()
+        data_sertifikat = [doc.to_dict() for doc in sertifikat]
+
+        organisasi = db.collection('users_mobile').document(id).collection('organisasi').stream()
+        data_organisasi = [doc.to_dict() for doc in organisasi]
+
+
+        return render_template(
+            f'dashboard/lowongan/detail_pelamar.html', 
+            user=session['user_info'], 
+            data=pelamar,
+            dataPengalamanKerja=data_pengalaman_kerja,
+            dataPendidikan=data_pendidikan,
+            dataSertifikat=data_sertifikat,
+            dataOrganisasi=data_organisasi
+        )
+    
+    return render_template('errors/error-403.html'), 403
