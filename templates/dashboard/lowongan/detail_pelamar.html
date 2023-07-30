@@ -1,0 +1,146 @@
+{% extends 'dashboard/lowongan/master2.html' %}
+
+{% block title %} Detail Pelamar {% endblock %}
+
+{% block page_content %}
+<div class="card">
+    <div class="card-header mb-0">
+        <h3>{{ data['nama'] }}</h3>
+        <p class="text-subtitle mb-0">{{ data['profile_summary'] }}</p>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-12 col-md-6 col-lg-4 col-xl-3 border-2 border-info">
+                <h5 class="mb-3">Pengalaman Kerja</h5>
+                {% for dpk in dataPengalamanKerja %}
+
+                <div class="card mb-3" style="border: 1px solid var(--bs-primary) !important;">
+                    <div class="card-body p-3">
+                        <h6 class="mb-0 text-md text-black">{{ dpk['title'] }}</h6>
+                        <p class="mt-0 mb-2 text-sm">{{ dpk['sub_title'] }}</p>
+                        <p class="mt-2 mb-2">{{ dpk['description'] }}</p>
+                        <p class="mt-0 mb-0 text-sm text-gray-500">{{ dpk['date'] }}</p>
+                    </div>
+                </div>
+
+                {% endfor %}
+
+            </div>
+
+            <div class="col-12 col-md-6 col-lg-4 col-xl-3 border-2 border-info">
+                <h5 class="mb-3">Riwayat Pendidikan</h5>
+                {% for dp in dataPendidikan %}
+
+                <div class="card mb-3" style="border: 1px solid var(--bs-success) !important;">
+                    <div class="card-body p-3">
+                        <h6 class="mb-0 text-md text-black">{{ dp['title'] }}</h6>
+                        <p class="mt-0 mb-2 text-sm">{{ dp['sub_title'] }}</p>
+                        <p class="mt-2 mb-2">{{ dp['description'] }}</p>
+                        <p class="mt-0 mb-0 text-sm text-gray-500">{{ dp['date'] }}</p>
+                    </div>
+                </div>
+
+                {% endfor %}
+            </div>
+
+            <div class="col-12 col-md-6 col-lg-4 col-xl-3 border-2 border-info">
+                <h5 class="mb-3">Sertifikat</h5>
+                {% for ds in dataSertifikat %}
+
+                <div class="card mb-3" style="border: 1px solid var(--bs-warning) !important;">
+                    <div class="card-body p-3">
+                        <h6 class="mb-0 text-md text-black">{{ ds['title'] }}</h6>
+                        <p class="mt-0 mb-2 text-sm">{{ ds['sub_title'] }}</p>
+                        <p class="mt-2 mb-2">{{ ds['description'] }}</p>
+                        <p class="mt-0 mb-0 text-sm text-gray-500">{{ ds['date'] }}</p>
+                    </div>
+                </div>
+
+                {% endfor %}
+            </div>
+
+            <div class="col-12 col-md-6 col-lg-4 col-xl-3 border-2 border-info">
+                <h5 class="mb-3">Pengalaman Organisasi</h5>
+                {% for do in dataOrganisasi %}
+
+                <div class="card mb-3" style="border: 1px solid var(--bs-danger) !important;">
+                    <div class="card-body p-3">
+                        <h6 class="mb-0 text-md text-black">{{ do['title'] }}</h6>
+                        <p class="mt-0 mb-2 text-sm">{{ do['sub_title'] }}</p>
+                        <p class="mt-2 mb-2">{{ do['description'] }}</p>
+                        <p class="mt-0 mb-0 text-sm text-gray-500">{{ do['date'] }}</p>
+                    </div>
+                </div>
+
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade text-left modal-borderless" id="editStatusForm" tabindex="-1" aria-labelledby="editStatusFormLabel" style="display: none;" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable" role="document">
+        <div class="modal-content rounded-4 p-3">
+            <div class="modal-header">
+                <h4 class="modal-title" id="editStatusFormLabel">
+                    Ubah Status Lamaran
+                </h4>
+                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-x">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="editForm" action="/status-lamaran" method="POST">
+                    <label for="edt_status">Status Lamaran: </label>
+                    <div class="form-group mb-3">
+                        <select class="form-select py-2 bg-gray-light rounded-05 text-start" name="status" id="edt_status" required>
+                            <option class="text-start" disabled selected value="default">Pilih Status</option>
+                            <option class="text-start" value="Dalam Proses">Dalam Proses</option>
+                            <option class="text-start" value="Ditolak">Ditolak</option>
+                            <option class="text-start" value="Diterima">Diterima</option>
+                        </select>
+                    </div>
+                    <input id="edt_id" type="hidden" name="id">
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button id="submitEdit" type="submit" class="btn btn-primary rounded-05">Submit</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block script %}
+
+<script>
+    var editStatusModal = new bootstrap.Modal($('#editStatusForm'));
+
+    function editStatus(docId) {
+        $('.spinner').removeClass('d-none')
+        $('.overlay').removeClass('d-none')
+
+        $.get(`/get-lamaran/${docId}`, function (data) {
+            $('#edt_status').val(data.status)
+            $('#edt_id').val(docId)
+            editStatusModal.show()
+            $('.spinner').addClass('d-none')
+            $('.overlay').addClass('d-none')
+        })
+    }
+
+    $(document).ready(function () {
+        $('#submitEdit').click(function () {
+            $('.spinner').removeClass('d-none')
+            $('.overlay').removeClass('d-none')
+            $('#editForm').submit();
+        });
+    });
+
+</script>
+
+{% endblock %}

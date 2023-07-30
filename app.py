@@ -61,9 +61,9 @@ def login():
             user_info = auth.get_account_info(user['idToken'])['users'][0]
             session['user_info'] = user_info
 
-            if session['user_info']['emailVerified'] == False:
-                flash('Email akun anda belum terverifikasi', 'error')
-                return redirect(url_for('login'))
+            # if session['user_info']['emailVerified'] == False:
+            #     flash('Email akun anda belum terverifikasi', 'error')
+            #     return redirect(url_for('login'))
             
             data = db.collection('users_website').document(session['user_info']['localId']).get().to_dict()
             session['user_info']['role'] = data.get('role')
